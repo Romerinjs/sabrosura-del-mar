@@ -39,15 +39,39 @@ import Icon from '../icons/Icon.astro';
 
     <!-- Pie del drawer fijo/sticky con el botón de WhatsApp -->
     <div class="order-drawer__footer">
-      <div class="order-drawer__summary">
-        <span class="summary-label">Subtotal estimado en carta:</span>
-        <strong id="order-drawer-total" class="summary-total">$0</strong>
+      <!-- Encabezado de Subtotal interactivo como Acordeón (Inicia abierto / Up por defecto) -->
+      <div
+        id="summary-accordion-header"
+        class="summary-accordion-header is-open"
+        role="button"
+        tabindex="0"
+        aria-expanded="true"
+        title="Toca para plegar o desplegar el formulario"
+      >
+        <div class="summary-accordion-left">
+          <span class="summary-label">Subtotal estimado en carta:</span>
+          <!-- Tooltip de sugerencia temporal de 3 segundos -->
+          <span id="accordion-hint-tooltip" class="accordion-hint-tooltip">
+            Ocultar
+          </span>
+        </div>
+
+        <div class="summary-accordion-right">
+          <strong id="order-drawer-total" class="summary-total">$0</strong>
+          <span class="summary-chevron-pill" aria-hidden="true">
+            <svg class="summary-chevron-icon" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+              <polyline points="18 15 12 9 6 15"></polyline>
+            </svg>
+          </span>
+        </div>
       </div>
+
       <p class="summary-disclaimer">
         * El precio final, costo de env&iacute;o y disponibilidad ser&aacute;n liquidados directamente por el asesor en WhatsApp.
       </p>
 
-      <div class="order-drawer__fields">
+      <!-- Contenedor plegable de datos (Inicia visible / abierto por defecto) -->
+      <div class="order-drawer__fields" id="order-drawer-fields">
         <!-- Selector corregido: Solo 'Entrega a domicilio en Armenia' sin 'Sede Centro' (Item 5) -->
         <label class="order-form-group">
           <span class="order-label-text">&iquest;D&oacute;nde lo necesitas?</span>
@@ -58,16 +82,92 @@ import Icon from '../icons/Icon.astro';
           </select>
         </label>
 
-        <div class="order-form-row">
-          <label class="order-form-group">
-            <span class="order-label-text">Tu nombre (opcional)</span>
-            <input type="text" id="order-field-nombre" class="order-input" placeholder="Ej: Carlos G&oacute;mez" autocomplete="name" />
-          </label>
+        <label class="order-form-group">
+          <span class="order-label-text">Tu nombre (opcional)</span>
+          <input type="text" id="order-field-nombre" class="order-input" placeholder="Ej: Carlos G&oacute;mez" autocomplete="name" />
+        </label>
 
-          <label class="order-form-group">
-            <span class="order-label-text">Direcci&oacute;n / Barrio (opcional)</span>
-            <input type="text" id="order-field-direccion" class="order-input" placeholder="Ej: Cra. 14 #10-25" autocomplete="street-address" />
-          </label>
+        <div class="order-form-group" id="group-field-direccion">
+          <label for="order-field-direccion" class="order-label-text">Direcci&oacute;n / Barrio (opcional)</label>
+          <input type="text" id="order-field-direccion" class="order-input" placeholder="Ej: Cra. 14 #10-25, Barrio Granada" autocomplete="street-address" />
+          
+          <input type="hidden" id="order-field-lat" value="" />
+          <input type="hidden" id="order-field-lng" value="" />
+
+          <!-- Contenedor dedicado debajo de los inputs de dirección -->
+          <div class="order-map-card" id="order-map-card">
+            <div class="order-map-card__bar">
+              <div class="order-map-card__info">
+                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+                  <path d="M20 10c0 6-8 12-8 12s-8-6-8-12a8 8 0 0 1 16 0Z"></path>
+                  <circle cx="12" cy="10" r="3"></circle>
+                </svg>
+                <span>Fijar ruta en Google Maps</span>
+              </div>
+              <div class="order-map-card__actions">
+                <button type="button" id="btn-toggle-inline-map" class="btn-map-action" title="Abrir mapa para fijar punto de entrega">
+                  <span id="btn-toggle-map-icon">🗺️</span>
+                  <span id="btn-toggle-map-text">Fijar en mapa</span>
+                </button>
+                <button type="button" id="btn-inline-gps" class="btn-map-action btn-map-action--gps" title="Ubicarme con el GPS">
+                  <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round">
+                    <circle cx="12" cy="12" r="10"></circle>
+                    <line x1="22" y1="12" x2="18" y2="12"></line>
+                    <line x1="6" y1="12" x2="2" y2="12"></line>
+                    <line x1="12" y1="6" x2="12" y2="2"></line>
+                    <line x1="12" y1="22" x2="12" y2="18"></line>
+                  </svg>
+                  <span>Mi GPS</span>
+                </button>
+              </div>
+            </div>
+
+            <!-- Badge verde cuando hay coordenadas fijadas -->
+            <div id="order-map-badge" class="order-map-badge" style="display: none;">
+              <div class="order-map-badge__info">
+                <span class="order-map-badge__dot"></span>
+                <div class="order-map-badge__texts">
+                  <strong class="order-map-badge__title">📍 Ubicaci&oacute;n fijada en Maps</strong>
+                  <span id="order-map-badge-coords" class="order-map-badge__coords"></span>
+                </div>
+              </div>
+              <div class="order-map-badge__actions">
+                <button type="button" id="order-map-reopen-btn" class="order-map-badge__btn" title="Modificar punto">Cambiar</button>
+                <button type="button" id="order-map-clear-btn" class="order-map-badge__clear" title="Quitar punto GPS">&times;</button>
+              </div>
+            </div>
+
+            <!-- Contenedor del mapa integrado (se despliega debajo de los inputs) -->
+            <div id="inline-map-wrapper" class="inline-map-wrapper" style="display: none;">
+              <div class="inline-map-search-row">
+                <input
+                  type="text"
+                  id="inline-map-search-input"
+                  class="inline-map-search-input"
+                  placeholder="Buscar barrio o carrera en Armenia..."
+                  autocomplete="off"
+                />
+                <button type="button" id="inline-map-search-btn" class="inline-map-search-btn">Buscar</button>
+              </div>
+
+              <div class="inline-map-canvas-wrap">
+                <div id="inline-leaflet-map" class="inline-map-canvas"></div>
+                <div class="inline-map-hint">
+                  <span>Arrastra el puntero rojo o toca el mapa</span>
+                </div>
+              </div>
+
+              <div class="inline-map-footer">
+                <div class="inline-map-detected">
+                  <span class="inline-map-detected-tag">DIRECCI&Oacute;N:</span>
+                  <span id="inline-map-detected-text" class="inline-map-detected-text">Apuntando al mapa de Armenia...</span>
+                </div>
+                <button type="button" id="inline-map-confirm-btn" class="btn-confirm-inline-map">
+                  ✓ Confirmar este punto
+                </button>
+              </div>
+            </div>
+          </div>
         </div>
 
         <label class="order-form-group">
@@ -78,18 +178,6 @@ import Icon from '../icons/Icon.astro';
             class="order-input"
             placeholder="Ej: Sin salsa, sin cilantro, patac&oacute;n bien tostado..."
           />
-        </label>
-      </div>
-
-      <!-- SWITCH MODO DEMO / PRUEBAS DESARROLLO (Item 7) -->
-      <div class="dev-demo-switch-box" id="dev-demo-switch-box" title="Switch de desarrollo para probar pedidos con WhatsApp">
-        <label class="dev-demo-switch" for="dev-demo-toggle">
-          <input type="checkbox" id="dev-demo-toggle" class="dev-demo-checkbox" checked />
-          <span class="dev-demo-slider" aria-hidden="true"></span>
-          <span class="dev-demo-text">
-            <span class="dev-demo-badge">MODO PRUEBA ACTIVO</span>
-            <span class="dev-demo-desc">Enviar a mi WhatsApp (+57 312 444 8768)</span>
-          </span>
         </label>
       </div>
 
@@ -356,64 +444,158 @@ import Icon from '../icons/Icon.astro';
     flex-shrink: 0;
     background: #ffffff;
     border-top: 1px solid #e2e8f0;
-    padding: 0.95rem 1.25rem;
+    padding: 0.65rem 1rem;
     box-shadow: 0 -6px 20px rgba(5, 20, 35, 0.07);
     z-index: 10;
   }
 
-  .order-drawer__summary {
+  /* -------------------------------------------------------------
+     Encabezado de Subtotal con función de Acordeón interactivo
+     ------------------------------------------------------------- */
+  .summary-accordion-header {
     display: flex;
     justify-content: space-between;
-    align-items: baseline;
-    margin-bottom: 0.2rem;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.38rem 0.5rem;
+    margin: -0.2rem -0.4rem 0.15rem;
+    border-radius: 8px;
+    cursor: pointer;
+    user-select: none;
+    transition: background-color 0.18s ease;
+  }
+
+  .summary-accordion-header:hover {
+    background-color: #f1f5f9;
+  }
+
+  .summary-accordion-left {
+    display: flex;
+    align-items: center;
+    gap: 0.45rem;
+    min-width: 0;
   }
 
   .summary-label {
-    font-size: 0.88rem;
-    font-weight: 600;
+    font-size: 0.79rem;
+    font-weight: 650;
     color: #0a2540;
+    white-space: nowrap;
+  }
+
+  /* Tooltip sugerencia temporal de 3 segundos */
+  .accordion-hint-tooltip {
+    display: inline-flex;
+    align-items: center;
+    background: rgba(14, 90, 114, 0.12);
+    color: var(--teal-700, #0e5a72);
+    font-size: 0.64rem;
+    font-weight: 750;
+    padding: 0.1rem 0.45rem;
+    border-radius: 999px;
+    letter-spacing: 0.02em;
+    opacity: 1;
+    transform: translateY(0);
+    transition: opacity 0.5s ease, transform 0.5s ease;
+    pointer-events: none;
+    white-space: nowrap;
+  }
+
+  .accordion-hint-tooltip.is-hidden {
+    opacity: 0;
+    transform: translateY(-3px);
+  }
+
+  .summary-accordion-right {
+    display: flex;
+    align-items: center;
+    gap: 0.45rem;
+    flex-shrink: 0;
   }
 
   .summary-total {
     font-family: var(--font-display);
-    font-size: 1.45rem;
+    font-size: 1.25rem;
     font-weight: 800;
     color: #0e5a72;
+    font-variant-numeric: tabular-nums;
   }
 
+  .summary-chevron-pill {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 22px;
+    height: 22px;
+    border-radius: 6px;
+    background: #f1f5f9;
+    color: #64748b;
+    transition: background-color 0.2s ease, transform 0.25s ease, color 0.2s ease;
+  }
+
+  .summary-accordion-header:hover .summary-chevron-pill {
+    background: #e2e8f0;
+    color: #0a2540;
+  }
+
+  .summary-chevron-icon {
+    transition: transform 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+  }
+
+  /* Cuando está cerrado, el chevron rota a 180deg (abajo) */
+  .summary-accordion-header:not(.is-open) .summary-chevron-icon {
+    transform: rotate(180deg);
+  }
+
+  .summary-accordion-header:not(.is-open) {
+    background: rgba(14, 90, 114, 0.05);
+  }
+
+  /* Disclaimer más pequeño y discreto (solicitado por usuario) */
   .summary-disclaimer {
-    font-size: 0.72rem;
-    color: var(--muted);
-    margin: 0 0 0.65rem;
-    line-height: 1.35;
+    font-size: 0.64rem;
+    color: #64748b;
+    margin: 0.05rem 0 0.35rem;
+    line-height: 1.25;
+    font-style: italic;
   }
 
   .order-drawer__fields {
     display: flex;
     flex-direction: column;
-    gap: 0.5rem;
-    margin-bottom: 0.75rem;
+    gap: 0.35rem;
+    margin-bottom: 0.45rem;
+    max-height: 48vh;
+    overflow-y: auto;
+    padding-right: 0.15rem;
+    animation: fieldsUnfold 0.22s ease-out;
+  }
+
+  @keyframes fieldsUnfold {
+    from { opacity: 0; transform: translateY(-4px); }
+    to { opacity: 1; transform: translateY(0); }
   }
 
   .order-form-group {
     display: flex;
     flex-direction: column;
-    gap: 0.2rem;
+    gap: 0.12rem;
+    margin-bottom: 0.25rem;
   }
 
   .order-label-text {
-    font-size: 0.76rem;
-    font-weight: 750;
+    font-size: 0.72rem;
+    font-weight: 700;
     color: #0a2540;
   }
 
   .order-input {
     width: 100%;
-    padding: 0.55rem 0.75rem;
+    padding: 0.38rem 0.65rem;
     border: 1.5px solid #cbd5e1;
-    border-radius: 8px;
+    border-radius: 7px;
     font-family: var(--font-body);
-    font-size: 0.86rem;
+    font-size: 0.8rem;
     background: #f8fafc;
     color: #051423;
     transition: border-color 0.18s ease, background-color 0.18s ease, box-shadow 0.18s ease;
@@ -429,104 +611,6 @@ import Icon from '../icons/Icon.astro';
   .order-select {
     cursor: pointer;
     font-weight: 600;
-  }
-
-  .order-form-row {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 0.5rem;
-  }
-
-  @media (max-width: 440px) {
-    .order-form-row {
-      grid-template-columns: 1fr;
-    }
-  }
-
-  /* -------------------------------------------------------------
-     Switch Modo Demo / Pruebas WhatsApp (Item 7)
-     ------------------------------------------------------------- */
-  .dev-demo-switch-box {
-    margin-bottom: 0.75rem;
-    background: #f8fafc;
-    border: 1px dashed #cbd5e1;
-    border-radius: 9px;
-    padding: 0.45rem 0.75rem;
-    transition: all 0.2s ease;
-  }
-
-  .dev-demo-switch-box:has(.dev-demo-checkbox:checked) {
-    background: rgba(217, 154, 63, 0.08);
-    border-color: var(--gold-500);
-  }
-
-  .dev-demo-switch {
-    display: flex;
-    align-items: center;
-    gap: 0.65rem;
-    cursor: pointer;
-    user-select: none;
-    -webkit-user-select: none;
-  }
-
-  .dev-demo-checkbox {
-    position: absolute;
-    opacity: 0;
-    width: 0;
-    height: 0;
-    pointer-events: none;
-  }
-
-  .dev-demo-slider {
-    position: relative;
-    width: 36px;
-    height: 20px;
-    background: #94a3b8;
-    border-radius: 999px;
-    transition: background-color 0.2s ease;
-    flex-shrink: 0;
-  }
-
-  .dev-demo-slider::after {
-    content: "";
-    position: absolute;
-    top: 2px;
-    left: 2px;
-    width: 16px;
-    height: 16px;
-    border-radius: 50%;
-    background: #ffffff;
-    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.25);
-    transition: transform 0.2s ease;
-  }
-
-  .dev-demo-checkbox:checked + .dev-demo-slider {
-    background: #d97706;
-  }
-
-  .dev-demo-checkbox:checked + .dev-demo-slider::after {
-    transform: translateX(16px);
-  }
-
-  .dev-demo-text {
-    display: flex;
-    flex-direction: column;
-    gap: 0.05rem;
-    line-height: 1.25;
-  }
-
-  .dev-demo-badge {
-    font-size: 0.62rem;
-    font-weight: 800;
-    letter-spacing: 0.06em;
-    color: #b45309;
-    text-transform: uppercase;
-  }
-
-  .dev-demo-desc {
-    font-size: 0.76rem;
-    color: #334155;
-    font-weight: 550;
   }
 
   /* Botón CTA Enviar a WhatsApp */
@@ -556,6 +640,374 @@ import Icon from '../icons/Icon.astro';
 
   .btn-whatsapp-cta:active {
     transform: translateY(0);
+  }
+
+  .btn-whatsapp-cta--disabled,
+  .btn-whatsapp-cta[disabled] {
+    background: #94a3b8 !important;
+    box-shadow: none !important;
+    cursor: not-allowed !important;
+    transform: none !important;
+    opacity: 0.82;
+  }
+
+  /* -------------------------------------------------------------
+     Contenedor Dedicado de Ubicación en Mapa (Debajo de los inputs)
+     ------------------------------------------------------------- */
+  .order-map-card {
+    margin-top: 0.5rem;
+    width: 100%;
+    box-sizing: border-box;
+    background: #f8fafc;
+    border: 1px solid #e2e8f0;
+    border-radius: 12px;
+    padding: 0.65rem 0.75rem;
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+    transition: border-color 0.2s ease;
+  }
+
+  .order-map-card:focus-within {
+    border-color: rgba(14, 90, 114, 0.35);
+  }
+
+  .order-map-card__bar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 0.45rem;
+    flex-wrap: wrap;
+    width: 100%;
+    box-sizing: border-box;
+  }
+
+  .order-map-card__info {
+    display: flex;
+    align-items: center;
+    gap: 0.4rem;
+    font-size: 0.78rem;
+    font-weight: 700;
+    color: var(--navy-900, #071f38);
+  }
+
+  .order-map-card__info svg {
+    color: var(--teal-700, #0e5a72);
+    flex-shrink: 0;
+  }
+
+  .order-map-card__actions {
+    display: flex;
+    align-items: center;
+    gap: 0.35rem;
+    flex-shrink: 0;
+  }
+
+  .btn-map-action {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.3rem;
+    padding: 0.32rem 0.6rem;
+    font-size: 0.74rem;
+    font-weight: 700;
+    color: var(--teal-700, #0e5a72);
+    background: #ffffff;
+    border: 1px solid #cbd5e1;
+    border-radius: 8px;
+    cursor: pointer;
+    box-shadow: 0 1px 2px rgba(0, 0, 0, 0.04);
+    transition: all 0.18s ease;
+    white-space: nowrap;
+  }
+
+  .btn-map-action:hover {
+    background: var(--teal-700, #0e5a72);
+    color: #ffffff;
+    border-color: var(--teal-700, #0e5a72);
+  }
+
+  .btn-map-action--gps {
+    color: #b45309;
+    border-color: rgba(217, 119, 6, 0.3);
+    background: rgba(254, 243, 199, 0.5);
+  }
+
+  .btn-map-action--gps:hover {
+    background: #d97706;
+    color: #ffffff;
+    border-color: #d97706;
+  }
+
+  /* Badge verde de confirmación */
+  .order-map-badge {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 0.45rem;
+    background: #ecfdf5;
+    border: 1px solid #a7f3d0;
+    border-radius: 8px;
+    padding: 0.45rem 0.65rem;
+    font-size: 0.76rem;
+    box-sizing: border-box;
+    width: 100%;
+    animation: fadeInBadge 0.22s ease-out;
+  }
+
+  @keyframes fadeInBadge {
+    from { opacity: 0; transform: translateY(-4px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  .order-map-badge__info {
+    display: flex;
+    align-items: center;
+    gap: 0.45rem;
+    min-width: 0;
+  }
+
+  .order-map-badge__dot {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background: #10b981;
+    flex-shrink: 0;
+    box-shadow: 0 0 0 2px rgba(16, 185, 129, 0.2);
+  }
+
+  .order-map-badge__texts {
+    display: flex;
+    flex-direction: column;
+    line-height: 1.25;
+    min-width: 0;
+  }
+
+  .order-map-badge__title {
+    color: #065f46;
+    font-size: 0.75rem;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  .order-map-badge__coords {
+    font-family: monospace;
+    font-size: 0.68rem;
+    color: #047857;
+    opacity: 0.85;
+    font-variant-numeric: tabular-nums;
+  }
+
+  .order-map-badge__actions {
+    display: flex;
+    align-items: center;
+    gap: 0.35rem;
+    flex-shrink: 0;
+  }
+
+  .order-map-badge__btn {
+    background: transparent;
+    border: none;
+    color: #047857;
+    font-weight: 700;
+    font-size: 0.72rem;
+    text-decoration: underline;
+    cursor: pointer;
+    padding: 0.1rem 0.25rem;
+  }
+
+  .order-map-badge__btn:hover {
+    color: #064e3b;
+  }
+
+  .order-map-badge__clear {
+    background: transparent;
+    border: none;
+    color: #059669;
+    font-size: 1.25rem;
+    line-height: 1;
+    cursor: pointer;
+    padding: 0 0.15rem;
+  }
+
+  .order-map-badge__clear:hover {
+    color: #dc2626;
+  }
+
+  /* Desplegable del Mapa Inline */
+  .inline-map-wrapper {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+    margin-top: 0.25rem;
+    padding-top: 0.5rem;
+    border-top: 1px solid #e2e8f0;
+    width: 100%;
+    box-sizing: border-box;
+    animation: mapUnfold 0.28s cubic-bezier(0.16, 1, 0.3, 1);
+  }
+
+  @keyframes mapUnfold {
+    from { opacity: 0; transform: translateY(-6px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  .inline-map-search-row {
+    position: relative;
+    display: flex;
+    align-items: center;
+    width: 100%;
+    box-sizing: border-box;
+  }
+
+  .inline-map-search-input {
+    width: 100%;
+    box-sizing: border-box;
+    padding: 0.42rem 4.4rem 0.42rem 0.65rem;
+    font-size: 0.78rem;
+    border: 1px solid #cbd5e1;
+    border-radius: 7px;
+    background: #ffffff;
+    color: var(--navy-900, #071f38);
+    outline: none;
+  }
+
+  .inline-map-search-input:focus {
+    border-color: var(--teal-600, #0e5a72);
+  }
+
+  .inline-map-search-btn {
+    position: absolute;
+    right: 3px;
+    padding: 0.28rem 0.6rem;
+    font-size: 0.72rem;
+    font-weight: 700;
+    background: var(--teal-700, #0e5a72);
+    color: #ffffff;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+  }
+
+  .inline-map-canvas-wrap {
+    position: relative;
+    width: 100%;
+    height: 220px;
+    border-radius: 9px;
+    overflow: hidden;
+    border: 1px solid #cbd5e1;
+    background: #e2e8f0;
+    box-sizing: border-box;
+  }
+
+  .inline-map-canvas {
+    width: 100%;
+    height: 100%;
+    z-index: 1;
+  }
+
+  .inline-map-hint {
+    position: absolute;
+    bottom: 0.5rem;
+    left: 50%;
+    transform: translateX(-50%);
+    background: rgba(7, 31, 56, 0.88);
+    backdrop-filter: blur(4px);
+    color: #ffffff;
+    font-size: 0.68rem;
+    font-weight: 600;
+    padding: 0.22rem 0.6rem;
+    border-radius: 999px;
+    border: 1px solid rgba(244, 178, 63, 0.4);
+    z-index: 500;
+    pointer-events: none;
+    white-space: nowrap;
+  }
+
+  .inline-map-footer {
+    display: flex;
+    flex-direction: column;
+    gap: 0.45rem;
+    background: #ffffff;
+    border: 1px solid #e2e8f0;
+    border-radius: 8px;
+    padding: 0.5rem 0.65rem;
+    box-sizing: border-box;
+    width: 100%;
+  }
+
+  .inline-map-detected {
+    display: flex;
+    flex-direction: column;
+    gap: 0.15rem;
+  }
+
+  .inline-map-detected-tag {
+    font-size: 0.62rem;
+    font-weight: 800;
+    letter-spacing: 0.05em;
+    color: var(--teal-700, #0e5a72);
+  }
+
+  .inline-map-detected-text {
+    font-size: 0.8rem;
+    font-weight: 650;
+    color: var(--navy-900, #071f38);
+    line-height: 1.25;
+  }
+
+  .btn-confirm-inline-map {
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.4rem;
+    background: linear-gradient(135deg, #0e5a72 0%, #071f38 100%);
+    color: #ffffff;
+    border: 1px solid var(--gold-400, #f4b23f);
+    padding: 0.5rem 0.85rem;
+    border-radius: 7px;
+    font-size: 0.8rem;
+    font-weight: 750;
+    cursor: pointer;
+    box-shadow: 0 2px 8px rgba(14, 90, 114, 0.2);
+    transition: transform 0.15s ease, box-shadow 0.15s ease;
+  }
+
+  .btn-confirm-inline-map:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 4px 12px rgba(14, 90, 114, 0.35);
+  }
+
+  :global(.custom-pin-marker) {
+    background: transparent;
+    border: none;
+  }
+
+  :global(.pin-svg-wrapper) {
+    position: relative;
+    width: 38px;
+    height: 48px;
+    cursor: grab;
+    transform: translate(-19px, -48px);
+    transition: transform 0.15s ease;
+  }
+
+  :global(.pin-svg-wrapper:active) {
+    cursor: grabbing;
+    transform: translate(-19px, -52px) scale(1.08);
+  }
+
+  :global(.pin-pulse-base) {
+    position: absolute;
+    bottom: -4px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 16px;
+    height: 8px;
+    background: rgba(7, 31, 56, 0.45);
+    border-radius: 50%;
+    filter: blur(1.5px);
   }
 </style>
 
@@ -661,6 +1113,25 @@ import Icon from '../icons/Icon.astro';
     if (subtotalEl) subtotalEl.textContent = formatMoney(totalMonto);
     if (drawerTotalEl) drawerTotalEl.textContent = formatMoney(totalMonto);
 
+    // Estado del botón WhatsApp según horario configurado
+    const waBtn = document.getElementById('send-whatsapp-order-btn') as HTMLButtonElement | null;
+    if (waBtn) {
+      const open = isRestaurantOpen();
+      if (ENABLE_BUSINESS_HOURS_RESTRICTION && !open) {
+        waBtn.classList.add('btn-whatsapp-cta--disabled');
+        waBtn.setAttribute('disabled', 'true');
+        waBtn.setAttribute('title', 'Horario de pedidos finalizado por hoy (11:00 AM - 5:00 PM)');
+        const span = waBtn.querySelector('span');
+        if (span) span.textContent = 'Fuera de horario (Abre a las 11:00 AM)';
+      } else {
+        waBtn.classList.remove('btn-whatsapp-cta--disabled');
+        waBtn.removeAttribute('disabled');
+        waBtn.removeAttribute('title');
+        const span = waBtn.querySelector('span');
+        if (span) span.textContent = 'Enviar pedido a WhatsApp';
+      }
+    }
+
     if (itemsContainer) {
       if (cart.length === 0) {
         itemsContainer.innerHTML = `
@@ -704,19 +1175,380 @@ import Icon from '../icons/Icon.astro';
     }
   }
 
+  // -------------------------------------------------------------
+  // RESTRICCIÓN DE HORARIO DE ATENCIÓN (11:00 AM a 5:00 PM Colombia)
+  // CONFIGURACIÓN DE PRODUCCIÓN:
+  // - true (ACTIVO): Deshabilita el botón de pedidos y bloquea envíos fuera de horario.
+  // -------------------------------------------------------------
+  const ENABLE_BUSINESS_HOURS_RESTRICTION = true;
+
+  function isRestaurantOpen(): boolean {
+    try {
+      const now = new Date();
+      const options: Intl.DateTimeFormatOptions = {
+        timeZone: 'America/Bogota',
+        hour: 'numeric',
+        minute: 'numeric',
+        hour12: false,
+      };
+      const formatter = new Intl.DateTimeFormat('en-US', options);
+      const parts = formatter.formatToParts(now);
+
+      const hourStr = parts.find((p) => p.type === 'hour')?.value || '0';
+      const minuteStr = parts.find((p) => p.type === 'minute')?.value || '0';
+      const hour = parseInt(hourStr, 10);
+      const minute = parseInt(minuteStr, 10);
+      const currentMin = hour * 60 + minute;
+
+      const openMin = 11 * 60; // 11:00 AM
+      const closeMin = 17 * 60; // 5:00 PM
+
+      return currentMin >= openMin && currentMin < closeMin;
+    } catch {
+      return true;
+    }
+  }
+
+  // -------------------------------------------------------------
+  // MANEJO DE ACORDEÓN EN SUB-TOTAL Y SUGGEST TOOLTIP DE 3 SEGUNDOS
+  // -------------------------------------------------------------
+  let tooltipTimer: any = null;
+
+  function triggerAccordionSuggestTooltip(forceShow = true) {
+    const tooltip = document.getElementById('accordion-hint-tooltip');
+    const header = document.getElementById('summary-accordion-header');
+    if (!tooltip) return;
+
+    const isOpen = header ? header.classList.contains('is-open') : true;
+    tooltip.textContent = isOpen ? 'Ocultar' : 'Mostrar';
+
+    clearTimeout(tooltipTimer);
+
+    if (forceShow) {
+      tooltip.classList.remove('is-hidden');
+      tooltipTimer = setTimeout(() => {
+        tooltip.classList.add('is-hidden');
+      }, 3000);
+    } else {
+      tooltip.classList.add('is-hidden');
+    }
+  }
+
+  function toggleSummaryAccordion() {
+    const fields = document.getElementById('order-drawer-fields');
+    const header = document.getElementById('summary-accordion-header');
+    if (!fields || !header) return;
+
+    const isCurrentlyOpen = header.classList.contains('is-open');
+    if (isCurrentlyOpen) {
+      fields.style.display = 'none';
+      header.classList.remove('is-open');
+      header.setAttribute('aria-expanded', 'false');
+    } else {
+      fields.style.display = 'flex';
+      header.classList.add('is-open');
+      header.setAttribute('aria-expanded', 'true');
+    }
+
+    triggerAccordionSuggestTooltip(true);
+  }
+
+  import 'leaflet/dist/leaflet.css';
+
+  // Coordenadas fijas por defecto: Armenia, Quindío (Plaza Bolívar)
+  const DEFAULT_LAT = 4.538889;
+  const DEFAULT_LNG = -75.6725;
+  const DEFAULT_ZOOM = 15;
+
+  let inlineMap: any = null;
+  let inlineMarker: any = null;
+  let LModule: any = null;
+  let inlineSelectedLat = DEFAULT_LAT;
+  let inlineSelectedLng = DEFAULT_LNG;
+  let inlineSelectedAddress = 'Armenia, Quindío';
+  let inlineGeocodeTimer: any = null;
+
+  function createInlinePinIcon(L: any) {
+    return L.divIcon({
+      className: 'custom-pin-marker',
+      html: `
+        <div class="pin-svg-wrapper">
+          <div class="pin-pulse-base"></div>
+          <svg width="38" height="48" viewBox="0 0 38 48" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <defs>
+              <linearGradient id="pinGradOrder" x1="19" y1="0" x2="19" y2="48" gradientUnits="userSpaceOnUse">
+                <stop stop-color="#ef4444" />
+                <stop offset="1" stop-color="#b91c1c" />
+              </linearGradient>
+              <filter id="pinShadowOrder" x="-20%" y="-10%" width="140%" height="130%">
+                <feDropShadow dx="0" dy="3" stdDeviation="3" flood-color="#000000" flood-opacity="0.35"/>
+              </filter>
+            </defs>
+            <path filter="url(#pinShadowOrder)" d="M19 0C8.506 0 0 8.506 0 19C0 32.5 19 48 19 48C19 48 38 32.5 38 19C38 8.506 29.494 0 19 0Z" fill="url(#pinGradOrder)"/>
+            <circle cx="19" cy="18" r="7.5" fill="#ffffff"/>
+            <circle cx="19" cy="18" r="4" fill="#b91c1c"/>
+          </svg>
+        </div>
+      `,
+      iconSize: [38, 48],
+      iconAnchor: [19, 48],
+    });
+  }
+
+  async function reverseGeocodeInline(lat: number, lng: number) {
+    const textEl = document.getElementById('inline-map-detected-text');
+    if (textEl) {
+      textEl.textContent = 'Detectando dirección...';
+    }
+
+    clearTimeout(inlineGeocodeTimer);
+    inlineGeocodeTimer = setTimeout(async () => {
+      try {
+        const url = `https://nominatim.openstreetmap.org/reverse?format=jsonv2&lat=${lat}&lon=${lng}&accept-language=es`;
+        const res = await fetch(url, { headers: { 'Accept': 'application/json' } });
+        if (!res.ok) throw new Error('Geocoding error');
+        const data = await res.json();
+
+        const addr = data.address || {};
+        const road = addr.road || addr.pedestrian || addr.street || addr.footway || '';
+        const houseNumber = addr.house_number ? `#${addr.house_number}` : '';
+        const neighbourhood = addr.neighbourhood || addr.suburb || addr.residential || addr.quarter || '';
+        const city = addr.city || addr.town || addr.municipality || 'Armenia';
+
+        const parts: string[] = [];
+        if (road) {
+          parts.push(houseNumber ? `${road} ${houseNumber}` : road);
+        }
+        if (neighbourhood) {
+          parts.push(`Barrio ${neighbourhood}`);
+        }
+        parts.push(city);
+
+        const formatted = parts.length > 0 ? parts.join(', ') : (data.display_name?.split(',').slice(0, 3).join(',') || `Ubicación (${lat.toFixed(4)}, ${lng.toFixed(4)})`);
+        inlineSelectedAddress = formatted;
+
+        if (textEl) {
+          textEl.textContent = formatted;
+        }
+      } catch {
+        inlineSelectedAddress = `Ubicación GPS (${lat.toFixed(5)}, ${lng.toFixed(5)})`;
+        if (textEl) {
+          textEl.textContent = inlineSelectedAddress;
+        }
+      }
+    }, 320);
+  }
+
+  async function initInlineMap(initialLat = DEFAULT_LAT, initialLng = DEFAULT_LNG) {
+    const container = document.getElementById('inline-leaflet-map');
+    if (!container) return;
+
+    if (!LModule) {
+      LModule = (await import('leaflet')).default;
+    }
+    const L = LModule;
+
+    if (!inlineMap) {
+      inlineMap = L.map('inline-leaflet-map', {
+        center: [initialLat, initialLng],
+        zoom: DEFAULT_ZOOM,
+        zoomControl: true,
+      });
+
+      // OPENSTREETMAP OFICIAL: 100% GRATIS, SIN WATERMARK, NUNCA PIDE API KEY
+      L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
+        maxZoom: 19,
+        attribution: '&copy; <a href="https://www.openstreetmap.org/copyright" target="_blank" rel="noopener">OpenStreetMap</a>',
+      }).addTo(inlineMap);
+
+      const pinIcon = createInlinePinIcon(L);
+      inlineMarker = L.marker([initialLat, initialLng], {
+        icon: pinIcon,
+        draggable: true,
+      }).addTo(inlineMap);
+
+      inlineMarker.on('dragend', (e: any) => {
+        const pos = e.target.getLatLng();
+        inlineSelectedLat = pos.lat;
+        inlineSelectedLng = pos.lng;
+        reverseGeocodeInline(inlineSelectedLat, inlineSelectedLng);
+      });
+
+      inlineMap.on('click', (e: any) => {
+        const pos = e.latlng;
+        inlineSelectedLat = pos.lat;
+        inlineSelectedLng = pos.lng;
+        inlineMarker.setLatLng(pos);
+        reverseGeocodeInline(inlineSelectedLat, inlineSelectedLng);
+      });
+    } else {
+      inlineMap.setView([initialLat, initialLng], DEFAULT_ZOOM);
+      inlineMarker.setLatLng([initialLat, initialLng]);
+    }
+
+    inlineSelectedLat = initialLat;
+    inlineSelectedLng = initialLng;
+    reverseGeocodeInline(initialLat, initialLng);
+
+    setTimeout(() => {
+      inlineMap?.invalidateSize();
+    }, 180);
+  }
+
+  async function searchInlineMap(query: string) {
+    if (!query.trim() || !inlineMap) return;
+    const btn = document.getElementById('inline-map-search-btn');
+    if (btn) btn.textContent = '...';
+
+    try {
+      const q = `${query.trim()}, Armenia, Quindio, Colombia`;
+      const res = await fetch(`https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(q)}&limit=1`);
+      const data = await res.json();
+      if (data && data.length > 0) {
+        const lat = parseFloat(data[0].lat);
+        const lng = parseFloat(data[0].lon);
+        inlineSelectedLat = lat;
+        inlineSelectedLng = lng;
+        inlineMap.setView([lat, lng], 16);
+        inlineMarker.setLatLng([lat, lng]);
+        reverseGeocodeInline(lat, lng);
+      } else {
+        alert('No encontramos esa dirección en Armenia. Puedes tocar o arrastrar el marcador en el mapa.');
+      }
+    } catch (err) {
+      console.error(err);
+    } finally {
+      if (btn) btn.textContent = 'Buscar';
+    }
+  }
+
+  function toggleInlineMap(forceOpen?: boolean) {
+    const wrapper = document.getElementById('inline-map-wrapper');
+    const toggleIcon = document.getElementById('btn-toggle-map-icon');
+    const toggleText = document.getElementById('btn-toggle-map-text');
+    if (!wrapper) return;
+
+    const shouldOpen = forceOpen !== undefined ? forceOpen : wrapper.style.display === 'none';
+
+    if (shouldOpen) {
+      wrapper.style.display = 'flex';
+      if (toggleIcon) toggleIcon.textContent = '✕';
+      if (toggleText) toggleText.textContent = 'Cerrar mapa';
+
+      const latInput = document.getElementById('order-field-lat') as HTMLInputElement | null;
+      const lngInput = document.getElementById('order-field-lng') as HTMLInputElement | null;
+      const lat = latInput?.value ? parseFloat(latInput.value) : inlineSelectedLat;
+      const lng = lngInput?.value ? parseFloat(lngInput.value) : inlineSelectedLng;
+
+      initInlineMap(lat, lng);
+    } else {
+      wrapper.style.display = 'none';
+      if (toggleIcon) toggleIcon.textContent = '🗺️';
+      if (toggleText) toggleText.textContent = 'Fijar en mapa';
+    }
+  }
+
+  function locateInlineGPS() {
+    const btn = document.getElementById('btn-inline-gps');
+    if (!navigator.geolocation) {
+      alert('Tu navegador no soporta geolocalización GPS.');
+      return;
+    }
+
+    if (btn) {
+      btn.setAttribute('disabled', 'true');
+      btn.innerHTML = '<span>Localizando...</span>';
+    }
+
+    navigator.geolocation.getCurrentPosition(
+      (pos) => {
+        const lat = pos.coords.latitude;
+        const lng = pos.coords.longitude;
+        inlineSelectedLat = lat;
+        inlineSelectedLng = lng;
+
+        const latInput = document.getElementById('order-field-lat') as HTMLInputElement | null;
+        const lngInput = document.getElementById('order-field-lng') as HTMLInputElement | null;
+        const badge = document.getElementById('order-map-badge');
+        const badgeCoords = document.getElementById('order-map-badge-coords');
+
+        if (latInput) latInput.value = String(lat);
+        if (lngInput) lngInput.value = String(lng);
+        if (badgeCoords) badgeCoords.textContent = `(${lat.toFixed(4)}, ${lng.toFixed(4)})`;
+        if (badge) badge.style.display = 'flex';
+
+        if (inlineMap && inlineMarker) {
+          inlineMap.setView([lat, lng], 17);
+          inlineMarker.setLatLng([lat, lng]);
+        }
+        reverseGeocodeInline(lat, lng);
+
+        const accStatus = document.getElementById('delivery-accordion-status');
+        if (accStatus) {
+          accStatus.textContent = `✓ GPS fijado (${lat.toFixed(4)}, ${lng.toFixed(4)})`;
+        }
+
+        if (btn) {
+          btn.removeAttribute('disabled');
+          btn.innerHTML = `<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><line x1="22" y1="12" x2="18" y2="12"></line><line x1="6" y1="12" x2="2" y2="12"></line><line x1="12" y1="6" x2="12" y2="2"></line><line x1="12" y1="22" x2="12" y2="18"></line></svg><span>Mi GPS</span>`;
+        }
+      },
+      (err) => {
+        console.warn('GPS error', err);
+        alert('No se pudo obtener la ubicación GPS. Por favor permite los permisos de ubicación o toca el mapa manualmente.');
+        if (btn) {
+          btn.removeAttribute('disabled');
+          btn.innerHTML = `<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><line x1="22" y1="12" x2="18" y2="12"></line><line x1="6" y1="12" x2="2" y2="12"></line><line x1="12" y1="6" x2="12" y2="2"></line><line x1="12" y1="22" x2="12" y2="18"></line></svg><span>Mi GPS</span>`;
+        }
+      },
+      { enableHighAccuracy: true, timeout: 10000, maximumAge: 0 }
+    );
+  }
+
+  function confirmInlineLocation() {
+    const dirInput = document.getElementById('order-field-direccion') as HTMLInputElement | null;
+    const latInput = document.getElementById('order-field-lat') as HTMLInputElement | null;
+    const lngInput = document.getElementById('order-field-lng') as HTMLInputElement | null;
+    const badge = document.getElementById('order-map-badge');
+    const badgeCoords = document.getElementById('order-map-badge-coords');
+    const accStatus = document.getElementById('delivery-accordion-status');
+
+    if (dirInput && (!dirInput.value.trim() || dirInput.value.startsWith('Ubicación'))) {
+      dirInput.value = inlineSelectedAddress;
+    }
+    if (latInput) latInput.value = String(inlineSelectedLat);
+    if (lngInput) lngInput.value = String(inlineSelectedLng);
+    if (badgeCoords) badgeCoords.textContent = `(${inlineSelectedLat.toFixed(4)}, ${inlineSelectedLng.toFixed(4)})`;
+    if (badge) badge.style.display = 'flex';
+    if (accStatus) {
+      accStatus.textContent = `✓ Ubicación fijada en Maps (${inlineSelectedLat.toFixed(4)}, ${inlineSelectedLng.toFixed(4)})`;
+    }
+
+    toggleInlineMap(false);
+  }
+
   function sendWhatsAppOrder() {
     const cart = getCart();
     if (cart.length === 0) return;
+
+    if (ENABLE_BUSINESS_HOURS_RESTRICTION && !isRestaurantOpen()) {
+      alert('¡Hola! En este momento nuestro horario de atención para pedidos ha finalizado. Atendemos todos los días de 11:00 AM a 5:00 PM. ¡Te esperamos mañana!');
+      return;
+    }
 
     const sedeSelect = document.getElementById('order-field-sede') as HTMLSelectElement | null;
     const nombreInput = document.getElementById('order-field-nombre') as HTMLInputElement | null;
     const dirInput = document.getElementById('order-field-direccion') as HTMLInputElement | null;
     const notaInput = document.getElementById('order-field-nota') as HTMLInputElement | null;
+    const latInput = document.getElementById('order-field-lat') as HTMLInputElement | null;
+    const lngInput = document.getElementById('order-field-lng') as HTMLInputElement | null;
 
     const sede = sedeSelect?.value || 'Entrega a domicilio en Armenia';
     const nombre = nombreInput?.value.trim() || '';
     const direccion = dirInput?.value.trim() || '';
     const nota = notaInput?.value.trim() || '';
+    const lat = latInput?.value.trim() || '';
+    const lng = lngInput?.value.trim() || '';
 
     let msg = '*¡Hola! Quiero hacer el siguiente pedido en La Sabrosura del Mar:*\n\n';
     cart.forEach((it) => {
@@ -725,12 +1557,13 @@ import Icon from '../icons/Icon.astro';
     msg += `\n*Destino:* ${sede}`;
     if (nombre) msg += `\n*Nombre:* ${nombre}`;
     if (direccion) msg += `\n*Dirección:* ${direccion}`;
+    if (lat && lng) {
+      msg += `\n*📍 Ubicación en Google Maps (Ruta GPS):*\nhttps://www.google.com/maps/dir/?api=1&destination=${lat},${lng}`;
+    }
     if (nota) msg += `\n*Observaciones:* ${nota}`;
 
-    // Switch de desarrollo para pruebas con número demo (Item 7)
-    const demoToggle = document.getElementById('dev-demo-toggle') as HTMLInputElement | null;
-    const isDemo = demoToggle ? demoToggle.checked : false;
-    const phone = isDemo ? '573124448768' : '573113093429';
+    // Línea comercial oficial directa de La Sabrosura del Mar
+    const phone = '573113093429';
 
     const waUrl = `https://wa.me/${phone}?text=${encodeURIComponent(msg)}`;
 
@@ -740,7 +1573,7 @@ import Icon from '../icons/Icon.astro';
         event: 'whatsapp_order_sent',
         itemCount: cart.reduce((acc, it) => acc + it.cantidad, 0),
         sedeDestino: sede,
-        isDemoNumber: isDemo,
+        hasMapLocation: Boolean(lat && lng),
       });
     }
 
@@ -758,7 +1591,7 @@ import Icon from '../icons/Icon.astro';
       if (!target) return;
 
       // 1. Agregar plato (+ Pedir)
-      const addBtn = target.closest('[data-dish-add]');
+      const addBtn = target.closest('[data-dish-add]') as HTMLElement | null;
       if (addBtn) {
         e.preventDefault();
         e.stopPropagation();
@@ -766,6 +1599,22 @@ import Icon from '../icons/Icon.astro';
         const price = Number(addBtn.getAttribute('data-dish-price') || '0');
         if (name) {
           addToCart(name, price);
+
+          // Microinteracción táctil y visual: Feedback interactivo moderno
+          addBtn.classList.add('is-added');
+          const textEl = addBtn.querySelector('.btn-text');
+          if (textEl) {
+            const prevText = textEl.textContent;
+            textEl.textContent = '¡Añadido!';
+            setTimeout(() => {
+              addBtn.classList.remove('is-added');
+              if (prevText) textEl.textContent = prevText;
+            }, 1100);
+          } else {
+            setTimeout(() => {
+              addBtn.classList.remove('is-added');
+            }, 550);
+          }
         }
         return;
       }
@@ -788,6 +1637,7 @@ import Icon from '../icons/Icon.astro';
         const backdrop = document.getElementById('order-drawer-backdrop');
         backdrop?.classList.add('is-open');
         document.body.style.overflow = 'hidden';
+        triggerAccordionSuggestTooltip();
         return;
       }
 
@@ -806,9 +1656,84 @@ import Icon from '../icons/Icon.astro';
         sendWhatsAppOrder();
         return;
       }
+
+      // 5.5 Toggle Acordeón en el Encabezado de Subtotal
+      if (target.closest('#summary-accordion-header')) {
+        e.preventDefault();
+        toggleSummaryAccordion();
+        return;
+      }
+
+      // 6. Botones de mapa inline
+      if (target.closest('#btn-toggle-inline-map')) {
+        e.preventDefault();
+        const fields = document.getElementById('order-drawer-fields');
+        const header = document.getElementById('summary-accordion-header');
+        if (fields && fields.style.display === 'none') {
+          fields.style.display = 'flex';
+          header?.classList.add('is-open');
+          header?.setAttribute('aria-expanded', 'true');
+        }
+        toggleInlineMap();
+        return;
+      }
+
+      if (target.closest('#order-map-reopen-btn')) {
+        e.preventDefault();
+        const fields = document.getElementById('order-drawer-fields');
+        const header = document.getElementById('summary-accordion-header');
+        if (fields && fields.style.display === 'none') {
+          fields.style.display = 'flex';
+          header?.classList.add('is-open');
+          header?.setAttribute('aria-expanded', 'true');
+        }
+        toggleInlineMap(true);
+        return;
+      }
+
+      if (target.closest('#btn-inline-gps')) {
+        e.preventDefault();
+        locateInlineGPS();
+        return;
+      }
+
+      if (target.closest('#inline-map-confirm-btn')) {
+        e.preventDefault();
+        confirmInlineLocation();
+        return;
+      }
+
+      if (target.closest('#inline-map-search-btn')) {
+        e.preventDefault();
+        const searchInput = document.getElementById('inline-map-search-input') as HTMLInputElement | null;
+        if (searchInput?.value) searchInlineMap(searchInput.value);
+        return;
+      }
+
+      // 7. Limpiar punto del mapa
+      if (target.closest('#order-map-clear-btn')) {
+        e.preventDefault();
+        const latInput = document.getElementById('order-field-lat') as HTMLInputElement | null;
+        const lngInput = document.getElementById('order-field-lng') as HTMLInputElement | null;
+        const badge = document.getElementById('order-map-badge');
+        if (latInput) latInput.value = '';
+        if (lngInput) lngInput.value = '';
+        if (badge) badge.style.display = 'none';
+        toggleInlineMap(false);
+        return;
+      }
     });
 
     document.addEventListener('keydown', (e) => {
+      if (e.key === 'Enter') {
+        const searchInput = document.getElementById('inline-map-search-input') as HTMLInputElement | null;
+        if (document.activeElement === searchInput && searchInput?.value) {
+          e.preventDefault();
+          searchInlineMap(searchInput.value);
+          return;
+        }
+      }
+
       if (e.key === 'Escape') {
         const backdrop = document.getElementById('order-drawer-backdrop');
         if (backdrop?.classList.contains('is-open')) {

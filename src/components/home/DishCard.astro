@@ -73,8 +73,21 @@ const formatMoney = (n: number) => '$' + n.toLocaleString('es-CO');
         data-track-event="add_dish_to_bag"
         data-track-product={nombre}
         data-track-location="dish_card"
+        title={`Añadir ${nombre} a mi pedido`}
+        aria-label={`Añadir ${nombre} a mi pedido`}
       >
-        + Pedir
+        <span class="btn-icon" aria-hidden="true">
+          <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.8" stroke-linecap="round" stroke-linejoin="round">
+            <line x1="12" y1="5" x2="12" y2="19"></line>
+            <line x1="5" y1="12" x2="19" y2="12"></line>
+          </svg>
+        </span>
+        <span class="btn-text">Pedir</span>
+        <span class="btn-check-icon" aria-hidden="true">
+          <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round">
+            <polyline points="20 6 9 17 4 12"></polyline>
+          </svg>
+        </span>
       </button>
     </div>
   </div>
@@ -121,11 +134,12 @@ const formatMoney = (n: number) => '$' + n.toLocaleString('es-CO');
   }
 
   .dish__add-btn {
+    position: relative;
     display: inline-flex;
     align-items: center;
-    gap: 0.35rem;
-    padding: 0.45rem 1rem;
-    background: var(--navy-900);
+    gap: 0.4rem;
+    padding: 0.46rem 1.05rem;
+    background: linear-gradient(135deg, var(--navy-900) 0%, #0a2e52 100%);
     color: #ffffff;
     border: 1.5px solid var(--gold-500);
     border-radius: 999px;
@@ -133,21 +147,80 @@ const formatMoney = (n: number) => '$' + n.toLocaleString('es-CO');
     font-size: 0.85rem;
     font-weight: 750;
     cursor: pointer;
-    transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+    box-shadow: 0 3px 12px rgba(5, 20, 35, 0.2);
+    transition: all 0.22s cubic-bezier(0.16, 1, 0.3, 1);
     white-space: nowrap;
     margin-left: auto;
+    overflow: hidden;
+    user-select: none;
+    -webkit-user-select: none;
+  }
+
+  .dish__add-btn::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: -80%;
+    width: 50%;
+    height: 100%;
+    background: linear-gradient(
+      90deg,
+      transparent,
+      rgba(255, 255, 255, 0.25),
+      transparent
+    );
+    transform: skewX(-20deg);
+    transition: left 0.6s ease;
+    pointer-events: none;
   }
 
   .dish__add-btn:hover {
-    background: var(--gold-500);
+    background: linear-gradient(135deg, var(--gold-500) 0%, var(--gold-600, #d97706) 100%);
     color: var(--navy-950);
     border-color: var(--gold-400);
-    transform: translateY(-2px);
-    box-shadow: 0 6px 18px rgba(226, 149, 0, 0.35);
+    transform: translateY(-2px) scale(1.02);
+    box-shadow: 0 6px 18px rgba(226, 149, 0, 0.4);
+  }
+
+  .dish__add-btn:hover::before {
+    left: 130%;
   }
 
   .dish__add-btn:active {
-    transform: translateY(0);
+    transform: translateY(0) scale(0.96);
+  }
+
+  .dish__add-btn .btn-icon {
+    display: inline-flex;
+    align-items: center;
+    transition: transform 0.25s ease;
+    color: var(--gold-400);
+  }
+
+  .dish__add-btn:hover .btn-icon {
+    color: var(--navy-950);
+    transform: rotate(90deg);
+  }
+
+  .dish__add-btn .btn-check-icon {
+    display: none;
+  }
+
+  .dish__add-btn.is-added {
+    background: #10b981 !important;
+    border-color: #34d399 !important;
+    color: #ffffff !important;
+    transform: scale(1.04);
+    box-shadow: 0 0 16px rgba(16, 185, 129, 0.5) !important;
+  }
+
+  .dish__add-btn.is-added .btn-icon {
+    display: none;
+  }
+
+  .dish__add-btn.is-added .btn-check-icon {
+    display: inline-flex;
+    color: #ffffff;
   }
 </style>
 

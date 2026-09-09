@@ -157,8 +157,21 @@ const dishSlug = dishKey.replace(/[^a-z0-9]/g, '-');
           data-dish-add
           data-dish-name={nombre}
           data-dish-price={precio || 0}
+          title={`Añadir ${nombre} a mi pedido`}
+          aria-label={`Añadir ${nombre} a mi pedido`}
         >
-          <span>+ Añadir {nombre} {precio ? `(${money(precio)})` : ''}</span>
+          <span class="btn-icon" aria-hidden="true">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.8" stroke-linecap="round" stroke-linejoin="round">
+              <line x1="12" y1="5" x2="12" y2="19"></line>
+              <line x1="5" y1="12" x2="19" y2="12"></line>
+            </svg>
+          </span>
+          <span class="btn-text">Añadir a mi pedido {precio ? `(${money(precio)})` : ''}</span>
+          <span class="btn-check-icon" aria-hidden="true">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round">
+              <polyline points="20 6 9 17 4 12"></polyline>
+            </svg>
+          </span>
         </button>
       </div>
     </div>
@@ -490,23 +503,45 @@ const dishSlug = dishKey.replace(/[^a-z0-9]/g, '-');
   }
 
   .accordion-order-cta {
+    position: relative;
     display: inline-flex;
     align-items: center;
-    gap: 0.45rem;
-    background: linear-gradient(135deg, var(--teal-700), #084050);
+    gap: 0.5rem;
+    background: linear-gradient(135deg, #071f38 0%, #0a2e52 48%, #0e5a72 100%);
     color: #ffffff;
     font-family: var(--font-body);
     font-size: 0.84rem;
-    font-weight: 700;
-    padding: 0.5rem 1.05rem;
+    font-weight: 750;
+    padding: 0.52rem 1.2rem;
     border-radius: 999px;
-    border: none;
+    border: 1.5px solid rgba(226, 168, 66, 0.45);
     cursor: pointer;
     width: fit-content;
     margin-top: 0.35rem;
-    box-shadow: 0 4px 12px rgba(14, 90, 114, 0.2);
+    box-shadow: 0 4px 14px rgba(5, 20, 35, 0.22), 0 0 10px rgba(226, 168, 66, 0.18);
     transform: scale(0.96);
-    transition: all 0.22s ease;
+    transition: all 0.22s cubic-bezier(0.16, 1, 0.3, 1);
+    overflow: hidden;
+    user-select: none;
+    -webkit-user-select: none;
+  }
+
+  .accordion-order-cta::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: -80%;
+    width: 50%;
+    height: 100%;
+    background: linear-gradient(
+      90deg,
+      transparent,
+      rgba(255, 255, 255, 0.25),
+      transparent
+    );
+    transform: skewX(-20deg);
+    transition: left 0.6s ease;
+    pointer-events: none;
   }
 
   .menu-dish-card.is-expanded .accordion-order-cta {
@@ -514,9 +549,78 @@ const dishSlug = dishKey.replace(/[^a-z0-9]/g, '-');
   }
 
   .accordion-order-cta:hover {
-    background: linear-gradient(135deg, var(--teal-600), #0a4f63);
+    background: linear-gradient(135deg, #0a2e52 0%, #0e5a72 55%, #13718c 100%);
+    border-color: var(--gold-300);
     transform: translateY(-2px) scale(1.02);
-    box-shadow: 0 6px 16px rgba(14, 90, 114, 0.3);
+    box-shadow: 0 6px 18px rgba(5, 20, 35, 0.3), 0 0 14px rgba(226, 168, 66, 0.35);
+  }
+
+  .accordion-order-cta:hover::before {
+    left: 130%;
+  }
+
+  .accordion-order-cta:active {
+    transform: translateY(0) scale(0.96);
+  }
+
+  .accordion-order-cta .btn-icon {
+    display: inline-flex;
+    align-items: center;
+    transition: transform 0.25s ease;
+    color: var(--gold-400);
+  }
+
+  .accordion-order-cta:hover .btn-icon {
+    transform: rotate(90deg);
+    color: #ffffff;
+  }
+
+  .accordion-order-cta .btn-check-icon {
+    display: none;
+  }
+
+  .accordion-order-cta.is-added {
+    background: linear-gradient(135deg, #059669 0%, #10b981 100%) !important;
+    border-color: #6ee7b7 !important;
+    box-shadow: 0 0 18px rgba(16, 185, 129, 0.5) !important;
+    transform: scale(1.03);
+    color: #ffffff !important;
+  }
+
+  .accordion-order-cta.is-added .btn-icon {
+    display: none;
+  }
+
+  .accordion-order-cta.is-added .btn-check-icon {
+    display: inline-flex;
+    color: #ffffff;
+  }
+
+  /* Resalte moderno exclusivo para platos con badge 'Favorito' */
+  .menu-dish-card:has(.menu-item__badge) .menu-item__add-btn {
+    border-color: var(--gold-500) !important;
+    color: var(--gold-600) !important;
+    background: #fffdf8 !important;
+    box-shadow: 0 0 10px rgba(226, 168, 66, 0.3) !important;
+  }
+
+  .menu-dish-card:has(.menu-item__badge) .menu-item__add-btn:hover {
+    background: var(--gold-500) !important;
+    color: var(--navy-950) !important;
+    border-color: var(--gold-400) !important;
+    box-shadow: 0 4px 14px rgba(226, 168, 66, 0.45) !important;
+  }
+
+  .menu-dish-card:has(.menu-item__badge) .accordion-order-cta {
+    border: 1.5px solid var(--gold-400);
+    box-shadow: 0 4px 14px rgba(5, 20, 35, 0.25), 0 0 12px rgba(226, 168, 66, 0.26);
+  }
+
+  .menu-item__add-btn.is-added {
+    background: #10b981 !important;
+    border-color: #10b981 !important;
+    color: #ffffff !important;
+    transform: scale(1.15) !important;
   }
 
   .sr-only {
