@@ -1,0 +1,59 @@
+---
+import Icon from '../icons/Icon.astro';
+
+interface Canal {
+  id: string;
+  icono: string;
+  titulo: string;
+  subtitulo: string;
+  textoPrincipal?: string;
+  enlaces?: Array<{
+    texto: string;
+    href: string;
+    destacado?: boolean;
+  }>;
+}
+
+interface Props {
+  eyebrow: string;
+  title: string;
+  lead: string;
+  canales: Canal[];
+  avisoReservas: string;
+}
+
+const { eyebrow, title, lead, canales, avisoReservas } = Astro.props;
+---
+
+<section class="section section--sand" id="contacto">
+  <div class="container">
+    <div class="section-head section-head--center reveal">
+      <span class="eyebrow">{eyebrow}</span>
+      <h2>{title}</h2>
+      <p>{lead}</p>
+    </div>
+
+    <div class="contact-grid reveal">
+      {canales.map((c) => (
+        <div class="contact-card">
+          <div class="feature__icon">
+            <Icon name={c.icono} size={24} />
+          </div>
+          <h3>{c.titulo}</h3>
+          <p>{c.subtitulo}</p>
+          {c.textoPrincipal && (
+            <span class="big" style="display:block">{c.textoPrincipal}</span>
+          )}
+          {c.enlaces?.map((enlace) => (
+            <a class="big" href={enlace.href}>{enlace.texto}</a>
+          ))}
+        </div>
+      ))}
+    </div>
+
+    <div class="notice reveal">
+      <Icon name="notice" size={20} />
+      <p><strong>Atención al público:</strong> {avisoReservas}</p>
+    </div>
+  </div>
+</section>

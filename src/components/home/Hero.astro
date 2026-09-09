@@ -1,0 +1,56 @@
+---
+import Icon from '../icons/Icon.astro';
+
+interface Props {
+  eyebrow: string;
+  title: string;
+  titleEmphasis?: string;
+  lead: string;
+  image: {
+    src: string;
+    alt: string;
+    width: number;
+    height: number;
+  };
+  ctas: {
+    primary: { label: string; href: string; icon?: string };
+    secondary: { label: string; href: string; icon?: string };
+  };
+  badges: Array<{ icon: string; text: string; href?: string }>;
+}
+
+const { eyebrow, title, titleEmphasis, lead, image, ctas, badges } = Astro.props;
+---
+
+<section class="hero">
+  <div class="hero__media">
+    <img src={image.src} alt={image.alt} width={image.width} height={image.height} fetchpriority="high" />
+  </div>
+  <div class="container">
+    <div class="hero__inner">
+      <span class="eyebrow">{eyebrow}</span>
+      <h1>
+        {title} {titleEmphasis && <em>{titleEmphasis}</em>}
+      </h1>
+      <p>{lead}</p>
+      <div class="btn-row">
+        <a class="btn btn--primary" href={ctas.primary.href}>
+          {ctas.primary.icon && <Icon name={ctas.primary.icon} size={18} />}
+          {ctas.primary.label}
+        </a>
+        <a class="btn btn--ghost-light" href={ctas.secondary.href}>
+          {ctas.secondary.icon && <Icon name={ctas.secondary.icon} size={18} />}
+          {ctas.secondary.label}
+        </a>
+      </div>
+      <div class="hero__meta">
+        {badges.map((b) => (
+          <span>
+            <Icon name={b.icon} size={16} />
+            {b.href ? <a href={b.href} style="color:inherit;text-decoration:none">{b.text}</a> : b.text}
+          </span>
+        ))}
+      </div>
+    </div>
+  </div>
+</section>

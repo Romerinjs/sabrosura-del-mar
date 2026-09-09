@@ -1,0 +1,47 @@
+---
+import type { CategoriaMenu } from '../../types/menu';
+import MenuItem from './MenuItem.astro';
+import MenuFeature from './MenuFeature.astro';
+
+interface Props {
+  categoria: CategoriaMenu;
+}
+
+const { categoria: c } = Astro.props;
+---
+
+<section class="menu-section" id={c.id}>
+  <div class="menu-section__head">
+    <h2>{c.nombre}</h2>
+    {c.resumen && <span>{c.resumen}</span>}
+  </div>
+
+  {c.destacado && <MenuFeature feature={c.destacado} />}
+
+  {c.subgrupos ? (
+    c.subgrupos.map((sg) => (
+      <div class="menu-subgroup">
+        <h3 style="font-size:1.12rem;margin:1.6rem 0 .4rem;color:var(--teal-700);font-family:var(--font-display)">
+          {sg.nombre}
+        </h3>
+        <ul class="menu-list">
+          {sg.items.map((it) => (
+            <MenuItem {...it} />
+          ))}
+        </ul>
+      </div>
+    ))
+  ) : (
+    <ul class="menu-list">
+      {c.items?.map((it) => (
+        <MenuItem {...it} />
+      ))}
+    </ul>
+  )}
+
+  {c.notaFinal && (
+    <p style="margin-top:1.1rem;font-size:.87rem;color:var(--muted);font-style:italic">
+      Nota: {c.notaFinal}
+    </p>
+  )}
+</section>

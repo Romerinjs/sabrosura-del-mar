@@ -1,0 +1,49 @@
+---
+interface Milestone {
+  hito: string;
+  descripcion: string;
+}
+
+interface Props {
+  eyebrow: string;
+  title: string;
+  lead: string;
+  logo: {
+    src: string;
+    alt: string;
+    width: number;
+    height: number;
+  };
+  timeline: Milestone[];
+  conclusion: string;
+}
+
+const { eyebrow, title, lead, logo, timeline, conclusion } = Astro.props;
+---
+
+<section class="section section--sand" id="historia" style="padding-top:1rem">
+  <div class="container">
+    <div class="story-grid">
+      <div class="story-mark reveal">
+        <img src={logo.src} alt={logo.alt} width={logo.width} height={logo.height} loading="lazy" />
+      </div>
+
+      <div class="reveal">
+        <span class="eyebrow">{eyebrow}</span>
+        <h2 style="font-size:var(--step-3)">{title}</h2>
+        <p class="lead">{lead}</p>
+
+        <ul class="timeline">
+          {timeline.map((item) => (
+            <li>
+              <b>{item.hito}</b>
+              <p>{item.descripcion}</p>
+            </li>
+          ))}
+        </ul>
+
+        <p style="margin-top:1.8rem;font-weight:500;color:var(--ink)">{conclusion}</p>
+      </div>
+    </div>
+  </div>
+</section>

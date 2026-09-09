@@ -1,0 +1,46 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import Timeline from '../components/home/Timeline.astro';
+import { getEntry } from 'astro:content';
+
+const historia = (await getEntry('landing', 'historia'))?.data;
+---
+
+<BaseLayout
+  title="Nuestra historia y tradición costeña | La Sabrosura del Mar"
+  description="Conoce la historia de Candelaria y cómo nació La Sabrosura del Mar en Armenia en 2018. Tradición marina, pasión gastronómica y porciones generosas."
+  canonicalUrl="https://lasabrosuradelmar.com/historia"
+  activePage="inicio"
+>
+  <section class="page-hero">
+    <div class="container">
+      <span class="eyebrow">Sobre nosotros</span>
+      <h1>Nuestra historia</h1>
+      <p>El sueño de Candelaria de traer la auténtica cocina del mar al corazón del Eje Cafetero.</p>
+    </div>
+  </section>
+
+  {historia && (
+    <Timeline
+      eyebrow={historia.eyebrow}
+      title={historia.title}
+      lead={historia.lead}
+      logo={historia.logo}
+      timeline={historia.timeline}
+      conclusion={historia.conclusion}
+    />
+  )}
+
+  <section class="section">
+    <div class="container" style="max-width:800px;text-align:center">
+      <h2 style="font-size:var(--step-2);margin-bottom:1rem">Ven a vivir la experiencia</h2>
+      <p class="lead" style="margin-bottom:2rem">
+        Hoy te esperamos en nuestras dos sedes en Armenia para que disfrutes platos preparados al momento con pescado fresco y sabor costeño.
+      </p>
+      <div class="btn-row btn-row--center">
+        <a class="btn btn--primary" href="/carta">Ver la carta digital</a>
+        <a class="btn btn--outline" href="/sedes">Conocer nuestras sedes</a>
+      </div>
+    </div>
+  </section>
+</BaseLayout>

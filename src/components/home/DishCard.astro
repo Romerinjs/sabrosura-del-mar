@@ -1,0 +1,154 @@
+---
+import Icon from '../icons/Icon.astro';
+
+interface Props {
+  nombre: string;
+  descripcion: string;
+  precio: number;
+  precioAlt?: number;
+  notaPrecio?: string;
+  imagen?: string | null;
+  alt?: string;
+  wide?: boolean;
+  destacado?: boolean;
+}
+
+const {
+  nombre,
+  descripcion,
+  precio,
+  precioAlt,
+  notaPrecio,
+  imagen,
+  alt = '',
+  wide = false,
+  destacado = false,
+} = Astro.props;
+
+const formatMoney = (n: number) => '$' + n.toLocaleString('es-CO');
+---
+
+<article class:list={['dish', { 'dish--wide': wide }]}>
+  {destacado && wide && <span class="dish__tag">Favorito</span>}
+
+  {imagen ? (
+    <div class="dish__media">
+      <img src={imagen} alt={alt || nombre} width="800" height="533" loading="lazy" />
+    </div>
+  ) : (
+    <div class="dish__media dish__media--placeholder">
+      <div class="ph-inner">
+        <Icon name="camera" size={34} />
+        <b>{nombre}</b>
+        <small>Foto pendiente</small>
+      </div>
+    </div>
+  )}
+
+  <div class="dish__body">
+    <h3>{nombre}</h3>
+    <p>{descripcion}</p>
+    <div class="dish__action-row">
+      <div class="dish__price">
+        <span>{formatMoney(precio)}</span>
+        {precioAlt && (
+          <span class="dish__price-alt">
+            {notaPrecio ? `${notaPrecio}: ${formatMoney(precioAlt)}` : `Especial: ${formatMoney(precioAlt)}`}
+          </span>
+        )}
+        {!precioAlt && notaPrecio && (
+          <span class="dish__price-alt">
+            {notaPrecio}
+          </span>
+        )}
+      </div>
+
+
+      <button
+        type="button"
+        class="dish__add-btn"
+        data-dish-add
+        data-dish-name={nombre}
+        data-dish-price={precio || 0}
+        data-track-event="add_dish_to_bag"
+        data-track-product={nombre}
+        data-track-location="dish_card"
+      >
+        + Pedir
+      </button>
+    </div>
+  </div>
+</article>
+
+<style>
+  .dish__body {
+    display: flex;
+    flex-direction: column;
+    flex: 1;
+  }
+
+  .dish__body p {
+    flex: 1;
+  }
+
+  .dish__action-row {
+    display: flex;
+    align-items: flex-end;
+    justify-content: space-between;
+    gap: 0.65rem;
+    margin-top: auto;
+    padding-top: 0.85rem;
+    border-top: 1px dashed var(--line);
+    flex-wrap: wrap;
+  }
+
+  .dish__price {
+    display: flex;
+    flex-direction: column;
+    gap: 0.1rem;
+    font-family: var(--font-display);
+    font-size: 1.15rem;
+    font-weight: 800;
+    color: var(--teal-700);
+    line-height: 1.1;
+  }
+
+  .dish__price-alt {
+    font-family: var(--font-body);
+    font-size: 0.76rem;
+    font-weight: 500;
+    color: var(--muted);
+  }
+
+  .dish__add-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.35rem;
+    padding: 0.45rem 1rem;
+    background: var(--navy-900);
+    color: #ffffff;
+    border: 1.5px solid var(--gold-500);
+    border-radius: 999px;
+    font-family: var(--font-body);
+    font-size: 0.85rem;
+    font-weight: 750;
+    cursor: pointer;
+    transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+    white-space: nowrap;
+    margin-left: auto;
+  }
+
+  .dish__add-btn:hover {
+    background: var(--gold-500);
+    color: var(--navy-950);
+    border-color: var(--gold-400);
+    transform: translateY(-2px);
+    box-shadow: 0 6px 18px rgba(226, 149, 0, 0.35);
+  }
+
+  .dish__add-btn:active {
+    transform: translateY(0);
+  }
+</style>
+
+

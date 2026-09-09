@@ -1,0 +1,296 @@
+---
+import { getCollection } from 'astro:content';
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import Icon from '../../components/icons/Icon.astro';
+
+export async function getStaticPaths() {
+  const sedes = await getCollection('sedes');
+  const paths = [];
+
+  for (const sede of sedes) {
+    const shortId = sede.data.id.replace('sede-', '');
+    // Ruta limpia corta: /sedes/centro, /sedes/norte
+    paths.push({
+      params: { id: shortId },
+      props: { sede: sede.data },
+    });
+    // Alias opcional: /sedes/sede-centro, /sedes/sede-norte
+    paths.push({
+      params: { id: sede.data.id },
+      props: { sede: sede.data },
+    });
+  }
+
+  return paths;
+}
+
+const { sede } = Astro.props;
+
+const isNorte = sede.id.includes('norte');
+const pageTitle = isNorte
+  ? 'La Sabrosura del Mar — Sede Norte | Restaurante con Parqueadero en Armenia'
+  : 'La Sabrosura del Mar — Sede Centro | Restaurante y Domicilios en Armenia';
+
+const pageDesc = isNorte
+  ? 'Visita nuestra Sede Norte en Cra. 19 #15 Norte-40 (Proviteq, Armenia). Espacio amplio, ambiente familiar y parqueadero disponible. Abierto todos los días de 11:00 a. m. a 5:00 p. m.'
+  : 'Visita nuestra Sede Centro en Cra. 13 #21-32, en el corazón de Armenia. Servicio a domicilio y atención en mesa todos los días de 11:00 a. m. a 5:00 p. m.';
+
+const canonicalUrl = `https://lasabrosuradelmar.com/sedes/${sede.id.replace('sede-', '')}`;
+
+// Dirección para mapa embebido interactivo
+const mapAddress = isNorte
+  ? 'Cra. 19 #15 Norte-40, Proviteq, Armenia, Quindío'
+  : 'Cra. 13 #21-32, Centro, Armenia, Quindío';
+const mapEmbedUrl = `https://maps.google.com/maps?q=${encodeURIComponent(mapAddress)}&t=&z=16&ie=UTF8&iwloc=&output=embed`;
+
+const schemaRestaurant = {
+  '@context': 'https://schema.org',
+  '@type': 'Restaurant',
+  '@id': `${canonicalUrl}#restaurant`,
+  name: `La Sabrosura del Mar — ${sede.nombre}`,
+  servesCuisine: ['Comida de mar', 'Colombiana', 'Costeña'],
+  priceRange: '$$',
+  currenciesAccepted: 'COP',
+  image: isNorte
+    ? 'https://lasabrosuradelmar.com/assets/camarones-apanados.jpg'
+    : 'https://lasabrosuradelmar.com/assets/mojarra-frita.jpg',
+  logo: 'https://lasabrosuradelmar.com/assets/logo.png',
+  url: canonicalUrl,
+  hasMenu: 'https://lasabrosuradelmar.com/carta',
+  telephone: '+57 311 309 3429',
+  address: {
+    '@type': 'PostalAddress',
+    streetAddress: sede.direccion,
+    addressLocality: 'Armenia',
+    addressRegion: 'Quindío',
+    addressCountry: 'CO',
+  },
+  openingHoursSpecification: [
+    {
+      '@type': 'OpeningHoursSpecification',
+      dayOfWeek: ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'],
+      opens: '11:00',
+      closes: '17:00',
+    },
+  ],
+  acceptsReservations: 'False',
+  ...(sede.parqueadero
+    ? { amenityFeature: [{ '@type': 'LocationFeatureSpecification', name: 'Parqueadero', value: true }] }
+    : {}),
+};
+---
+
+<BaseLayout
+  title={pageTitle}
+  description={pageDesc}
+  canonicalUrl={canonicalUrl}
+  jsonLd={schemaRestaurant}
+  activePage="inicio"
+>
+  <section class="page-hero">
+    <div class="container">
+      <div style="display:flex;gap:0.6rem;align-items:center;margin-bottom:0.8rem">
+        <a href="/" style="color:var(--gold-300);text-decoration:none;font-size:0.85rem">Inicio</a>
+        <span style="color:rgba(255,255,255,0.4)">/</span>
+        <a href="/sedes" style="color:var(--gold-300);text-decoration:none;font-size:0.85rem">Sedes</a>
+        <span style="color:rgba(255,255,255,0.4)">/</span>
+        <span style="color:#fff;font-size:0.85rem">{sede.nombre}</span>
+      </div>
+      <span class={`venue__badge venue__badge--${sede.badge.tipo}`}>{sede.badge.texto}</span>
+      <h1>{sede.nombre}</h1>
+      <p>{sede.descripcion}</p>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="container" style="max-width:1100px">
+      <div class="venue-detail-card">
+        <!-- Columna Izquierda: Información detallada de la sede -->
+        <div class="venue-detail-info">
+          <div>
+            <h2 style="font-size:var(--step-2);margin-bottom:1.2rem">Información de la sede</h2>
+            <ul class="info-list" style="font-size:1.02rem;gap:1.15rem">
+              <li>
+                <Icon name="map-pin" size={22} />
+                <div>
+                  <strong>Dirección física</strong>
+                  <span>{sede.direccion} {sede.sector && `(${sede.sector})`} · {sede.ciudad}</span>
+                </div>
+              </li>
+              <li>
+                <Icon name="clock" size={22} />
+                <div>
+                  <strong>Horario de atención</strong>
+                  <span>{sede.horario.texto} ({sede.horario.detalle})</span>
+                </div>
+              </li>
+              <li>
+                <Icon name="phone" size={22} />
+                <div>
+                  <strong>Líneas telefónicas y WhatsApp</strong>
+                  <span>
+                    {sede.telefonos.map((t, idx) => (
+                      <>
+                        <a href={t.href} style="color:var(--teal-700);font-weight:700">{t.numero}</a> ({t.tipo})
+                        {idx < sede.telefonos.length - 1 && ' · '}
+                      </>
+                    ))}
+                  </span>
+                </div>
+              </li>
+              {sede.parqueadero && (
+                <li>
+                  <Icon name="car" size={22} />
+                  <div>
+                    <strong>Parqueadero propio vigilado</strong>
+                    <span>{sede.detalleParqueadero || 'Disponible para clientes, grupos y familias.'}</span>
+                  </div>
+                </li>
+              )}
+            </ul>
+
+            <div style="margin-top:1.6rem">
+              {sede.domicilios ? (
+                <div><span class="pill-note">Servicio a domicilio disponible en Armenia</span></div>
+              ) : (
+                <div><span class="pill-note pill-note--muted">Esta sede opera exclusivamente para atención en mesa</span></div>
+              )}
+            </div>
+          </div>
+
+          <!-- Botones de acción directa (sin botón redundante de Google Maps) -->
+          <div class="btn-row" style="margin-top:2rem">
+            <a class="btn btn--navy" href={`https://wa.me/${sede.whatsapp.phone}?text=${encodeURIComponent(sede.whatsapp.mensaje)}`} target="_blank" rel="noopener" data-track-event="whatsapp_click" data-track-location={sede.id}>
+              <Icon name="whatsapp" size={18} />
+              {sede.domicilios ? 'Pedir a domicilio' : 'Contactar por WhatsApp'}
+            </a>
+            <a class="btn btn--outline" href="/carta">
+              <Icon name="book-open" size={18} />
+              Ver la carta digital
+            </a>
+          </div>
+        </div>
+
+        <!-- Columna Derecha: Mapa embebido interactivo -->
+        <div class="venue-detail-map">
+          <div class="venue-detail-map__header">
+            <div class="venue-detail-map__title">
+              <Icon name="map-pin" size={16} />
+              <span>{sede.nombre} · {sede.direccion}</span>
+            </div>
+            <a
+              class="venue-detail-map__link"
+              href={sede.mapsUrl}
+              target="_blank"
+              rel="noopener"
+              data-track-event="maps_click"
+              data-track-location={sede.id}
+              title="Abrir en Google Maps o Waze"
+            >
+              <span>Cómo llegar</span>
+              <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"></path><polyline points="15 3 21 3 21 9"></polyline><line x1="10" y1="14" x2="21" y2="3"></line></svg>
+            </a>
+          </div>
+          <iframe
+            src={mapEmbedUrl}
+            title={`Mapa interactivo de ubicación de ${sede.nombre}`}
+            class="venue-detail-map__iframe"
+            allowfullscreen=""
+            loading="lazy"
+            referrerpolicy="no-referrer-when-downgrade"
+          ></iframe>
+        </div>
+      </div>
+
+      <div style="margin-top:2.5rem;text-align:center">
+        <a href="/sedes" style="color:var(--teal-700);font-weight:600;text-decoration:none;display:inline-flex;align-items:center;gap:0.4rem">
+          &larr; Volver al directorio de sedes
+        </a>
+      </div>
+    </div>
+  </section>
+</BaseLayout>
+
+<style>
+  .venue-detail-card {
+    background: #ffffff;
+    border: 1px solid var(--line);
+    border-radius: var(--radius-lg);
+    padding: clamp(1.4rem, 3.5vw, 2.4rem);
+    box-shadow: 0 12px 34px rgba(10, 37, 64, 0.07);
+    display: grid;
+    grid-template-columns: 1.15fr 1fr;
+    gap: clamp(1.5rem, 3vw, 2.5rem);
+    align-items: stretch;
+  }
+
+  .venue-detail-info {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+  }
+
+  .venue-detail-map {
+    display: flex;
+    flex-direction: column;
+    border-radius: var(--radius-md);
+    overflow: hidden;
+    border: 1.5px solid var(--line);
+    background: #f8fafc;
+    box-shadow: 0 4px 16px rgba(10, 37, 64, 0.05);
+    min-height: 380px;
+  }
+
+  .venue-detail-map__header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0.65rem 0.95rem;
+    background: #f1f5f9;
+    border-bottom: 1px solid var(--line);
+    font-size: 0.8rem;
+    font-weight: 600;
+  }
+
+  .venue-detail-map__title {
+    display: flex;
+    align-items: center;
+    gap: 0.4rem;
+    color: var(--navy-800, #0a2540);
+  }
+
+  .venue-detail-map__link {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.3rem;
+    color: var(--teal-700);
+    text-decoration: none;
+    font-size: 0.76rem;
+    font-weight: 700;
+    transition: color 0.18s ease;
+  }
+
+  .venue-detail-map__link:hover {
+    color: var(--gold-600);
+    text-decoration: underline;
+  }
+
+  .venue-detail-map__iframe {
+    border: 0;
+    flex-grow: 1;
+    min-height: 340px;
+    width: 100%;
+    height: 100%;
+    display: block;
+  }
+
+  @media (max-width: 860px) {
+    .venue-detail-card {
+      grid-template-columns: 1fr;
+    }
+    .venue-detail-map {
+      min-height: 320px;
+      margin-top: 1rem;
+    }
+  }
+</style>

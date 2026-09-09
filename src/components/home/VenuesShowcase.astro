@@ -1,0 +1,594 @@
+---
+import type { CollectionEntry } from 'astro:content';
+
+interface Props {
+  sedes: CollectionEntry<'sedes'>[];
+}
+
+const { sedes } = Astro.props;
+
+// Aseguramos que Sede Centro sea la primera (izquierda) y Sede Norte la segunda (derecha)
+const sortedSedes = [...sedes].sort((a, b) => {
+  const isACentro = a.data.id.includes('centro') || a.data.nombre.toLowerCase().includes('centro');
+  const isBCentro = b.data.id.includes('centro') || b.data.nombre.toLowerCase().includes('centro');
+  if (isACentro && !isBCentro) return -1;
+  if (!isACentro && isBCentro) return 1;
+  return 0;
+});
+
+// Helper para construir la URL del mapa embebido
+function getMapEmbedUrl(sedeId: string) {
+  const isNorte = sedeId.includes('norte');
+  const address = isNorte
+    ? 'Cra. 19 #15 Norte-40, Proviteq, Armenia, Quindío'
+    : 'Cra. 13 #21-32, Centro, Armenia, Quindío';
+  return `https://maps.google.com/maps?q=${encodeURIComponent(address)}&t=&z=16&ie=UTF8&iwloc=&output=embed`;
+}
+---
+
+<div class="venues-showcase" data-venues-showcase>
+  <!-- Selector de pestañas píldora (Centro a la izquierda, Norte a la derecha) -->
+  <div class="venues-tabs-nav" role="tablist" aria-label="Seleccionar sede">
+    {sortedSedes.map((sede, idx) => {
+      const slug = sede.data.id.replace('sede-', '');
+      const isActive = idx === 0;
+      return (
+        <button
+          type="button"
+          role="tab"
+          class={`venues-tab-btn ${isActive ? 'is-active' : ''}`}
+          id={`tab-${slug}`}
+          aria-controls={`panel-${slug}`}
+          aria-selected={isActive ? 'true' : 'false'}
+          tabindex={isActive ? 0 : -1}
+          data-tab-target={slug}
+        >
+          {sede.data.nombre}
+        </button>
+      );
+    })}
+  </div>
+
+  <!-- Contenedor inmersivo tipo tarjeta -->
+  <div class="venues-card-container">
+    {sortedSedes.map((sede, idx) => {
+      const slug = sede.data.id.replace('sede-', '');
+      const isNorte = slug === 'norte';
+      const isActive = idx === 0;
+      const mapUrl = getMapEmbedUrl(sede.data.id);
+      const bgImg = sede.data.imagen || (isNorte ? '/assets/sede-norte.jpg' : '/assets/sede-centro.jpg');
+      const waUrl = `https://wa.me/${sede.data.whatsapp.phone}?text=${encodeURIComponent(sede.data.whatsapp.mensaje)}`;
+      const detailUrl = `/sedes/${slug}`;
+      const eyebrowText = isNorte ? 'SECTOR PROVITEQ · ARMENIA' : 'CENTRO · ARMENIA';
+      const primaryBtnText = isNorte ? 'CONTACTAR' : 'PEDIR A DOMICILIO';
+
+      return (
+        <article
+          class={`venues-panel ${isActive ? 'is-active' : ''}`}
+          id={`panel-${slug}`}
+          role="tabpanel"
+          aria-labelledby={`tab-${slug}`}
+          hidden={!isActive}
+          data-panel-slug={slug}
+        >
+          <!-- Imagen de fondo inmersiva -->
+          <div class="venues-panel__media" aria-hidden="true">
+            <img
+              src={bgImg}
+              alt=""
+              class="venues-panel__bg-img"
+              loading="lazy"
+              width="1200"
+              height="800"
+            />
+            <div class="venues-panel__overlay"></div>
+          </div>
+
+          <!-- Contenido en dos columnas: Información y Mapa embebido -->
+          <div class="venues-panel__content">
+            <!-- Columna Izquierda: Información de la sede -->
+            <div class="venues-panel__info-col">
+              <span class="venues-panel__eyebrow">{eyebrowText}</span>
+              <h3 class="venues-panel__title">{sede.data.nombre}</h3>
+              <div class="venues-panel__rule" aria-hidden="true"></div>
+
+              <div class="venues-panel__details">
+                <p class="venues-panel__address">
+                  <strong>Dirección:</strong> {sede.data.direccion}{sede.data.sector ? `, ${sede.data.sector}` : ''}, {sede.data.ciudad}.
+                </p>
+                <p class="venues-panel__hours">
+                  <strong>Horario:</strong> {sede.data.horario.texto} ({sede.data.horario.detalle}).
+                </p>
+                {isNorte ? (
+                  <p class="venues-panel__extra">
+                    <strong>Servicios:</strong> Atención en mesa · Parqueadero propio vigilado para familias y grupos.
+                  </p>
+                ) : (
+                  <p class="venues-panel__extra">
+                    <strong>Servicios:</strong> Atención en mesa y despacho de domicilios en Armenia.
+                  </p>
+                )}
+                <p class="venues-panel__notice">
+                  <em>Atención por orden de llegada · Sin reserva previa.</em>
+                </p>
+              </div>
+
+              <!-- Fila de Botones Píldora -->
+              <div class="venues-panel__actions">
+                <a
+                  class="venues-btn-primary"
+                  href={waUrl}
+                  target="_blank"
+                  rel="noopener"
+                  data-track-event="venues_showcase_whatsapp"
+                  data-track-location={slug}
+                >
+                  {primaryBtnText}
+                </a>
+                <a
+                  class="venues-btn-secondary"
+                  href={detailUrl}
+                  data-track-event="venues_showcase_detail"
+                  data-track-location={slug}
+                >
+                  CONOCER MÁS
+                </a>
+              </div>
+            </div>
+
+            <!-- Columna Derecha: Tarjeta con Embed de Google Maps -->
+            <div class="venues-panel__map-col">
+              <div class="venues-map-card">
+                <iframe
+                  src={mapUrl}
+                  title={`Ubicación en mapa de ${sede.data.nombre}`}
+                  loading="lazy"
+                  referrerpolicy="no-referrer-when-downgrade"
+                  allowfullscreen
+                ></iframe>
+                <a
+                  class="venues-map-card__link"
+                  href={sede.data.mapsUrl}
+                  target="_blank"
+                  rel="noopener"
+                  title="Abrir en Google Maps o Waze"
+                >
+                  <span>Cómo llegar</span>
+                  <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                    <path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"></path>
+                    <polyline points="15 3 21 3 21 9"></polyline>
+                    <line x1="10" y1="14" x2="21" y2="3"></line>
+                  </svg>
+                </a>
+              </div>
+            </div>
+          </div>
+        </article>
+      );
+    })}
+  </div>
+</div>
+
+<style>
+  .venues-showcase {
+    width: 100%;
+    margin-inline: auto;
+  }
+
+  /* Selector de Pestañas Centrado Arriba */
+  .venues-tabs-nav {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.85rem;
+    margin-bottom: 2.2rem;
+    flex-wrap: wrap;
+  }
+
+  .venues-tab-btn {
+    font-family: var(--font-body);
+    font-size: 0.82rem;
+    font-weight: 650;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    padding: 0.65rem 2rem;
+    border-radius: 999px;
+    background: transparent;
+    cursor: pointer;
+    border: 1.5px solid #d1d5db;
+    color: #64748b;
+    outline: none;
+    transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+    -webkit-user-select: none;
+    user-select: none;
+  }
+
+  .venues-tab-btn:hover {
+    border-color: #94a3b8;
+    color: var(--navy-900);
+    transform: translateY(-1px);
+  }
+
+  .venues-tab-btn.is-active {
+    border: 2px solid var(--navy-900);
+    color: var(--navy-900);
+    font-weight: 750;
+    background: transparent;
+    box-shadow: 0 4px 14px rgba(5, 20, 35, 0.08);
+  }
+
+  .venues-tab-btn:focus-visible {
+    outline: 3px solid var(--gold-500);
+    outline-offset: 3px;
+  }
+
+  /* Contenedor Principal Inmersivo */
+  .venues-card-container {
+    position: relative;
+    width: 100%;
+    border-radius: clamp(24px, 3.2vw, 36px);
+    overflow: hidden;
+    background: #051423;
+    box-shadow: 0 24px 60px rgba(5, 20, 35, 0.22), 0 8px 24px rgba(5, 20, 35, 0.12);
+    min-height: 520px;
+  }
+
+  /* Paneles de Sede */
+  .venues-panel {
+    display: none;
+    position: relative;
+    width: 100%;
+    min-height: 520px;
+    animation: venueFadeIn 0.35s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+  }
+
+  .venues-panel.is-active {
+    display: block;
+  }
+
+  @keyframes venueFadeIn {
+    from {
+      opacity: 0;
+      transform: translateY(6px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+
+  /* Capa de fondo con foto y degradado cinematográfico */
+  .venues-panel__media {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 0;
+    overflow: hidden;
+  }
+
+  .venues-panel__bg-img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: center;
+    filter: brightness(0.78);
+    transform: scale(1.02);
+    transition: transform 1.2s ease;
+  }
+
+  .venues-panel.is-active .venues-panel__bg-img {
+    transform: scale(1);
+  }
+
+  .venues-panel__overlay {
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(
+      90deg,
+      rgba(5, 20, 35, 0.96) 0%,
+      rgba(5, 20, 35, 0.88) 45%,
+      rgba(5, 20, 35, 0.58) 75%,
+      rgba(5, 20, 35, 0.42) 100%
+    );
+  }
+
+  /* Distribución interior del contenido */
+  .venues-panel__content {
+    position: relative;
+    z-index: 2;
+    display: grid;
+    grid-template-columns: 1fr 1.08fr;
+    gap: clamp(1.8rem, 3.5vw, 3.2rem);
+    align-items: center;
+    padding: clamp(2rem, 4vw, 3.6rem);
+    min-height: 520px;
+  }
+
+  /* Columna Izquierda (Texto y Botones) */
+  .venues-panel__info-col {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    color: #ffffff;
+  }
+
+  .venues-panel__eyebrow {
+    font-family: var(--font-body);
+    font-size: 0.82rem;
+    font-weight: 700;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--gold-300);
+    margin-bottom: 0.75rem;
+    display: block;
+  }
+
+  .venues-panel__title {
+    font-family: var(--font-display, "Fraunces", Georgia, serif);
+    font-size: clamp(2.2rem, 3.8vw, 3.3rem);
+    font-weight: 700;
+    letter-spacing: 0.02em;
+    color: #ffffff;
+    line-height: 1.1;
+    margin: 0 0 0.9rem;
+    text-transform: uppercase;
+    text-shadow: 0 2px 14px rgba(0, 0, 0, 0.6);
+  }
+
+  .venues-panel__rule {
+    width: 48px;
+    height: 2.5px;
+    background: var(--gold-400);
+    margin-bottom: 1.35rem;
+    border-radius: 2px;
+  }
+
+  .venues-panel__details {
+    display: flex;
+    flex-direction: column;
+    gap: 0.45rem;
+    margin-bottom: 2rem;
+    max-width: 460px;
+  }
+
+  .venues-panel__details p {
+    font-size: clamp(0.9rem, 1.05vw, 0.96rem);
+    line-height: 1.55;
+    color: #e2e8f0;
+    margin: 0;
+    text-shadow: 0 1px 6px rgba(0, 0, 0, 0.5);
+  }
+
+  .venues-panel__details strong {
+    color: #ffffff;
+    font-weight: 650;
+  }
+
+  .venues-panel__notice {
+    font-size: 0.82rem !important;
+    color: var(--gold-300) !important;
+    margin-top: 0.35rem !important;
+  }
+
+  /* Botones Píldora de Acción */
+  .venues-panel__actions {
+    display: flex;
+    align-items: center;
+    gap: 0.85rem;
+    flex-wrap: wrap;
+  }
+
+  .venues-btn-primary {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0.75rem 1.85rem;
+    border-radius: 999px;
+    background: #ffffff;
+    color: #051423;
+    font-family: var(--font-body);
+    font-size: 0.82rem;
+    font-weight: 750;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    text-decoration: none;
+    transition: all 0.22s ease;
+    box-shadow: 0 6px 18px rgba(0, 0, 0, 0.25);
+    white-space: nowrap;
+  }
+
+  .venues-btn-primary:hover {
+    background: var(--gold-400);
+    color: #051423;
+    transform: translateY(-2px);
+    box-shadow: 0 10px 24px rgba(217, 154, 63, 0.4);
+  }
+
+  .venues-btn-secondary {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0.75rem 1.85rem;
+    border-radius: 999px;
+    background: rgba(30, 41, 59, 0.55);
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+    border: 1.5px solid rgba(255, 255, 255, 0.32);
+    color: #ffffff;
+    font-family: var(--font-body);
+    font-size: 0.82rem;
+    font-weight: 700;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    text-decoration: none;
+    transition: all 0.22s ease;
+    white-space: nowrap;
+  }
+
+  .venues-btn-secondary:hover {
+    background: rgba(255, 255, 255, 0.2);
+    border-color: #ffffff;
+    transform: translateY(-2px);
+  }
+
+  /* Columna Derecha (Tarjeta Flotante de Mapa) */
+  .venues-panel__map-col {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+  }
+
+  .venues-map-card {
+    position: relative;
+    width: 100%;
+    aspect-ratio: 16 / 10.5;
+    min-height: 320px;
+    max-height: 420px;
+    border-radius: 20px;
+    overflow: hidden;
+    box-shadow: 0 20px 48px rgba(0, 0, 0, 0.5);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    background: #0d2338;
+  }
+
+  .venues-map-card iframe {
+    width: 100%;
+    height: 100%;
+    border: 0;
+    display: block;
+  }
+
+  .venues-map-card__link {
+    position: absolute;
+    bottom: 12px;
+    right: 12px;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
+    background: rgba(5, 20, 35, 0.86);
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+    color: #ffffff;
+    font-size: 0.76rem;
+    font-weight: 700;
+    padding: 0.4rem 0.85rem;
+    border-radius: 999px;
+    border: 1px solid rgba(255, 255, 255, 0.3);
+    text-decoration: none;
+    transition: all 0.2s ease;
+    z-index: 5;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+  }
+
+  .venues-map-card__link:hover {
+    background: var(--gold-500);
+    color: var(--navy-950);
+    border-color: var(--gold-400);
+    transform: translateY(-1px);
+  }
+
+  /* Adaptación Responsiva (Tablets y Móviles) */
+  @media (max-width: 940px) {
+    .venues-panel__content {
+      grid-template-columns: 1fr;
+      padding: clamp(1.8rem, 4vw, 2.5rem);
+      gap: 2rem;
+    }
+
+    .venues-panel__overlay {
+      background: linear-gradient(
+        180deg,
+        rgba(5, 20, 35, 0.94) 0%,
+        rgba(5, 20, 35, 0.9) 60%,
+        rgba(5, 20, 35, 0.95) 100%
+      );
+    }
+
+    .venues-map-card {
+      aspect-ratio: 16 / 10;
+      min-height: 280px;
+    }
+  }
+
+  @media (max-width: 480px) {
+    .venues-tab-btn {
+      padding: 0.55rem 1.4rem;
+      font-size: 0.78rem;
+    }
+
+    .venues-panel__actions {
+      flex-direction: column;
+      width: 100%;
+    }
+
+    .venues-btn-primary,
+    .venues-btn-secondary {
+      width: 100%;
+    }
+
+    .venues-map-card {
+      min-height: 250px;
+    }
+  }
+</style>
+
+<script>
+  function setupVenuesShowcase() {
+    const showcases = document.querySelectorAll<HTMLElement>('[data-venues-showcase]');
+
+    showcases.forEach((showcase) => {
+      const tabButtons = showcase.querySelectorAll<HTMLButtonElement>('.venues-tab-btn');
+      const panels = showcase.querySelectorAll<HTMLElement>('.venues-panel');
+
+      const selectTab = (targetSlug: string) => {
+        tabButtons.forEach((btn) => {
+          const isMatch = btn.getAttribute('data-tab-target') === targetSlug;
+          btn.classList.toggle('is-active', isMatch);
+          btn.setAttribute('aria-selected', isMatch ? 'true' : 'false');
+          btn.setAttribute('tabindex', isMatch ? '0' : '-1');
+        });
+
+        panels.forEach((panel) => {
+          const isMatch = panel.getAttribute('data-panel-slug') === targetSlug;
+          panel.classList.toggle('is-active', isMatch);
+          if (isMatch) {
+            panel.removeAttribute('hidden');
+          } else {
+            panel.setAttribute('hidden', 'true');
+          }
+        });
+      };
+
+      tabButtons.forEach((btn, index) => {
+        btn.addEventListener('click', () => {
+          const target = btn.getAttribute('data-tab-target');
+          if (target) selectTab(target);
+        });
+
+        // Soporte de navegación accesible con flechas izquierda/derecha
+        btn.addEventListener('keydown', (e) => {
+          let newIndex = index;
+          if (e.key === 'ArrowRight' || e.key === 'ArrowDown') {
+            newIndex = (index + 1) % tabButtons.length;
+          } else if (e.key === 'ArrowLeft' || e.key === 'ArrowUp') {
+            newIndex = (index - 1 + tabButtons.length) % tabButtons.length;
+          } else {
+            return;
+          }
+          e.preventDefault();
+          const targetBtn = tabButtons[newIndex];
+          targetBtn.focus();
+          const target = targetBtn.getAttribute('data-tab-target');
+          if (target) selectTab(target);
+        });
+      });
+    });
+  }
+
+  // Inicializar en carga inicial y tras transiciones de página de Astro
+  setupVenuesShowcase();
+  document.addEventListener('DOMContentLoaded', setupVenuesShowcase);
+  document.addEventListener('astro:page-load', setupVenuesShowcase);
+</script>

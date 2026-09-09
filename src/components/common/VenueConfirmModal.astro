@@ -1,0 +1,317 @@
+---
+// Modal de confirmación para visitar sede con vista previa de imagen y animación spring
+---
+
+<div id="venue-confirm-dialog" class="venue-modal-backdrop" aria-hidden="true">
+  <div class="venue-modal-card" role="dialog" aria-modal="true" aria-labelledby="venue-confirm-title">
+    <!-- Cabecera visual con foto de la sede y botón de cierre -->
+    <div class="venue-modal-cover">
+      <img
+        id="venue-confirm-img"
+        src="/assets/sede-centro.jpg"
+        alt=""
+        class="venue-modal-cover-img"
+        loading="lazy"
+        width="500"
+        height="220"
+      />
+      <div class="venue-modal-cover-gradient"></div>
+      
+      <button type="button" class="venue-modal-close" id="venue-confirm-close" aria-label="Cerrar modal">&times;</button>
+      
+      <div class="venue-modal-pin-badge" aria-hidden="true">
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M20 10c0 6-8 12-8 12s-8-6-8-12a8 8 0 0 1 16 0Z"></path>
+          <circle cx="12" cy="10" r="3"></circle>
+        </svg>
+      </div>
+    </div>
+
+    <!-- Cuerpo del diálogo -->
+    <div class="venue-modal-body">
+      <h3 id="venue-confirm-title" class="venue-modal-title">¿Deseas visitar esta sede?</h3>
+      <p id="venue-confirm-desc" class="venue-modal-desc">
+        Vas a ingresar a la vista detallada de <strong><span id="venue-confirm-name">esta sede</span></strong> con mapa interactivo en vivo, fotografías y canales de atención directa.
+      </p>
+
+      <div class="venue-modal-actions">
+        <button type="button" class="btn btn--outline btn--sm" id="venue-confirm-cancel">
+          Cancelar
+        </button>
+        <a href="#" class="btn btn--primary btn--sm" id="venue-confirm-accept">
+          Visitar sede &rarr;
+        </a>
+      </div>
+    </div>
+  </div>
+</div>
+
+<style>
+  .venue-modal-backdrop {
+    position: fixed;
+    inset: 0;
+    background: rgba(5, 20, 35, 0.78);
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+    z-index: 9999;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 1.25rem;
+    opacity: 0;
+    visibility: hidden;
+    pointer-events: none;
+    transition: opacity 0.32s cubic-bezier(0.16, 1, 0.3, 1), visibility 0.32s cubic-bezier(0.16, 1, 0.3, 1);
+  }
+
+  .venue-modal-backdrop.is-active {
+    opacity: 1;
+    visibility: visible;
+    pointer-events: auto;
+  }
+
+  .venue-modal-card {
+    position: relative;
+    width: 100%;
+    max-width: 440px;
+    background: #ffffff;
+    border-radius: 22px;
+    border: 1px solid rgba(217, 154, 63, 0.35);
+    box-shadow: 0 25px 60px rgba(5, 20, 35, 0.45);
+    overflow: hidden;
+    text-align: center;
+    transform: translateY(28px) scale(0.92);
+    opacity: 0;
+    transition: transform 0.38s cubic-bezier(0.175, 0.885, 0.32, 1.275), opacity 0.3s ease;
+  }
+
+  .venue-modal-backdrop.is-active .venue-modal-card {
+    transform: translateY(0) scale(1);
+    opacity: 1;
+  }
+
+  /* Portada con imagen de la sede */
+  .venue-modal-cover {
+    position: relative;
+    width: 100%;
+    height: 150px;
+    overflow: hidden;
+    background: #0a2540;
+  }
+
+  .venue-modal-cover-img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: center;
+    filter: brightness(0.92);
+  }
+
+  .venue-modal-cover-gradient {
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(180deg, rgba(5, 20, 35, 0.2) 0%, rgba(5, 20, 35, 0.6) 65%, #ffffff 100%);
+  }
+
+  .venue-modal-close {
+    position: absolute;
+    top: 12px;
+    right: 14px;
+    background: rgba(5, 20, 35, 0.6);
+    backdrop-filter: blur(6px);
+    -webkit-backdrop-filter: blur(6px);
+    border: 1px solid rgba(255, 255, 255, 0.3);
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    font-size: 1.35rem;
+    line-height: 1;
+    color: #ffffff;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: background 0.18s ease, transform 0.18s ease;
+    z-index: 5;
+  }
+
+  .venue-modal-close:hover {
+    background: rgba(5, 20, 35, 0.85);
+    transform: scale(1.08);
+  }
+
+  .venue-modal-pin-badge {
+    position: absolute;
+    bottom: 4px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 52px;
+    height: 52px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, #0e5a72, #0a2540);
+    border: 2.5px solid #ffffff;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--gold-400);
+    box-shadow: 0 6px 18px rgba(5, 20, 35, 0.35);
+    z-index: 4;
+  }
+
+  /* Contenido del modal */
+  .venue-modal-body {
+    padding: 1.3rem 1.75rem 1.6rem;
+  }
+
+  .venue-modal-title {
+    font-family: var(--font-display, serif);
+    font-size: 1.4rem;
+    font-weight: 800;
+    color: #0a2540;
+    margin: 0.2rem 0 0.5rem;
+    line-height: 1.25;
+  }
+
+  .venue-modal-desc {
+    font-size: 0.92rem;
+    color: #475569;
+    line-height: 1.5;
+    margin: 0 0 1.6rem;
+  }
+
+  .venue-modal-desc strong {
+    color: #0a2540;
+    font-weight: 700;
+  }
+
+  .venue-modal-actions {
+    display: flex;
+    gap: 0.75rem;
+    justify-content: center;
+  }
+
+  .venue-modal-actions .btn {
+    flex: 1;
+    justify-content: center;
+  }
+
+  @media (max-width: 420px) {
+    .venue-modal-cover {
+      height: 120px;
+    }
+    .venue-modal-body {
+      padding: 1.2rem 1.25rem 1.4rem;
+    }
+    .venue-modal-actions {
+      flex-direction: column-reverse;
+    }
+  }
+</style>
+
+<script>
+  function setupVenueConfirmModal() {
+    const modal = document.getElementById('venue-confirm-dialog');
+    if (!modal) return;
+
+    const nameEl = document.getElementById('venue-confirm-name');
+    const imgEl = document.getElementById('venue-confirm-img') as HTMLImageElement | null;
+    const acceptBtn = document.getElementById('venue-confirm-accept') as HTMLAnchorElement | null;
+    const cancelBtn = document.getElementById('venue-confirm-cancel');
+    const closeBtn = document.getElementById('venue-confirm-close');
+
+    const closeModal = () => {
+      modal.classList.remove('is-active');
+      modal.setAttribute('aria-hidden', 'true');
+      document.body.style.overflow = '';
+    };
+
+    cancelBtn?.addEventListener('click', (e) => {
+      e.preventDefault();
+      closeModal();
+    });
+
+    closeBtn?.addEventListener('click', (e) => {
+      e.preventDefault();
+      closeModal();
+    });
+
+    const openModal = (name: string, url: string, imgSrc?: string) => {
+      if (nameEl) nameEl.textContent = name;
+      if (acceptBtn) acceptBtn.href = url;
+      if (imgEl && imgSrc) {
+        imgEl.src = imgSrc;
+      }
+      modal.classList.add('is-active');
+      modal.setAttribute('aria-hidden', 'false');
+      document.body.style.overflow = 'hidden';
+      acceptBtn?.focus();
+    };
+
+    // Exponer helper al objeto global
+    (window as any).__sabrosuraOpenVenueModal = openModal;
+    (window as any).__sabrosuraCloseVenueModal = closeModal;
+  }
+
+  // Delegación de eventos global atómica con singleton
+  if (!(window as any).__sabrosuraVenueConfirmListenerAttached) {
+    (window as any).__sabrosuraVenueConfirmListenerAttached = true;
+
+    document.addEventListener('click', (e) => {
+      const target = e.target as HTMLElement | null;
+      if (!target) return;
+
+      // 1. Si se hace clic en botones o enlaces internos (Llamar, WhatsApp, Cómo llegar), no disparar modal
+      if (
+        target.closest('.venue-inner-link') ||
+        target.closest('a[href^="tel:"]') ||
+        target.closest('a[href*="wa.me"]') ||
+        target.closest('a[href*="maps.google.com"]') ||
+        target.closest('a[href*="google.com/maps"]')
+      ) {
+        return;
+      }
+
+      // 2. Clic en tarjeta de sede
+      const card = target.closest('[data-venue-card]') as HTMLElement | null;
+      if (card) {
+        e.preventDefault();
+        const url = card.getAttribute('data-venue-url') || '/sedes';
+        const name = card.getAttribute('data-venue-name') || 'esta sede';
+        const img = card.getAttribute('data-venue-img') || '/assets/sede-centro.jpg';
+        if (typeof (window as any).__sabrosuraOpenVenueModal === 'function') {
+          (window as any).__sabrosuraOpenVenueModal(name, url, img);
+        }
+        return;
+      }
+
+      // 3. Acciones de cerrar modal
+      if (
+        target.closest('#venue-confirm-close') ||
+        target.closest('#venue-confirm-cancel') ||
+        target.id === 'venue-confirm-dialog'
+      ) {
+        e.preventDefault();
+        if (typeof (window as any).__sabrosuraCloseVenueModal === 'function') {
+          (window as any).__sabrosuraCloseVenueModal();
+        }
+        return;
+      }
+    });
+
+    // Tecla Escape para cerrar
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape') {
+        const modal = document.getElementById('venue-confirm-dialog');
+        if (modal?.classList.contains('is-active')) {
+          if (typeof (window as any).__sabrosuraCloseVenueModal === 'function') {
+            (window as any).__sabrosuraCloseVenueModal();
+          }
+        }
+      }
+    });
+  }
+
+  setupVenueConfirmModal();
+  document.addEventListener('DOMContentLoaded', setupVenueConfirmModal);
+  document.addEventListener('astro:page-load', setupVenueConfirmModal);
+</script>

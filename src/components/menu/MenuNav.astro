@@ -1,0 +1,476 @@
+---
+import Icon from '../icons/Icon.astro';
+
+interface Props {
+  categorias: Array<{ id: string; nombre: string }>;
+}
+
+const { categorias } = Astro.props;
+---
+
+<nav class="interactive-menu-nav" id="interactive-menu-nav" aria-label="Búsqueda y filtros de la carta">
+  <div class="container">
+    <div class="interactive-menu-nav__wrapper">
+      <!-- Fila 1: Barra de búsqueda en tiempo real + Contador de resultados -->
+      <div class="interactive-search-row">
+        <div class="search-input-container">
+          <Icon name="search" size={18} />
+          <input
+            type="search"
+            id="menu-live-search"
+            class="search-live-input"
+            placeholder="Buscar por plato o ingrediente (ej: camarón, mojarra, cazuela)..."
+            autocomplete="off"
+            spellcheck="false"
+            aria-label="Buscar plato en la carta"
+          />
+          <button
+            type="button"
+            id="clear-search-btn"
+            class="clear-search-btn"
+            aria-label="Borrar búsqueda"
+            title="Borrar búsqueda"
+          >
+            &times;
+          </button>
+        </div>
+
+        <div class="filter-results-badge" id="filter-results-badge" aria-live="polite">
+          <span id="results-count-text">Cargando carta...</span>
+        </div>
+      </div>
+
+      <!-- Fila 2: Selector interactivo de categorías (Píldoras) -->
+      <div class="category-filter-strip-container">
+        <div
+          class="category-filter-strip"
+          id="category-filter-strip"
+          role="tablist"
+          aria-label="Filtrar por categoría"
+        >
+          <button
+            type="button"
+            class="cat-pill is-active"
+            data-category-filter="all"
+            role="tab"
+            aria-selected="true"
+          >
+            <span>Todos los platos</span>
+          </button>
+          {categorias.map((cat) => (
+            <button
+              type="button"
+              class="cat-pill"
+              data-category-filter={cat.id}
+              role="tab"
+              aria-selected="false"
+            >
+              <span>{cat.nombre}</span>
+            </button>
+          ))}
+        </div>
+      </div>
+    </div>
+  </div>
+</nav>
+
+<style>
+  .interactive-menu-nav {
+    position: sticky;
+    top: var(--header-h);
+    z-index: 55;
+    background: rgba(255, 255, 255, 0.96);
+    backdrop-filter: blur(14px) saturate(1.6);
+    -webkit-backdrop-filter: blur(14px) saturate(1.6);
+    border-bottom: 1px solid var(--line);
+    box-shadow: 0 4px 18px rgba(5, 20, 35, 0.05);
+    transition: top 0.25s ease;
+  }
+
+  .interactive-menu-nav__wrapper {
+    padding-block: 0.75rem 0.65rem;
+    display: flex;
+    flex-direction: column;
+    gap: 0.65rem;
+  }
+
+  /* -------------------------------------------------------------
+     Fila de búsqueda
+     ------------------------------------------------------------- */
+  .interactive-search-row {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    width: 100%;
+  }
+
+  .search-input-container {
+    position: relative;
+    flex: 1;
+    display: flex;
+    align-items: center;
+  }
+
+  .search-input-container :global(svg) {
+    position: absolute;
+    left: 1rem;
+    color: var(--muted);
+    pointer-events: none;
+    transition: color 0.18s ease;
+  }
+
+  .search-live-input {
+    width: 100%;
+    font-family: var(--font-body);
+    font-size: 0.92rem;
+    padding: 0.65rem 2.5rem 0.65rem 2.7rem;
+    border: 1.5px solid var(--line);
+    border-radius: 999px;
+    background: var(--sand);
+    color: var(--navy-950);
+    transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+  }
+
+  .search-live-input:focus {
+    outline: none;
+    border-color: var(--teal-600);
+    background: #ffffff;
+    box-shadow: 0 0 0 3px rgba(27, 122, 130, 0.14);
+  }
+
+  .search-input-container:focus-within :global(svg) {
+    color: var(--teal-700);
+  }
+
+  .clear-search-btn {
+    position: absolute;
+    right: 0.75rem;
+    width: 24px;
+    height: 24px;
+    border-radius: 50%;
+    border: none;
+    background: rgba(10, 37, 64, 0.1);
+    color: var(--navy-900);
+    font-size: 1.15rem;
+    line-height: 1;
+    display: none;
+    place-items: center;
+    cursor: pointer;
+    transition: all 0.15s ease;
+    padding: 0;
+  }
+
+  .clear-search-btn:hover {
+    background: #ef4444;
+    color: #ffffff;
+  }
+
+  .clear-search-btn.is-visible {
+    display: grid;
+  }
+
+  .filter-results-badge {
+    flex-shrink: 0;
+    font-family: var(--font-body);
+    font-size: 0.78rem;
+    font-weight: 700;
+    color: var(--teal-700);
+    background: rgba(27, 122, 130, 0.08);
+    border: 1px solid rgba(27, 122, 130, 0.2);
+    padding: 0.42rem 0.85rem;
+    border-radius: 999px;
+    white-space: nowrap;
+    transition: all 0.2s ease;
+  }
+
+  /* -------------------------------------------------------------
+     Fila de categorías (Píldoras con scroll horizontal suave)
+     ------------------------------------------------------------- */
+  .category-filter-strip-container {
+    position: relative;
+    width: 100%;
+    overflow: hidden;
+  }
+
+  .category-filter-strip {
+    display: flex;
+    gap: 0.45rem;
+    overflow-x: auto;
+    scrollbar-width: none;
+    -ms-overflow-style: none;
+    padding-bottom: 0.15rem;
+    -webkit-overflow-scrolling: touch;
+    scroll-behavior: smooth;
+  }
+
+  .category-filter-strip::-webkit-scrollbar {
+    display: none;
+  }
+
+  .cat-pill {
+    flex-shrink: 0;
+    font-family: var(--font-body);
+    font-size: 0.84rem;
+    font-weight: 650;
+    color: var(--ink-soft);
+    background: #ffffff;
+    border: 1.5px solid var(--line);
+    border-radius: 999px;
+    padding: 0.44rem 0.95rem;
+    cursor: pointer;
+    transition: all 0.18s cubic-bezier(0.16, 1, 0.3, 1);
+    white-space: nowrap;
+    -webkit-user-select: none;
+    user-select: none;
+  }
+
+  .cat-pill:hover {
+    border-color: var(--teal-600);
+    color: var(--teal-700);
+    transform: translateY(-1px);
+  }
+
+  .cat-pill.is-active {
+    background: var(--navy-950);
+    color: #ffffff;
+    border-color: var(--navy-950);
+    box-shadow: 0 4px 14px rgba(5, 20, 35, 0.2);
+    transform: translateY(-1px);
+  }
+
+  @media (max-width: 640px) {
+    .interactive-menu-nav__wrapper {
+      padding-block: 0.6rem 0.5rem;
+      gap: 0.5rem;
+    }
+
+    .interactive-search-row {
+      gap: 0.5rem;
+    }
+
+    .search-live-input {
+      font-size: 0.85rem;
+      padding: 0.58rem 2.2rem 0.58rem 2.4rem;
+    }
+
+    .filter-results-badge {
+      font-size: 0.72rem;
+      padding: 0.32rem 0.65rem;
+    }
+
+    .cat-pill {
+      font-size: 0.78rem;
+      padding: 0.38rem 0.8rem;
+    }
+  }
+</style>
+
+<script>
+  function setupInteractiveMenu() {
+    const searchInput = document.getElementById('menu-live-search') as HTMLInputElement | null;
+    const clearBtn = document.getElementById('clear-search-btn') as HTMLButtonElement | null;
+    const countBadge = document.getElementById('results-count-text');
+    const pills = document.querySelectorAll<HTMLButtonElement>('[data-category-filter]');
+    const sections = document.querySelectorAll<HTMLElement>('.menu-section');
+    const emptyState = document.getElementById('menu-empty');
+    const emptyTitle = emptyState?.querySelector('.menu-empty__title');
+    const emptyDesc = emptyState?.querySelector('.menu-empty__desc');
+    const resetBtn = document.getElementById('reset-carta-filter');
+
+    if (!sections.length) return;
+
+    // Conteo total de platos en la carta
+    const allMenuItems = document.querySelectorAll<HTMLElement>('.menu-item');
+    const totalDishes = allMenuItems.length;
+
+    let activeCategory = 'all';
+    let searchQuery = '';
+
+    // Normalizador de texto para búsquedas en español (elimina acentos y tildes)
+    function normalize(str: string): string {
+      return (str || '')
+        .toLowerCase()
+        .normalize('NFD')
+        .replace(/[\u0300-\u036f]/g, '')
+        .trim();
+    }
+
+    function filterDishes() {
+      let matchedCount = 0;
+      const q = normalize(searchQuery);
+
+      sections.forEach((section) => {
+        const sectionId = section.id;
+        const isCategoryMatch = activeCategory === 'all' || sectionId === activeCategory;
+
+        if (!isCategoryMatch) {
+          section.classList.add('is-hidden');
+          return;
+        }
+
+        let sectionMatchedItems = 0;
+
+        // Platos individuales de la sección
+        const items = section.querySelectorAll<HTMLElement>('.menu-item');
+        items.forEach((item) => {
+          const name = normalize(item.getAttribute('data-dish-name') || '');
+          const desc = normalize(item.getAttribute('data-dish-desc') || '');
+
+          const matchesQuery = q === '' || name.includes(q) || desc.includes(q);
+
+          if (matchesQuery) {
+            item.classList.remove('is-hidden');
+            sectionMatchedItems++;
+            matchedCount++;
+          } else {
+            item.classList.add('is-hidden');
+          }
+        });
+
+        // Plato destacado con foto dentro de la sección (si existe)
+        const feature = section.querySelector<HTMLElement>('.menu-feature');
+        if (feature) {
+          const fName = normalize(feature.getAttribute('data-dish-name') || '');
+          const fDesc = normalize(feature.getAttribute('data-dish-desc') || '');
+          const featureMatches = q === '' || fName.includes(q) || fDesc.includes(q);
+
+          if (featureMatches) {
+            feature.classList.remove('is-hidden');
+            sectionMatchedItems++;
+            if (q !== '') matchedCount++;
+          } else {
+            feature.classList.add('is-hidden');
+          }
+        }
+
+        // Subgrupos de platos (ej: pescados específicos o acompañamientos)
+        const subgroups = section.querySelectorAll<HTMLElement>('.menu-subgroup');
+        subgroups.forEach((sg) => {
+          const hasVisible = sg.querySelectorAll('.menu-item:not(.is-hidden)').length > 0;
+          if (hasVisible) {
+            sg.classList.remove('is-hidden');
+          } else {
+            sg.classList.add('is-hidden');
+          }
+        });
+
+        // Mostrar u ocultar la sección completa según sus resultados
+        if (sectionMatchedItems > 0) {
+          section.classList.remove('is-hidden');
+        } else {
+          section.classList.add('is-hidden');
+        }
+      });
+
+      // Actualizar el contador en vivo
+      if (countBadge) {
+        if (activeCategory === 'all' && q === '') {
+          countBadge.textContent = `${totalDishes} platos disponibles`;
+        } else if (q !== '') {
+          countBadge.textContent = `${matchedCount} resultado${matchedCount === 1 ? '' : 's'}`;
+        } else {
+          countBadge.textContent = `${matchedCount} plato${matchedCount === 1 ? '' : 's'}`;
+        }
+      }
+
+      // Estado vacío
+      if (emptyState) {
+        if (matchedCount === 0) {
+          emptyState.classList.add('is-visible');
+          if (emptyTitle) {
+            emptyTitle.textContent = q !== '' 
+              ? `No encontramos platos con "${searchQuery}"`
+              : 'No hay platos disponibles en esta categoría';
+          }
+          if (emptyDesc) {
+            emptyDesc.textContent = q !== ''
+              ? 'Verifica la ortografía o intenta con palabras como camarón, arroz, cazuela o pescado.'
+              : 'Puedes seleccionar "Todos los platos" para explorar el resto de nuestra carta.';
+          }
+        } else {
+          emptyState.classList.remove('is-visible');
+        }
+      }
+    }
+
+    // Listener para los botones de píldoras de categoría
+    pills.forEach((pill) => {
+      pill.addEventListener('click', () => {
+        const cat = pill.getAttribute('data-category-filter') || 'all';
+        activeCategory = cat;
+
+        pills.forEach((p) => {
+          const isActive = p === pill;
+          p.classList.toggle('is-active', isActive);
+          p.setAttribute('aria-selected', String(isActive));
+        });
+
+        // Scroll horizontal suave del pill hacia el centro visible
+        pill.scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'center' });
+
+        filterDishes();
+
+        // Scroll suave al inicio de los resultados si el usuario está muy abajo
+        const cartaContainer = document.getElementById('carta');
+        if (cartaContainer) {
+          const rect = cartaContainer.getBoundingClientRect();
+          if (rect.top < 0) {
+            window.scrollTo({
+              top: window.scrollY + rect.top - 130,
+              behavior: 'smooth',
+            });
+          }
+        }
+      });
+    });
+
+    // Listener para el buscador en tiempo real
+    if (searchInput) {
+      searchInput.addEventListener('input', () => {
+        searchQuery = searchInput.value;
+        if (clearBtn) {
+          clearBtn.classList.toggle('is-visible', searchQuery.trim().length > 0);
+        }
+        filterDishes();
+      });
+    }
+
+    // Botón para limpiar búsqueda
+    if (clearBtn && searchInput) {
+      clearBtn.addEventListener('click', () => {
+        searchInput.value = '';
+        searchQuery = '';
+        clearBtn.classList.remove('is-visible');
+        searchInput.focus();
+        filterDishes();
+      });
+    }
+
+    // Botón de restablecer desde el estado vacío
+    if (resetBtn) {
+      resetBtn.addEventListener('click', () => {
+        if (searchInput) {
+          searchInput.value = '';
+          searchQuery = '';
+        }
+        if (clearBtn) {
+          clearBtn.classList.remove('is-visible');
+        }
+        activeCategory = 'all';
+        pills.forEach((p) => {
+          const isAll = p.getAttribute('data-category-filter') === 'all';
+          p.classList.toggle('is-active', isAll);
+          p.setAttribute('aria-selected', String(isAll));
+        });
+        filterDishes();
+      });
+    }
+
+    // Inicializar carta
+    filterDishes();
+  }
+
+  // Soporte para carga normal y ClientRouter de Astro
+  document.addEventListener('DOMContentLoaded', setupInteractiveMenu);
+  document.addEventListener('astro:page-load', setupInteractiveMenu);
+</script>

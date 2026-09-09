@@ -1,0 +1,64 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import ContactCard from '../components/home/ContactCard.astro';
+import { getEntry, getCollection } from 'astro:content';
+
+const contacto = (await getEntry('landing', 'contacto'))?.data;
+const sedes = await getCollection('sedes');
+---
+
+<BaseLayout
+  title="Contacto y atención al cliente | La Sabrosura del Mar"
+  description="Comunícate con La Sabrosura del Mar en Armenia. Teléfono, WhatsApp, domicilios y direcciones de nuestras sedes Centro y Norte."
+  canonicalUrl="https://lasabrosuradelmar.com/contacto"
+  activePage="inicio"
+>
+  <section class="page-hero">
+    <div class="container">
+      <span class="eyebrow">Canales de atención</span>
+      <h1>Contacto</h1>
+      <p>Estamos disponibles para resolver tus dudas y atender tus pedidos en Armenia.</p>
+    </div>
+  </section>
+
+  {contacto && (
+    <ContactCard
+      eyebrow={contacto.eyebrow}
+      title={contacto.title}
+      lead={contacto.lead}
+      canales={contacto.canales}
+      avisoReservas={contacto.avisoReservas}
+    />
+  )}
+
+  <section class="section" style="padding-top:0">
+    <div class="container">
+      <div class="section-head section-head--center">
+        <span class="eyebrow">Dónde encontrarnos</span>
+        <h2>Direcciones de nuestras dos sedes</h2>
+      </div>
+
+      <div class="venue-grid">
+        {sedes.map((s) => (
+          <div style="background:#fff;border:1px solid var(--line);border-radius:var(--radius);padding:1.8rem;box-shadow:var(--shadow-sm)">
+            <h3 style="font-size:1.3rem;margin-bottom:.4rem">{s.data.nombre}</h3>
+            <p style="color:var(--muted);font-size:.92rem;margin-bottom:1rem">
+              📍 {s.data.direccion} {s.data.sector && `(${s.data.sector})`}, {s.data.ciudad}
+            </p>
+            <p style="font-size:.9rem;margin-bottom:1.4rem">
+              ⏰ {s.data.horario.texto} · {s.data.horario.detalle}
+            </p>
+            <div class="btn-row">
+              <a class="btn btn--navy btn--sm" href={s.data.mapsUrl} target="_blank" rel="noopener">
+                Ver en Google Maps
+              </a>
+              <a class="btn btn--outline btn--sm" href={`/sedes/${s.data.id.replace('sede-', '')}`}>
+                Ver detalles
+              </a>
+            </div>
+          </div>
+        ))}
+      </div>
+    </div>
+  </section>
+</BaseLayout>

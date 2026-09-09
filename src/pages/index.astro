@@ -1,0 +1,218 @@
+---
+import { getEntry, getCollection } from 'astro:content';
+import BaseLayout from '../layouts/BaseLayout.astro';
+import Hero from '../components/home/Hero.astro';
+import Intro from '../components/home/Intro.astro';
+import DishCard from '../components/home/DishCard.astro';
+import Diferenciales from '../components/home/Diferenciales.astro';
+import WaveDivider from '../components/home/WaveDivider.astro';
+import Timeline from '../components/home/Timeline.astro';
+import VenueCard from '../components/home/VenueCard.astro';
+import VenuesShowcase from '../components/home/VenuesShowcase.astro';
+import ContactCard from '../components/home/ContactCard.astro';
+
+// Cargar módulos MDX
+const site = (await getEntry('meta', 'site'))?.data;
+const hero = (await getEntry('landing', 'hero'))?.data;
+const intro = (await getEntry('landing', 'intro'))?.data;
+const diferenciales = (await getEntry('landing', 'diferenciales'))?.data;
+const historia = (await getEntry('landing', 'historia'))?.data;
+const platosDestacados = (await getEntry('landing', 'platos-destacados'))?.data;
+const contacto = (await getEntry('landing', 'contacto'))?.data;
+const sedes = await getCollection('sedes');
+
+// Schema.org Restaurant para ambas sedes
+const schemaJsonLd = {
+  '@context': 'https://schema.org',
+  '@graph': [
+    {
+      '@type': 'Restaurant',
+      '@id': 'https://lasabrosuradelmar.com/#sede-centro',
+      name: 'La Sabrosura del Mar — Sede Centro',
+      servesCuisine: ['Comida de mar', 'Colombiana', 'Costeña'],
+      priceRange: '$$',
+      currenciesAccepted: 'COP',
+      image: 'https://lasabrosuradelmar.com/assets/mojarra-frita.jpg',
+      logo: 'https://lasabrosuradelmar.com/assets/logo.png',
+      url: 'https://lasabrosuradelmar.com/',
+      hasMenu: 'https://lasabrosuradelmar.com/carta',
+      telephone: '+57 311 309 3429',
+      address: {
+        '@type': 'PostalAddress',
+        streetAddress: 'Cra. 13 #21-32',
+        addressLocality: 'Armenia',
+        addressRegion: 'Quindío',
+        addressCountry: 'CO',
+      },
+      openingHoursSpecification: [
+        {
+          '@type': 'OpeningHoursSpecification',
+          dayOfWeek: ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'],
+          opens: '11:00',
+          closes: '17:00',
+        },
+      ],
+      acceptsReservations: 'False',
+      sameAs: [
+        'https://www.instagram.com/lasabrosuradelmar',
+        'https://www.facebook.com/lasabrosuradelmar',
+        'https://www.tiktok.com/@lasabrosuradelmar',
+      ],
+    },
+    {
+      '@type': 'Restaurant',
+      '@id': 'https://lasabrosuradelmar.com/#sede-norte',
+      name: 'La Sabrosura del Mar — Sede Norte',
+      servesCuisine: ['Comida de mar', 'Colombiana', 'Costeña'],
+      priceRange: '$$',
+      currenciesAccepted: 'COP',
+      image: 'https://lasabrosuradelmar.com/assets/camarones-apanados.jpg',
+      logo: 'https://lasabrosuradelmar.com/assets/logo.png',
+      url: 'https://lasabrosuradelmar.com/',
+      hasMenu: 'https://lasabrosuradelmar.com/carta',
+      telephone: '+57 311 309 3429',
+      address: {
+        '@type': 'PostalAddress',
+        streetAddress: 'Cra. 19 #15 Norte-40, sector Proviteq',
+        addressLocality: 'Armenia',
+        addressRegion: 'Quindío',
+        addressCountry: 'CO',
+      },
+      openingHoursSpecification: [
+        {
+          '@type': 'OpeningHoursSpecification',
+          dayOfWeek: ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'],
+          opens: '11:00',
+          closes: '17:00',
+        },
+      ],
+      acceptsReservations: 'False',
+      amenityFeature: [{ '@type': 'LocationFeatureSpecification', name: 'Parqueadero', value: true }],
+    },
+  ],
+};
+---
+
+<BaseLayout
+  title={site?.title}
+  description={site?.description}
+  ogImage={site?.ogImage}
+  canonicalUrl={site?.canonicalUrl}
+  activePage="inicio"
+  jsonLd={schemaJsonLd}
+>
+  {hero && (
+    <Hero
+      eyebrow={hero.eyebrow}
+      title={hero.title}
+      titleEmphasis={hero.titleEmphasis}
+      lead={hero.lead}
+      image={hero.image}
+      ctas={hero.ctas}
+      badges={hero.badges}
+    />
+  )}
+
+  {intro && (
+    <Intro
+      eyebrow={intro.eyebrow}
+      title={intro.title}
+      figure={intro.figure}
+      ctas={intro.ctas}
+    >
+      <p class="lead">
+        En La Sabrosura del Mar encuentras una carta llena de sabores: pescados, cazuelas, ceviches, arroces marineros, camarones, langostinos, pastas y especialidades de la casa.
+      </p>
+      <p class="lead">
+        Cada plato combina ingredientes de calidad, pescado fresco y el toque costeño de Candelaria para ofrecerte una experiencia auténtica, abundante y llena de sabor.
+      </p>
+    </Intro>
+  )}
+
+  {platosDestacados && (
+    <section class="section" id="destacados">
+      <div class="container">
+        <div class="section-head section-head--center reveal">
+          <span class="eyebrow">{platosDestacados.eyebrow}</span>
+          <h2>{platosDestacados.title}</h2>
+          <p>{platosDestacados.lead}</p>
+        </div>
+
+        <div class="dish-grid reveal">
+          {platosDestacados.platos.map((plato: any) => (
+            <DishCard {...plato} />
+          ))}
+        </div>
+
+        <div class="btn-row btn-row--center" style="margin-top:2.6rem">
+          <a class="btn btn--navy" href={platosDestacados.cta.href}>
+            {platosDestacados.cta.label}
+          </a>
+        </div>
+      </div>
+    </section>
+  )}
+
+  {diferenciales && (
+    <>
+      <WaveDivider position="top" fill="#0a2540" />
+      <Diferenciales
+        eyebrow={diferenciales.eyebrow}
+        title={diferenciales.title}
+        diferenciales={diferenciales.diferenciales}
+      />
+      <WaveDivider position="bottom" fill="#0a2540" />
+    </>
+  )}
+
+  {historia && (
+    <Timeline
+      eyebrow={historia.eyebrow}
+      title={historia.title}
+      lead={historia.lead}
+      logo={historia.logo}
+      timeline={historia.timeline}
+      conclusion={historia.conclusion}
+    />
+  )}
+
+  <section class="section" id="sedes">
+    <div class="container">
+      <div class="section-head section-head--center reveal">
+        <span class="eyebrow">Sedes</span>
+        <h2>Dos sedes, el mismo sabor</h2>
+        <p>Elige la sede más conveniente y disfruta nuestra carta de comida de mar en Armenia.</p>
+      </div>
+
+      <div class="reveal">
+        <VenuesShowcase sedes={sedes} />
+      </div>
+    </div>
+  </section>
+
+  <!-- CTA Band -->
+  <section class="cta-band">
+    <div class="cta-band__media">
+      <img src="/assets/camarones-apanados.jpg" alt="" role="presentation" width="1400" height="933" loading="lazy" />
+    </div>
+    <div class="container">
+      <span class="eyebrow" style="color:var(--gold-300)">¿Se te antojó?</span>
+      <h2>Descubre nuestra carta</h2>
+      <p>Disfruta auténtica comida de mar sin salir de Armenia.</p>
+      <div class="btn-row btn-row--center">
+        <a class="btn btn--primary" href="/carta">Explorar la carta</a>
+        <a class="btn btn--ghost-light" href="#sedes">Elegir sede</a>
+      </div>
+    </div>
+  </section>
+
+  {contacto && (
+    <ContactCard
+      eyebrow={contacto.eyebrow}
+      title={contacto.title}
+      lead={contacto.lead}
+      canales={contacto.canales}
+      avisoReservas={contacto.avisoReservas}
+    />
+  )}
+</BaseLayout>

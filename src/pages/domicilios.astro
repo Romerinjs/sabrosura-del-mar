@@ -1,0 +1,82 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import Icon from '../components/icons/Icon.astro';
+import DishCard from '../components/home/DishCard.astro';
+import { getEntry } from 'astro:content';
+
+const platosDestacados = (await getEntry('landing', 'platos-destacados'))?.data;
+const platosDomicilio = platosDestacados?.platos.slice(0, 4) || [];
+---
+
+<BaseLayout
+  title="Domicilios de comida de mar en Armenia | La Sabrosura del Mar"
+  description="Pide auténtica comida de mar a domicilio en Armenia, Quindío. Pescados, cazuelas, arroces marineros y camarones apanados. Despacho directo desde nuestra Sede Centro."
+  canonicalUrl="https://lasabrosuradelmar.com/domicilios"
+  activePage="carta"
+>
+  <section class="page-hero">
+    <div class="container">
+      <span class="eyebrow">Servicio a domicilio</span>
+      <h1>Comida de mar a tu casa u oficina en Armenia</h1>
+      <p>Disfruta de nuestros pescados frescos, arroces marineros y cazuelas calientes directamente en tu puerta.</p>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="container" style="max-width:900px">
+      <div style="background:#fff;border:1px solid var(--line);border-radius:var(--radius-lg);padding:clamp(1.5rem,4vw,2.5rem);box-shadow:var(--shadow)">
+        <h2 style="font-size:var(--step-2);margin-bottom:1rem">Cómo pedir tu domicilio</h2>
+        
+        <div style="display:grid;gap:1.5rem;grid-template-columns:repeat(auto-fit, minmax(220px, 1fr));margin-bottom:2rem">
+          <div style="background:var(--sand);padding:1.4rem;border-radius:var(--radius)">
+            <strong style="display:block;font-size:1.1rem;color:var(--navy-900);margin-bottom:.4rem">1. Elige tu plato</strong>
+            <p style="font-size:.9rem;color:var(--ink-soft);margin:0">Consulta nuestra carta digital completa con precios actualizados.</p>
+          </div>
+          <div style="background:var(--sand);padding:1.4rem;border-radius:var(--radius)">
+            <strong style="display:block;font-size:1.1rem;color:var(--navy-900);margin-bottom:.4rem">2. Escríbenos o llama</strong>
+            <p style="font-size:.9rem;color:var(--ink-soft);margin:0">Envía tu pedido y dirección exacta por WhatsApp o línea telefónica.</p>
+          </div>
+          <div style="background:var(--sand);padding:1.4rem;border-radius:var(--radius)">
+            <strong style="display:block;font-size:1.1rem;color:var(--navy-900);margin-bottom:.4rem">3. Recibe y disfruta</strong>
+            <p style="font-size:.9rem;color:var(--ink-soft);margin:0">Despacho desde nuestra Sede Centro todos los días de 11:00 a. m. a 5:00 p. m.</p>
+          </div>
+        </div>
+
+        <div style="background:var(--teal-100);border:1px solid rgba(14,90,114,0.2);padding:1.2rem 1.5rem;border-radius:var(--radius);margin-bottom:2rem">
+          <h3 style="color:var(--teal-700);margin:0 0 .5rem;font-size:1.1rem">Líneas directas de domicilios:</h3>
+          <p style="margin:0;font-size:1.05rem">
+            📲 WhatsApp & Celular: <a href="tel:+573113093429" style="font-weight:700;color:var(--teal-700)">311 309 3429</a><br />
+            ☎️ Teléfono fijo: <a href="tel:+576067477424" style="font-weight:700;color:var(--teal-700)">606 747 7424</a>
+          </p>
+        </div>
+
+        <div class="btn-row btn-row--center">
+          <a class="btn btn--primary" href="https://wa.me/573113093429?text=Hola%2C%20quiero%20hacer%20un%20pedido%20a%20domicilio%20en%20Armenia" target="_blank" rel="noopener" data-track-event="whatsapp_click" data-track-location="landing_domicilios">
+            <Icon name="whatsapp" size={20} />
+            Hacer pedido ahora por WhatsApp
+          </a>
+          <a class="btn btn--navy" href="/carta">
+            <Icon name="book-open" size={18} />
+            Explorar la carta completa
+          </a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Platos favoritos para domicilio -->
+  <section class="section section--sand">
+    <div class="container">
+      <div class="section-head section-head--center">
+        <span class="eyebrow">Los más pedidos</span>
+        <h2>Favoritos para pedir a domicilio</h2>
+      </div>
+
+      <div class="dish-grid">
+        {platosDomicilio.map((plato: any) => (
+          <DishCard {...plato} />
+        ))}
+      </div>
+    </div>
+  </section>
+</BaseLayout>

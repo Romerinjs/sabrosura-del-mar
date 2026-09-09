@@ -1,0 +1,35 @@
+---
+import { getCollection } from 'astro:content';
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import VenueCard from '../../components/home/VenueCard.astro';
+import VenuesShowcase from '../../components/home/VenuesShowcase.astro';
+import Icon from '../../components/icons/Icon.astro';
+
+const sedes = await getCollection('sedes');
+---
+
+<BaseLayout
+  title="Nuestras sedes en Armenia | La Sabrosura del Mar"
+  description="Conoce nuestras dos sedes en Armenia, Quindío: Sede Centro (Cra. 13 con servicio a domicilio) y Sede Norte (Cra. 19 Proviteq, más amplia y con parqueadero)."
+  canonicalUrl="https://lasabrosuradelmar.com/sedes"
+  activePage="inicio"
+>
+  <section class="page-hero">
+    <div class="container">
+      <span class="eyebrow">Ubicaciones</span>
+      <h1>Nuestras sedes en Armenia</h1>
+      <p>Dos espacios con el mismo auténtico sabor costeño. Elige la sede más conveniente para ti.</p>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="container">
+      <VenuesShowcase sedes={sedes} />
+
+      <div class="notice reveal" style="margin-top:3rem">
+        <Icon name="notice" size={20} />
+        <p><strong>Atención en mesa:</strong> No manejamos reservas en ninguna de nuestras dos sedes. La atención se realiza directamente por orden de llegada.</p>
+      </div>
+    </div>
+  </section>
+</BaseLayout>

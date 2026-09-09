@@ -1,0 +1,63 @@
+---
+import Icon from '../icons/Icon.astro';
+
+interface Props {
+  feature: {
+    nombre: string;
+    descripcion: string;
+    precio: number;
+    precioNota?: string;
+    imagen?: string | null;
+    alt?: string;
+    pendienteFoto?: boolean;
+  };
+}
+
+const { feature: f } = Astro.props;
+const money = (n: number) => '$' + n.toLocaleString('es-CO');
+---
+
+<div class="menu-feature" data-dish-name={f.nombre} data-dish-desc={f.descripcion}>
+  {f.imagen ? (
+    <img src={f.imagen} alt={f.alt || f.nombre} width="480" height="320" loading="lazy" />
+  ) : (
+    <div class="dish__media dish__media--placeholder" style="min-height:180px">
+      <div class="ph-inner">
+        <Icon name="camera" size={30} />
+        <b>{f.nombre}</b>
+        <small>Foto pendiente</small>
+      </div>
+    </div>
+  )}
+
+  <div class="menu-feature__body">
+    <span class="eyebrow" style="font-size:0.68rem;margin-bottom:0.4rem">Recomendado del chef</span>
+    <h3>{f.nombre}</h3>
+    <p>{f.descripcion}</p>
+    <div style="display:flex;align-items:center;justify-content:space-between;gap:1rem;margin-top:0.4rem">
+      <div class="menu-feature__price">
+        {money(f.precio)}
+        {f.precioNota && (
+          <span style="font-family:var(--font-body);font-size:.78rem;font-weight:500;color:var(--muted)">
+            · {f.precioNota}
+          </span>
+        )}
+      </div>
+      <button
+        type="button"
+        class="menu-item__add-btn"
+        data-dish-add
+        data-dish-name={f.nombre}
+        data-dish-price={f.precio || 0}
+        data-track-event="add_dish_to_bag"
+        data-track-product={f.nombre}
+        data-track-location="menu_feature"
+        title={`Añadir ${f.nombre} a mi pedido`}
+        aria-label={`Añadir ${f.nombre} a mi pedido`}
+      >
+        <span aria-hidden="true">+</span>
+        <span class="sr-only">Añadir a mi pedido</span>
+      </button>
+    </div>
+  </div>
+</div>

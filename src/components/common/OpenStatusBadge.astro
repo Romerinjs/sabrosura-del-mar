@@ -1,0 +1,190 @@
+---
+interface Props {
+  size?: 'sm' | 'md';
+  variant?: 'light' | 'dark';
+  class?: string;
+}
+
+const { size = 'sm', variant = 'light', class: className = '' } = Astro.props;
+---
+
+<div
+  class:list={[
+    'open-status-badge',
+    `open-status-badge--${size}`,
+    `open-status-badge--${variant}`,
+    className,
+  ]}
+  data-open-status-badge
+>
+  <span class="status-dot" aria-hidden="true"></span>
+  <span class="status-text">Consultando horario...</span>
+</div>
+
+<style>
+  .open-status-badge {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.45rem;
+    padding: 0.28rem 0.75rem;
+    border-radius: 999px;
+    font-size: 0.78rem;
+    font-weight: 650;
+    line-height: 1;
+    white-space: nowrap;
+    transition: all 0.2s ease;
+    margin-inline: auto;
+  }
+
+
+  .open-status-badge--sm {
+    font-size: 0.74rem;
+    padding: 0.24rem 0.65rem;
+  }
+
+  .open-status-badge--md {
+    font-size: 0.85rem;
+    padding: 0.35rem 0.85rem;
+  }
+
+  .status-dot {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    display: inline-block;
+    flex-shrink: 0;
+  }
+
+  /* Variante Light (tarjetas sobre fondo blanco/arena) */
+  .open-status-badge--light {
+    background: rgba(10, 37, 64, 0.05);
+    color: var(--navy-900);
+    border: 1px solid var(--line);
+  }
+  .open-status-badge--light .status-dot {
+    background: #a0aec0;
+  }
+  .open-status-badge--light.is-open {
+    background: rgba(46, 133, 64, 0.1);
+    color: #1b632e;
+    border-color: rgba(46, 133, 64, 0.35);
+  }
+  .open-status-badge--light.is-open .status-dot {
+    background: #2e8540;
+    box-shadow: 0 0 0 0 rgba(46, 133, 64, 0.6);
+    animation: status-pulse-green 2s infinite;
+  }
+  .open-status-badge--light.is-closed {
+    background: rgba(226, 149, 0, 0.12);
+    color: #975a16;
+    border-color: rgba(226, 149, 0, 0.35);
+  }
+  .open-status-badge--light.is-closed .status-dot {
+    background: #d69e2e;
+  }
+
+  /* Variante Dark (para la barra azul oscuro con ALTO CONTRASTE) */
+  .open-status-badge--dark {
+    background: rgba(255, 255, 255, 0.12);
+    color: #ffffff;
+    border: 1px solid rgba(255, 255, 255, 0.25);
+  }
+  .open-status-badge--dark .status-dot {
+    background: #cbd5e0;
+  }
+  .open-status-badge--dark.is-open {
+    background: #14532d;
+    color: #86efac;
+    border: 1px solid #22c55e;
+    box-shadow: 0 0 10px rgba(34, 197, 94, 0.3);
+  }
+  .open-status-badge--dark.is-open .status-dot {
+    background: #4ade80;
+    box-shadow: 0 0 0 0 rgba(74, 222, 128, 0.7);
+    animation: status-pulse-green 2s infinite;
+  }
+  .open-status-badge--dark.is-closed {
+    background: #451a03;
+    color: #fde047;
+    border: 1px solid #d97706;
+    box-shadow: 0 0 10px rgba(217, 119, 6, 0.25);
+  }
+  .open-status-badge--dark.is-closed .status-dot {
+    background: #facc15;
+  }
+
+  @keyframes status-pulse-green {
+    0% {
+      transform: scale(0.95);
+      box-shadow: 0 0 0 0 rgba(74, 222, 128, 0.7);
+    }
+    70% {
+      transform: scale(1);
+      box-shadow: 0 0 0 5px rgba(74, 222, 128, 0);
+    }
+    100% {
+      transform: scale(0.95);
+      box-shadow: 0 0 0 0 rgba(74, 222, 128, 0);
+    }
+  }
+</style>
+
+<script>
+  function updateOpenBadges() {
+    const badges = document.querySelectorAll('[data-open-status-badge]');
+    if (!badges.length) return;
+
+    try {
+      const now = new Date();
+      // Formato oficial hora Colombia (America/Bogota)
+      const options: Intl.DateTimeFormatOptions = {
+        timeZone: 'America/Bogota',
+        hour: 'numeric',
+        minute: 'numeric',
+        hour12: false,
+      };
+      const formatter = new Intl.DateTimeFormat('en-US', options);
+      const parts = formatter.formatToParts(now);
+
+      const hourStr = parts.find((p) => p.type === 'hour')?.value || '0';
+      const minuteStr = parts.find((p) => p.type === 'minute')?.value || '0';
+      const hour = parseInt(hourStr, 10);
+      const minute = parseInt(minuteStr, 10);
+      const currentMin = hour * 60 + minute;
+
+      const openMin = 11 * 60; // 11:00 AM
+      const closeMin = 17 * 60; // 5:00 PM
+
+      const isOpen = currentMin >= openMin && currentMin < closeMin;
+
+      badges.forEach((badge) => {
+        const textEl = badge.querySelector('.status-text');
+        if (!textEl) return;
+
+        if (isOpen) {
+          badge.classList.remove('is-closed');
+          badge.classList.add('is-open');
+          textEl.textContent = 'Disponible ahora';
+        } else {
+          badge.classList.remove('is-open');
+          badge.classList.add('is-closed');
+          textEl.textContent = 'No disponible ahora';
+        }
+      });
+    } catch {
+      badges.forEach((b) => {
+        const t = b.querySelector('.status-text');
+        if (t) t.textContent = 'Consultando...';
+      });
+    }
+  }
+
+
+  if (!(window as any).__sabrosuraBadgeInit) {
+    (window as any).__sabrosuraBadgeInit = true;
+    document.addEventListener('DOMContentLoaded', updateOpenBadges);
+    document.addEventListener('astro:page-load', updateOpenBadges);
+  }
+  updateOpenBadges();
+</script>

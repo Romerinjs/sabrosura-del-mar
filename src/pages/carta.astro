@@ -1,0 +1,87 @@
+---
+import { getEntry } from 'astro:content';
+import BaseLayout from '../layouts/BaseLayout.astro';
+import MenuNav from '../components/menu/MenuNav.astro';
+import MenuSection from '../components/menu/MenuSection.astro';
+import menuDataRaw from '../data/menu.json';
+import type { MenuData } from '../types/menu';
+
+const menu = menuDataRaw as MenuData;
+const cartaInfo = (await getEntry('carta', 'info'))?.data;
+
+// Categorías para la barra de navegación
+const navCategorias = menu.categorias.map((c) => ({
+  id: c.id,
+  nombre: c.nombre,
+}));
+
+// Generación de Schema.org Menu JSON-LD en tiempo de compilación
+const schemaJsonLd = {
+  '@context': 'https://schema.org',
+  '@type': 'Menu',
+  name: 'Carta de La Sabrosura del Mar',
+  inLanguage: 'es-CO',
+  hasMenuSection: menu.categorias.map((c) => ({
+    '@type': 'MenuSection',
+    name: c.nombre,
+    description: c.resumen || '',
+    hasMenuItem: (c.subgrupos ? c.subgrupos.flatMap((sg) => sg.items) : (c.items || [])).map((it) => ({
+      '@type': 'MenuItem',
+      name: it.nombre,
+      ...(it.precio ? {
+        offers: {
+          '@type': 'Offer',
+          price: String(it.precio),
+          priceCurrency: 'COP',
+        },
+      } : {}),
+    })),
+  })),
+};
+---
+
+<BaseLayout
+  title="Carta digital | La Sabrosura del Mar — Armenia, Quindío"
+  description="Carta digital de La Sabrosura del Mar en Armenia: arroces marineros, cazuelas, ceviches, pescados, salmón, camarones, langostinos, pastas y especialidades. Precios en pesos colombianos."
+  ogImage="/assets/camarones-apanados.jpg"
+  canonicalUrl="https://lasabrosuradelmar.com/carta"
+  activePage="carta"
+  jsonLd={schemaJsonLd}
+>
+  <section class="page-hero">
+    <div class="container">
+      <span class="eyebrow">{cartaInfo?.eyebrow || 'Carta digital'}</span>
+      <h1>{cartaInfo?.title || 'Nuestra carta'}</h1>
+      <p>{cartaInfo?.description}</p>
+      <p style="font-size:.88rem;color:rgba(255,255,255,.62);margin-top:.6rem">
+        {cartaInfo?.notaMoneda || 'Los precios se expresan en pesos colombianos (COP).'}
+      </p>
+    </div>
+  </section>
+
+  <MenuNav categorias={navCategorias} />
+
+  <div class="container" id="carta">
+    <div class="menu-empty" id="menu-empty">
+      <p class="menu-empty__title" style="font-size:1.15rem;font-weight:600;color:var(--navy-900);margin-bottom:.4rem">
+        No encontramos platos que coincidan con tu búsqueda
+      </p>
+      <p class="menu-empty__desc" style="font-size:.92rem;color:var(--muted);margin-bottom:1rem">
+        Intenta con otro término (por ejemplo: camarón, mojarra, arroz o cazuela).
+      </p>
+      <button type="button" id="reset-carta-filter" class="btn btn-secondary" style="font-size:.85rem;padding:.5rem 1.2rem">
+        Ver todos los platos
+      </button>
+    </div>
+
+    {menu.categorias.map((cat) => (
+      <MenuSection categoria={cat} />
+    ))}
+
+    <footer class="carta-disclaimer" aria-label="Aviso legal de la carta">
+      <p class="carta-disclaimer__text">
+        * {cartaInfo?.notaGeneral || menu.nota || 'Los productos y precios pueden variar según disponibilidad o temporada.'}
+      </p>
+    </footer>
+  </div>
+</BaseLayout>

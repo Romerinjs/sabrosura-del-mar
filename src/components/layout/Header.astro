@@ -1,0 +1,114 @@
+---
+import OpenStatusBadge from '../common/OpenStatusBadge.astro';
+
+interface Props {
+  activePage?: 'inicio' | 'carta';
+}
+
+const { activePage = 'inicio' } = Astro.props;
+---
+
+<header class="site-header" id="site-header">
+  <div class="site-header__main">
+    <div class="container site-header__container">
+      <a class="brand" href="/" aria-label="La Sabrosura del Mar — inicio">
+        <img src="/assets/logo-sm.png" alt="La Sabrosura del Mar" width="160" height="166" />
+        <span class="brand__text">La Sabrosura del Mar<span>Armenia, Quindío</span></span>
+      </a>
+
+      <nav class="nav" aria-label="Navegación principal">
+        <a href="/" aria-current={activePage === 'inicio' ? 'page' : undefined}>Inicio</a>
+        <a href="/carta" aria-current={activePage === 'carta' ? 'page' : undefined}>Carta</a>
+        <a href="/sedes">Sedes</a>
+        <a href="/domicilios">Domicilios</a>
+        <a href="/historia">Historia</a>
+        <a href="/contacto">Contacto</a>
+      </nav>
+
+      <div class="header-actions">
+        <a class="btn btn--primary btn--sm" href={activePage === 'carta' ? "https://wa.me/573113093429?text=Hola%2C%20quiero%20hacer%20un%20pedido" : "/carta"}>
+          {activePage === 'carta' ? "Pedir a domicilio" : "Ver la carta"}
+        </a>
+        <button class="nav-toggle" id="nav-toggle" type="button" aria-expanded="false" aria-controls="mobile-nav" aria-label="Abrir menú">
+          <span></span>
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Barra minimalista con disponibilidad 100% CENTRADA -->
+  <div class="header-status-strip" role="status" aria-label="Disponibilidad actual del restaurante">
+    <div class="header-status-strip__center">
+      <OpenStatusBadge size="sm" variant="dark" />
+    </div>
+  </div>
+</header>
+
+<style>
+  .site-header {
+    position: fixed;
+    inset: 0 0 auto 0;
+    z-index: 100;
+    display: flex;
+    flex-direction: column;
+    background: rgba(255, 255, 255, 0.94);
+    backdrop-filter: blur(14px) saturate(1.6);
+    -webkit-backdrop-filter: blur(14px) saturate(1.6);
+    border-bottom: 1px solid var(--line);
+    transition: background-color 0.25s ease, box-shadow 0.25s ease;
+  }
+
+  .site-header.is-scrolled {
+    background: rgba(255, 255, 255, 0.98);
+    box-shadow: 0 4px 20px rgba(5, 20, 35, 0.08);
+  }
+
+  .site-header__main {
+    height: var(--header-main-h, 70px);
+    display: flex;
+    align-items: center;
+    width: 100%;
+  }
+
+  .site-header__container {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem;
+    width: 100%;
+  }
+
+  /* -------------------------------------------------------------
+     Barra de disponibilidad 100% CENTRADA horizontalmente
+     ------------------------------------------------------------- */
+  .header-status-strip {
+    background: #051423 !important;
+    border-top: 1px solid rgba(255, 255, 255, 0.1);
+    border-bottom: 2px solid var(--gold-500);
+    padding-block: 0.28rem;
+    width: 100%;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    text-align: center !important;
+    line-height: 1;
+  }
+
+  .header-status-strip__center {
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    width: 100%;
+    margin-inline: auto !important;
+    text-align: center !important;
+  }
+
+  @media (max-width: 680px) {
+    .site-header__main {
+      height: 64px;
+    }
+    .header-status-strip {
+      padding-block: 0.24rem;
+    }
+  }
+</style>

@@ -1,0 +1,100 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import MenuSection from '../../components/menu/MenuSection.astro';
+import menuDataRaw from '../../data/menu.json';
+import type { MenuData, CategoriaMenu } from '../../types/menu';
+
+export async function getStaticPaths() {
+  const menu = menuDataRaw as MenuData;
+  return menu.categorias.map((cat) => ({
+    params: { categoria: cat.id },
+    props: {
+      categoria: cat,
+      todasCategorias: menu.categorias.map((c) => ({ id: c.id, nombre: c.nombre })),
+    },
+  }));
+}
+
+interface Props {
+  categoria: CategoriaMenu;
+  todasCategorias: Array<{ id: string; nombre: string }>;
+}
+
+const { categoria, todasCategorias } = Astro.props;
+
+const pageTitle = `${categoria.nombre} en Armenia | Carta La Sabrosura del Mar`;
+const pageDesc = `${categoria.nombre}: ${categoria.resumen || 'Consulta preparaciones, precios en pesos colombianos y realiza tu pedido directo en Armenia, Quindío.'}`;
+const canonicalUrl = `https://lasabrosuradelmar.com/carta/${categoria.id}`;
+
+// Schema.org para la categoría específica
+const schemaJsonLd = {
+  '@context': 'https://schema.org',
+  '@type': 'MenuSection',
+  name: categoria.nombre,
+  description: categoria.resumen || '',
+  hasMenuItem: (categoria.subgrupos ? categoria.subgrupos.flatMap((sg) => sg.items) : (categoria.items || [])).map((it) => ({
+    '@type': 'MenuItem',
+    name: it.nombre,
+    ...(it.precio ? {
+      offers: {
+        '@type': 'Offer',
+        price: String(it.precio),
+        priceCurrency: 'COP',
+      },
+    } : {}),
+  })),
+};
+---
+
+<BaseLayout
+  title={pageTitle}
+  description={pageDesc}
+  canonicalUrl={canonicalUrl}
+  activePage="carta"
+  jsonLd={schemaJsonLd}
+>
+  <section class="page-hero">
+    <div class="container">
+      <div style="display:flex;gap:0.6rem;align-items:center;margin-bottom:0.8rem">
+        <a href="/" style="color:var(--gold-300);text-decoration:none;font-size:0.85rem">Inicio</a>
+        <span style="color:rgba(255,255,255,0.4)">/</span>
+        <a href="/carta" style="color:var(--gold-300);text-decoration:none;font-size:0.85rem">Carta digital</a>
+        <span style="color:rgba(255,255,255,0.4)">/</span>
+        <span style="color:#fff;font-size:0.85rem">{categoria.nombre}</span>
+      </div>
+      <span class="eyebrow">Categoría de la carta</span>
+      <h1>{categoria.nombre}</h1>
+      <p>{categoria.resumen}</p>
+      <p style="font-size:.88rem;color:rgba(255,255,255,.62);margin-top:.6rem">
+        Precios expresados en pesos colombianos (COP). Servicio a la mesa y domicilios en Armenia.
+      </p>
+    </div>
+  </section>
+
+  <!-- Selector horizontal de categorías -->
+  <nav class="menu-nav" aria-label="Cambiar de categoría">
+    <div class="container">
+      <div class="menu-nav__inner">
+        <div class="menu-nav__scroll">
+          <a href="/carta">Ver toda la carta</a>
+          {todasCategorias.map((c) => (
+            <a href={`/carta/${c.id}`} class={c.id === categoria.id ? 'is-active' : undefined}>
+              {c.nombre}
+            </a>
+          ))}
+        </div>
+      </div>
+    </div>
+  </nav>
+
+  <div class="container" style="padding-block:3rem">
+    <MenuSection categoria={categoria} />
+
+    <div class="btn-row btn-row--center" style="margin-top:3rem">
+      <a class="btn btn--navy" href="/carta">Ver todas las categorías de la carta</a>
+      <a class="btn btn--primary" href="https://wa.me/573113093429?text=Hola%2C%20quiero%20hacer%20un%20pedido" target="_blank" rel="noopener" data-track-event="whatsapp_click" data-track-category={categoria.id}>
+        Pedir a domicilio por WhatsApp
+      </a>
+    </div>
+  </div>
+</BaseLayout>

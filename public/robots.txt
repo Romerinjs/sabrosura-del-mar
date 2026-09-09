@@ -1,0 +1,6 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://lasabrosuradelmar.com/sitemap.xml
+Sitemap: https://lasabrosuradelmar.com/sitemap-index.xml
+

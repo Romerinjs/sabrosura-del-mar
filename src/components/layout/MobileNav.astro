@@ -1,0 +1,40 @@
+---
+interface Props {
+  activePage?: 'inicio' | 'carta';
+}
+
+const { activePage = 'inicio' } = Astro.props;
+---
+
+<!-- Fondo oscuro translúcido para el Drawer móvil con cierre táctil -->
+<div class="mobile-nav-backdrop" id="mobile-nav-backdrop" aria-hidden="true"></div>
+
+<!-- Drawer deslizable desde la izquierda con apertura suave en 0.5s -->
+<aside class="mobile-nav" id="mobile-nav" aria-label="Navegación móvil" aria-hidden="true">
+  <div class="mobile-nav__top">
+    <div style="display:flex;align-items:center;gap:0.65rem">
+      <img src="/assets/logo-sm.png" alt="La Sabrosura del Mar" width="36" height="36" style="width:36px;height:36px;object-fit:contain" />
+      <span style="font-family:var(--font-display);font-weight:700;font-size:1.05rem;color:var(--navy-950);line-height:1.2">
+        La Sabrosura<br /><span style="font-size:0.75rem;font-weight:600;color:var(--teal-700)">del Mar</span>
+      </span>
+    </div>
+    <button type="button" class="mobile-nav__close" id="mobile-nav-close" aria-label="Cerrar menú móvil" title="Cerrar menú">
+      &times;
+    </button>
+  </div>
+
+  <nav class="mobile-nav__links">
+    <a href="/" aria-current={activePage === 'inicio' ? 'page' : undefined}>Inicio</a>
+    <a href="/carta" aria-current={activePage === 'carta' ? 'page' : undefined}>Carta</a>
+    <a href="/sedes">Sedes</a>
+    <a href="/domicilios">Domicilios</a>
+    <a href="/historia">Nuestra historia</a>
+    <a href="/contacto">Contacto</a>
+  </nav>
+
+  <div class="mobile-nav__footer">
+    <a class="btn btn--primary btn--block" href={activePage === 'carta' ? "https://wa.me/573113093429?text=Hola%2C%20quiero%20hacer%20un%20pedido" : "/carta"}>
+      {activePage === 'carta' ? "Pedir a domicilio" : "Ver la carta"}
+    </a>
+  </div>
+</aside>
