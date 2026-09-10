@@ -1,0 +1,120 @@
+---
+interface Props {
+  items?: string[];
+  speed?: string;
+}
+
+const {
+  items = [
+    "Pescado fresco del día",
+    "Sazón costeña de Candelaria",
+    "Arroces marineros abundantes",
+    "Cazuela de mariscos al gratín",
+    "Patacones crocantes",
+    "Dos sedes en Armenia",
+    "Ceviches tradicionales",
+    "Camarones al ajillo"
+  ],
+  speed = "28s"
+} = Astro.props;
+---
+
+<div class="marquee-wrapper" aria-hidden="true">
+  <div class="marquee-track" style={`--marquee-speed: ${speed}`}>
+    <!-- Pista 1 -->
+    <div class="marquee-content">
+      {items.map((item) => (
+        <span class="marquee-item">
+          <span class="marquee-star">✦</span>
+          <span class="marquee-text">{item}</span>
+        </span>
+      ))}
+    </div>
+
+    <!-- Pista 2 (Duplicado para loop continuo sin saltos) -->
+    <div class="marquee-content" aria-hidden="true">
+      {items.map((item) => (
+        <span class="marquee-item">
+          <span class="marquee-star">✦</span>
+          <span class="marquee-text">{item}</span>
+        </span>
+      ))}
+    </div>
+  </div>
+</div>
+
+<style>
+  .marquee-wrapper {
+    position: relative;
+    width: 100%;
+    overflow: hidden;
+    background: #051423;
+    border-top: 1px solid rgba(217, 154, 63, 0.25);
+    border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+    padding-block: 0.85rem;
+    mask-image: linear-gradient(to right, transparent, black 8%, black 92%, transparent);
+    -webkit-mask-image: linear-gradient(to right, transparent, black 8%, black 92%, transparent);
+    user-select: none;
+    z-index: 10;
+  }
+
+  .marquee-track {
+    display: flex;
+    width: max-content;
+    animation: marqueeScroll var(--marquee-speed, 28s) linear infinite;
+    will-change: transform;
+  }
+
+  .marquee-wrapper:hover .marquee-track {
+    animation-play-state: paused;
+  }
+
+  .marquee-content {
+    display: flex;
+    align-items: center;
+    gap: 2.2rem;
+    padding-right: 2.2rem;
+  }
+
+  .marquee-item {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.75rem;
+    white-space: nowrap;
+  }
+
+  .marquee-star {
+    color: var(--gold-400, #d99a3f);
+    font-size: 0.75rem;
+    opacity: 0.85;
+  }
+
+  .marquee-text {
+    font-family: var(--font-body);
+    font-size: 0.82rem;
+    font-weight: 650;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: rgba(255, 255, 255, 0.82);
+    transition: color 0.2s ease;
+  }
+
+  .marquee-item:hover .marquee-text {
+    color: var(--gold-300);
+  }
+
+  @keyframes marqueeScroll {
+    0% {
+      transform: translateX(0);
+    }
+    100% {
+      transform: translateX(-50%);
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .marquee-track {
+      animation: none;
+    }
+  }
+</style>

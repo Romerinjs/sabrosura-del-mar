@@ -27,14 +27,20 @@ const { activePage = 'inicio' } = Astro.props;
     <a href="/" aria-current={activePage === 'inicio' ? 'page' : undefined}>Inicio</a>
     <a href="/carta" aria-current={activePage === 'carta' ? 'page' : undefined}>Carta</a>
     <a href="/sedes">Sedes</a>
-    <a href="/domicilios">Domicilios</a>
     <a href="/historia">Nuestra historia</a>
     <a href="/contacto">Contacto</a>
   </nav>
 
   <div class="mobile-nav__footer">
-    <a class="btn btn--primary btn--block" href={activePage === 'carta' ? "https://wa.me/573113093429?text=Hola%2C%20quiero%20hacer%20un%20pedido" : "/carta"}>
-      {activePage === 'carta' ? "Pedir a domicilio" : "Ver la carta"}
+    <a
+      class="btn btn--primary btn--block"
+      href={activePage === 'carta' ? "https://wa.me/573113093429?text=Hola%2C%20estoy%20interesado%20en%20pedir%20al%20restaurante" : "/carta"}
+      target={activePage === 'carta' ? "_blank" : undefined}
+      rel={activePage === 'carta' ? "noopener" : undefined}
+      data-track-event={activePage === 'carta' ? "whatsapp_click" : "nav_carta"}
+      data-track-location="mobile_nav_footer"
+    >
+      {activePage === 'carta' ? "Pedir al restaurante" : "Ver la carta"}
     </a>
   </div>
 </aside>

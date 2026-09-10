@@ -64,44 +64,95 @@ const formatMoney = (n: number) => '$' + n.toLocaleString('es-CO');
       </div>
 
 
-      <button
-        type="button"
-        class="dish__add-btn"
-        data-dish-add
-        data-dish-name={nombre}
-        data-dish-price={precio || 0}
-        data-track-event="add_dish_to_bag"
-        data-track-product={nombre}
-        data-track-location="dish_card"
-        title={`Añadir ${nombre} a mi pedido`}
-        aria-label={`Añadir ${nombre} a mi pedido`}
+      <a
+        class="dish__more-link"
+        href="/carta"
+        title={`Ver ${nombre} en la carta digital`}
+        aria-label={`Ver ${nombre} en la carta digital`}
       >
-        <span class="btn-icon" aria-hidden="true">
-          <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.8" stroke-linecap="round" stroke-linejoin="round">
-            <line x1="12" y1="5" x2="12" y2="19"></line>
-            <line x1="5" y1="12" x2="19" y2="12"></line>
-          </svg>
-        </span>
-        <span class="btn-text">Pedir</span>
-        <span class="btn-check-icon" aria-hidden="true">
-          <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round">
-            <polyline points="20 6 9 17 4 12"></polyline>
-          </svg>
-        </span>
-      </button>
+        <span>Ver plato</span>
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+          <polyline points="9 18 15 12 9 6"></polyline>
+        </svg>
+      </a>
     </div>
   </div>
 </article>
 
 <style>
+  .dish {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    width: 100%;
+    background: #fff;
+    border: 1px solid var(--line);
+    border-radius: var(--radius);
+    overflow: hidden;
+    box-shadow: var(--shadow-sm);
+    transition: transform 0.5s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.5s cubic-bezier(0.16, 1, 0.3, 1), border-color 0.4s ease;
+  }
+
+  .dish__media {
+    position: relative;
+    aspect-ratio: 4 / 3;
+    width: 100%;
+    background: var(--navy-900);
+    overflow: hidden;
+    flex-shrink: 0;
+  }
+
+  .dish__media img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+    transform: scale(1);
+    transition: transform 2s cubic-bezier(0.16, 1, 0.3, 1), filter 1.2s cubic-bezier(0.16, 1, 0.3, 1);
+    will-change: transform;
+  }
+
+  .dish:hover .dish__media img {
+    transform: scale(1.06);
+    filter: brightness(1.025);
+  }
+
+  .dish__media--placeholder {
+    display: grid;
+    place-items: center;
+    text-align: center;
+    padding: 1.25rem;
+    aspect-ratio: 4 / 3 !important;
+    width: 100% !important;
+    height: auto !important;
+    flex-shrink: 0 !important;
+    background: radial-gradient(120% 120% at 25% 10%, var(--navy-800) 0%, var(--navy-950) 72%);
+    color: rgba(255, 255, 255, 0.9);
+  }
+
   .dish__body {
     display: flex;
     flex-direction: column;
-    flex: 1;
+    flex: 1 1 auto;
+    padding: 1.25rem 1.35rem 1.35rem;
+  }
+
+  .dish__body h3 {
+    font-size: 1.2rem;
+    color: var(--navy-900);
+    margin-bottom: 0.45rem;
+    line-height: 1.25;
+    min-height: 2.85rem;
+    display: flex;
+    align-items: flex-start;
   }
 
   .dish__body p {
-    flex: 1;
+    flex: 1 1 auto;
+    font-size: 0.88rem;
+    color: var(--ink-soft);
+    line-height: 1.5;
+    margin-bottom: 1.15rem;
   }
 
   .dish__action-row {
@@ -112,115 +163,64 @@ const formatMoney = (n: number) => '$' + n.toLocaleString('es-CO');
     margin-top: auto;
     padding-top: 0.85rem;
     border-top: 1px dashed var(--line);
-    flex-wrap: wrap;
+    min-height: 50px;
   }
 
   .dish__price {
     display: flex;
     flex-direction: column;
-    gap: 0.1rem;
+    justify-content: flex-end;
+    gap: 0.15rem;
     font-family: var(--font-display);
-    font-size: 1.15rem;
+    font-size: 1.18rem;
     font-weight: 800;
     color: var(--teal-700);
     line-height: 1.1;
+    min-width: 0;
+    flex: 1 1 auto;
   }
 
   .dish__price-alt {
     font-family: var(--font-body);
-    font-size: 0.76rem;
+    font-size: 0.72rem;
     font-weight: 500;
     color: var(--muted);
+    line-height: 1.2;
   }
 
-  .dish__add-btn {
-    position: relative;
-    display: inline-flex;
-    align-items: center;
-    gap: 0.4rem;
-    padding: 0.46rem 1.05rem;
-    background: linear-gradient(135deg, var(--navy-900) 0%, #0a2e52 100%);
-    color: #ffffff;
-    border: 1.5px solid var(--gold-500);
-    border-radius: 999px;
+  .dish__more-link {
+    display: inline-flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    gap: 0.35rem !important;
+    white-space: nowrap !important;
+    flex-shrink: 0 !important;
     font-family: var(--font-body);
-    font-size: 0.85rem;
-    font-weight: 750;
-    cursor: pointer;
-    box-shadow: 0 3px 12px rgba(5, 20, 35, 0.2);
-    transition: all 0.22s cubic-bezier(0.16, 1, 0.3, 1);
-    white-space: nowrap;
-    margin-left: auto;
-    overflow: hidden;
-    user-select: none;
-    -webkit-user-select: none;
+    font-size: 0.82rem;
+    font-weight: 650;
+    color: var(--navy-900);
+    background: var(--sand);
+    border: 1px solid var(--line);
+    padding: 0.44rem 0.85rem;
+    border-radius: 999px;
+    text-decoration: none;
+    transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
   }
 
-  .dish__add-btn::before {
-    content: "";
-    position: absolute;
-    top: 0;
-    left: -80%;
-    width: 50%;
-    height: 100%;
-    background: linear-gradient(
-      90deg,
-      transparent,
-      rgba(255, 255, 255, 0.25),
-      transparent
-    );
-    transform: skewX(-20deg);
-    transition: left 0.6s ease;
-    pointer-events: none;
-  }
-
-  .dish__add-btn:hover {
-    background: linear-gradient(135deg, var(--gold-500) 0%, var(--gold-600, #d97706) 100%);
-    color: var(--navy-950);
-    border-color: var(--gold-400);
-    transform: translateY(-2px) scale(1.02);
-    box-shadow: 0 6px 18px rgba(226, 149, 0, 0.4);
-  }
-
-  .dish__add-btn:hover::before {
-    left: 130%;
-  }
-
-  .dish__add-btn:active {
-    transform: translateY(0) scale(0.96);
-  }
-
-  .dish__add-btn .btn-icon {
-    display: inline-flex;
-    align-items: center;
-    transition: transform 0.25s ease;
-    color: var(--gold-400);
-  }
-
-  .dish__add-btn:hover .btn-icon {
-    color: var(--navy-950);
-    transform: rotate(90deg);
-  }
-
-  .dish__add-btn .btn-check-icon {
-    display: none;
-  }
-
-  .dish__add-btn.is-added {
-    background: #10b981 !important;
-    border-color: #34d399 !important;
-    color: #ffffff !important;
-    transform: scale(1.04);
-    box-shadow: 0 0 16px rgba(16, 185, 129, 0.5) !important;
-  }
-
-  .dish__add-btn.is-added .btn-icon {
-    display: none;
-  }
-
-  .dish__add-btn.is-added .btn-check-icon {
-    display: inline-flex;
+  .dish__more-link:hover {
+    background: var(--navy-900);
     color: #ffffff;
+    border-color: var(--navy-900);
+    transform: translateX(2px);
+  }
+
+  .dish__more-link svg {
+    transition: transform 0.2s ease;
+    flex-shrink: 0;
+  }
+
+  .dish__more-link:hover svg {
+    transform: translateX(2px);
   }
 </style>
 

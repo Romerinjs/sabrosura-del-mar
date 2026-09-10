@@ -4,9 +4,9 @@ import Header from '../components/layout/Header.astro';
 import MobileNav from '../components/layout/MobileNav.astro';
 import Footer from '../components/layout/Footer.astro';
 import WhatsAppFloat from '../components/layout/WhatsAppFloat.astro';
-import OrderBag from '../components/menu/OrderBag.astro';
-import VenueConfirmModal from '../components/common/VenueConfirmModal.astro';
+import MarineWatermark from '../components/common/MarineWatermark.astro';
 import '../styles/global.css';
+import '../styles/scroll-reveal.css';
 
 interface Props {
   title?: string;
@@ -67,17 +67,18 @@ const {
     <Header activePage={activePage} />
     <MobileNav activePage={activePage} />
 
-    <main id="contenido">
+    <main id="contenido" style="position:relative">
+      <MarineWatermark />
       <slot />
     </main>
 
     <Footer />
     <WhatsAppFloat />
-    <OrderBag />
-    <VenueConfirmModal />
 
     <!-- Script de interactividad ligero y compatible con ClientRouter -->
     <script>
+      import { initScrollReveal } from '../utils/scroll-reveal';
+
       function initLayoutInteractions() {
         // Header scrolled & mobile nav toggle
         const header = document.getElementById('site-header');
@@ -135,23 +136,69 @@ const {
         window.addEventListener('scroll', updateHeader, { passive: true });
         updateHeader();
 
-        // Reveal on scroll
+        // Efecto 1: Motor Scroll Reveal Universal (data-sr, data-animate, reveal)
+        initScrollReveal();
+
+        // Efecto 3: Contador Numérico Animado On-Scroll
         if ('IntersectionObserver' in window) {
-          const reveals = document.querySelectorAll('.reveal:not(.is-visible)');
-          const observer = new IntersectionObserver(
-            (entries) => {
-              entries.forEach((entry) => {
-                if (entry.isIntersecting) {
-                  entry.target.classList.add('is-visible');
-                  observer.unobserve(entry.target);
+          const counters = document.querySelectorAll<HTMLElement>('[data-counter]:not(.counted)');
+          const counterObserver = new IntersectionObserver((entries) => {
+            entries.forEach((entry) => {
+              if (entry.isIntersecting) {
+                const el = entry.target as HTMLElement;
+                const targetNum = parseInt(el.getAttribute('data-number') || '0', 10);
+                const duration = parseInt(el.getAttribute('data-speed') || '1400', 10);
+
+                if (!el.classList.contains('counted')) {
+                  el.classList.add('counted');
+                  let startTimestamp: number | null = null;
+
+                  const step = (timestamp: number) => {
+                    if (!startTimestamp) startTimestamp = timestamp;
+                    const progress = Math.min((timestamp - startTimestamp) / duration, 1);
+                    // Curva de desaceleración suave (easeOutQuad)
+                    const easeOutProgress = 1 - (1 - progress) * (1 - progress);
+                    const currentNum = Math.floor(easeOutProgress * targetNum);
+
+                    el.innerText = currentNum.toString();
+
+                    if (progress < 1) {
+                      window.requestAnimationFrame(step);
+                    } else {
+                      el.innerText = targetNum.toString();
+                    }
+                  };
+
+                  window.requestAnimationFrame(step);
                 }
+                counterObserver.unobserve(el);
+              }
+            });
+          }, { threshold: 0.25 });
+
+          counters.forEach((el) => counterObserver.observe(el));
+        }
+
+        // Efecto 4: Parallax Ligero a 60fps con requestAnimationFrame
+        const parallaxEls = document.querySelectorAll<HTMLElement>('[data-parallax]');
+        if (parallaxEls.length > 0 && !window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+          let ticking = false;
+          const handleParallax = () => {
+            if (!ticking) {
+              window.requestAnimationFrame(() => {
+                const scrollY = window.scrollY;
+                parallaxEls.forEach((el) => {
+                  const speed = parseFloat(el.getAttribute('data-parallax-speed') || '15');
+                  const translateY = scrollY * (speed / 1000);
+                  el.style.transform = `translate3d(0, ${translateY}px, 0)`;
+                });
+                ticking = false;
               });
-            },
-            { threshold: 0.12 }
-          );
-          reveals.forEach((el) => observer.observe(el));
-        } else {
-          document.querySelectorAll('.reveal').forEach((el) => el.classList.add('is-visible'));
+              ticking = true;
+            }
+          };
+          window.removeEventListener('scroll', handleParallax);
+          window.addEventListener('scroll', handleParallax, { passive: true });
         }
       }
 

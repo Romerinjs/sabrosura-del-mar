@@ -1,17 +1,20 @@
 ---
 import Icon from '../icons/Icon.astro';
 
+interface HeroImage {
+  src: string;
+  alt?: string;
+  width?: number;
+  height?: number;
+}
+
 interface Props {
   eyebrow: string;
   title: string;
   titleEmphasis?: string;
   lead: string;
-  image: {
-    src: string;
-    alt: string;
-    width: number;
-    height: number;
-  };
+  image?: HeroImage;
+  images?: HeroImage[];
   ctas: {
     primary: { label: string; href: string; icon?: string };
     secondary: { label: string; href: string; icon?: string };
@@ -19,21 +22,72 @@ interface Props {
   badges: Array<{ icon: string; text: string; href?: string }>;
 }
 
-const { eyebrow, title, titleEmphasis, lead, image, ctas, badges } = Astro.props;
+const { eyebrow, title, titleEmphasis, lead, image, images, ctas, badges } = Astro.props;
+
+// Lista de imágenes para el fondo rotativo continuo con zoom-out
+const fallbackImages: HeroImage[] = [
+  {
+    src: "/assets/mojarra-frita.jpg",
+    alt: "Mojarra frita con patacones en La Sabrosura del Mar",
+    width: 1400,
+    height: 933,
+  },
+  {
+    src: "/assets/camarones-apanados.jpg",
+    alt: "Camarones apanados crocantes en La Sabrosura del Mar",
+    width: 1400,
+    height: 933,
+  },
+  {
+    src: "/assets/sede-norte.jpg",
+    alt: "Sede Norte Proviteq en Armenia",
+    width: 1400,
+    height: 933,
+  },
+  {
+    src: "/assets/sede-centro.jpg",
+    alt: "Sede Centro tradicional en Armenia",
+    width: 1400,
+    height: 933,
+  },
+];
+
+const heroImages: HeroImage[] = (images && images.length > 0)
+  ? images
+  : (image ? [image, ...fallbackImages.filter(f => f.src !== image.src)] : fallbackImages);
 ---
 
 <section class="hero">
-  <div class="hero__media">
-    <img src={image.src} alt={image.alt} width={image.width} height={image.height} fetchpriority="high" />
+  <!-- Carrusel / Crossfade de Fondo con Zoom-Out Cinemático (3s intervalo y transición suave de 2s) -->
+  <div class="hero__media hero-slider" data-hero-slider data-interval="3000">
+    {heroImages.map((img, idx) => (
+      <div
+        class={`hero-slide ${idx === 0 ? 'is-active' : ''}`}
+        data-hero-slide
+      >
+        <img
+          src={img.src}
+          alt={img.alt || title}
+          width={img.width || 1400}
+          height={img.height || 933}
+          fetchpriority={idx === 0 ? "high" : "auto"}
+          loading={idx === 0 ? "eager" : "lazy"}
+          class="hero-slide__img"
+        />
+      </div>
+    ))}
+    <!-- Capa azul reducida y sutil para máxima visibilidad y nitidez de las fotos -->
+    <div class="hero-slider__overlay" aria-hidden="true"></div>
   </div>
+
   <div class="container">
     <div class="hero__inner">
-      <span class="eyebrow">{eyebrow}</span>
-      <h1>
+      <span class="eyebrow" data-sr data-sr-instant data-sr-delay="0.05">{eyebrow}</span>
+      <h1 data-sr data-sr-instant data-sr-delay="0.15">
         {title} {titleEmphasis && <em>{titleEmphasis}</em>}
       </h1>
-      <p>{lead}</p>
-      <div class="btn-row">
+      <p data-sr data-sr-instant data-sr-delay="0.25">{lead}</p>
+      <div class="btn-row" data-sr data-sr-instant data-sr-delay="0.35">
         <a class="btn btn--primary" href={ctas.primary.href}>
           {ctas.primary.icon && <Icon name={ctas.primary.icon} size={18} />}
           {ctas.primary.label}
@@ -43,7 +97,7 @@ const { eyebrow, title, titleEmphasis, lead, image, ctas, badges } = Astro.props
           {ctas.secondary.label}
         </a>
       </div>
-      <div class="hero__meta">
+      <div class="hero__meta" data-sr data-sr-instant data-sr-delay="0.45">
         {badges.map((b) => (
           <span>
             <Icon name={b.icon} size={16} />
@@ -54,3 +108,187 @@ const { eyebrow, title, titleEmphasis, lead, image, ctas, badges } = Astro.props
     </div>
   </div>
 </section>
+
+<style>
+  .hero {
+    position: relative;
+    min-height: min(92vh, 800px);
+    display: flex;
+    align-items: flex-end;
+    padding-top: calc(var(--header-h) + 3rem);
+    padding-bottom: clamp(3rem, 6vw, 5rem);
+    overflow: hidden;
+    background: var(--navy-950);
+    isolation: isolate;
+  }
+
+  .hero-slider {
+    position: absolute;
+    inset: 0;
+    z-index: -2;
+    overflow: hidden;
+    background: #061524;
+  }
+
+  .hero-slide {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    opacity: 0;
+    visibility: hidden;
+    transition: opacity 2s cubic-bezier(0.4, 0, 0.2, 1), visibility 2s cubic-bezier(0.4, 0, 0.2, 1);
+    will-change: opacity;
+  }
+
+  .hero-slide.is-active {
+    opacity: 1;
+    visibility: visible;
+    z-index: 1;
+  }
+
+  /* Animación de zoom-out progresivo durante la estancia de cada imagen (+15% de brillo y claridad) */
+  .hero-slide__img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: 60% 55%;
+    transform: scale(1.15);
+    filter: brightness(1.15) contrast(1.05) saturate(1.08);
+    transition: transform 4.5s cubic-bezier(0.16, 1, 0.3, 1);
+    will-change: transform, filter;
+  }
+
+  .hero-slide.is-active .hero-slide__img {
+    transform: scale(1);
+  }
+
+  /* Capa de degradado azul marino equilibrada con rica profundidad marina */
+  .hero-slider__overlay {
+    position: absolute;
+    inset: 0;
+    z-index: 2;
+    pointer-events: none;
+    background:
+      linear-gradient(to top, rgba(5, 20, 35, 0.88) 0%, rgba(10, 37, 64, 0.48) 42%, rgba(10, 37, 64, 0.18) 75%, rgba(5, 20, 35, 0.38) 100%),
+      linear-gradient(to right, rgba(10, 37, 64, 0.82) 0%, rgba(10, 37, 64, 0.46) 48%, rgba(10, 37, 64, 0.12) 100%);
+  }
+
+  .hero__inner {
+    max-width: 44rem;
+    color: #fff;
+    text-shadow: 0 2px 14px rgba(0, 0, 0, 0.65), 0 1px 3px rgba(0, 0, 0, 0.85);
+  }
+
+  .hero h1 {
+    font-size: var(--step-4);
+    color: #fff;
+    margin-bottom: 0.5rem;
+    text-wrap: balance;
+    text-shadow: 0 2px 24px rgba(0, 0, 0, 0.7), 0 1px 4px rgba(0, 0, 0, 0.9);
+  }
+
+  .hero h1 em {
+    font-style: normal;
+    color: var(--gold-300);
+  }
+
+  .hero p {
+    font-size: var(--step-1);
+    color: rgba(255, 255, 255, 0.96);
+    max-width: 34rem;
+    margin-bottom: 1.9rem;
+    text-wrap: pretty;
+    text-shadow: 0 1px 8px rgba(0, 0, 0, 0.7);
+  }
+
+  .hero .eyebrow {
+    color: var(--gold-300);
+    text-shadow: 0 1px 6px rgba(0, 0, 0, 0.8);
+  }
+
+  .hero .eyebrow::before {
+    background: var(--gold-300);
+  }
+
+  .hero__meta {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem 1.4rem;
+    margin-top: 2.2rem;
+    padding-top: 1.4rem;
+    border-top: 1px solid rgba(255, 255, 255, 0.28);
+    font-size: 0.86rem;
+    color: rgba(255, 255, 255, 0.92);
+    text-shadow: 0 1px 6px rgba(0, 0, 0, 0.75);
+  }
+
+  .hero__meta span {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.45rem;
+  }
+
+  .hero__meta svg {
+    width: 16px;
+    height: 16px;
+    color: var(--gold-300);
+    flex: none;
+  }
+
+  @media (max-width: 720px) {
+    .hero-slide__img {
+      object-position: 62% 38%;
+    }
+  }
+</style>
+
+<script>
+  function setupHeroSlider() {
+    const slider = document.querySelector<HTMLElement>('[data-hero-slider]');
+    if (!slider) return;
+
+    const slides = slider.querySelectorAll<HTMLElement>('[data-hero-slide]');
+    if (slides.length <= 1) return;
+
+    // Limpiar temporizador previo si existe para evitar acumulaciones
+    const win = window as any;
+    if (win.__heroSliderTimer) {
+      clearInterval(win.__heroSliderTimer);
+      win.__heroSliderTimer = null;
+    }
+
+    let currentIndex = 0;
+    const intervalTime = parseInt(slider.getAttribute('data-interval') || '3000', 10);
+
+    const advanceSlide = () => {
+      slides[currentIndex].classList.remove('is-active');
+      currentIndex = (currentIndex + 1) % slides.length;
+      slides[currentIndex].classList.add('is-active');
+    };
+
+    win.__heroSliderTimer = setInterval(advanceSlide, intervalTime);
+
+    // Pausar rotación en pestañas en segundo plano para optimizar rendimiento de GPU
+    const handleVisibility = () => {
+      if (document.hidden) {
+        if (win.__heroSliderTimer) {
+          clearInterval(win.__heroSliderTimer);
+          win.__heroSliderTimer = null;
+        }
+      } else {
+        if (!win.__heroSliderTimer) {
+          win.__heroSliderTimer = setInterval(advanceSlide, intervalTime);
+        }
+      }
+    };
+
+    document.removeEventListener('visibilitychange', handleVisibility);
+    document.addEventListener('visibilitychange', handleVisibility);
+  }
+
+  // Inicialización inmediata y con ClientRouter
+  setupHeroSlider();
+  document.addEventListener('DOMContentLoaded', setupHeroSlider);
+  document.addEventListener('astro:page-load', setupHeroSlider);
+</script>

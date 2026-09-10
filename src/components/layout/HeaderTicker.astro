@@ -1,0 +1,274 @@
+---
+---
+
+<div class="header-ticker-bar" id="headerTickerBar" role="region" aria-label="Novedades y especialidades">
+  <!-- FASE 1: Fogonazo de Palabras Progresivas Centradas (Platos y Especialidades) -->
+  <div class="ticker-word-phase is-active" id="tickerWordPhase">
+    <span class="ticker-word-item word-visible" id="tickerWordItem">La Sabrosura del Mar</span>
+  </div>
+
+  <!-- FASE 2: Carrusel Continuo Limpio (Solo letras: La Sabrosura del Mar, Disponible, Horario) -->
+  <div class="ticker-marquee-phase" id="tickerMarqueePhase">
+    <div class="ticker-wrapper">
+      <div class="ticker-content">
+        <!-- Bloque 1 -->
+        <span class="ticker-item">La Sabrosura del Mar</span>
+        <span class="ticker-item">Disponible Ahora</span>
+        <span class="ticker-item">Horario: 11:00 a. m. – 5:00 p. m.</span>
+        <span class="ticker-item">La Sabrosura del Mar</span>
+        <span class="ticker-item">Disponible Ahora</span>
+        <span class="ticker-item">Horario: 11:00 a. m. – 5:00 p. m.</span>
+
+        <!-- Bloque 2 (Réplica exacta para bucle 100% seamless) -->
+        <span class="ticker-item">La Sabrosura del Mar</span>
+        <span class="ticker-item">Disponible Ahora</span>
+        <span class="ticker-item">Horario: 11:00 a. m. – 5:00 p. m.</span>
+        <span class="ticker-item">La Sabrosura del Mar</span>
+        <span class="ticker-item">Disponible Ahora</span>
+        <span class="ticker-item">Horario: 11:00 a. m. – 5:00 p. m.</span>
+      </div>
+    </div>
+  </div>
+</div>
+
+<style>
+  .header-ticker-bar {
+    width: 100%;
+    height: var(--header-bar-h, 32px);
+    background: #051423;
+    border-top: 1px solid rgba(255, 255, 255, 0.08);
+    border-bottom: 2px solid var(--gold-500, #d99a3f);
+    overflow: hidden;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+    z-index: 90;
+    user-select: none;
+    -webkit-user-select: none;
+  }
+
+  /* -------------------------------------------------------------
+     FASE 1: Palabras Progresivas Centradas (Platos individuales)
+     ------------------------------------------------------------- */
+  .ticker-word-phase {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+    z-index: 2;
+  }
+
+  .ticker-word-phase.is-active {
+    opacity: 1;
+    pointer-events: auto;
+  }
+
+  .ticker-word-item {
+    font-family: var(--font-display, "Fraunces", Georgia, serif);
+    font-size: clamp(0.78rem, 1.1vw, 0.88rem);
+    font-weight: 750;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    opacity: 0;
+    transform: scale(0.94);
+    transition: opacity 0.4s cubic-bezier(0.16, 1, 0.3, 1),
+                transform 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+    background: linear-gradient(90deg, #ffffff 15%, var(--gold-300, #eec894) 70%, var(--gold-500, #d99a3f) 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    display: inline-block;
+    white-space: nowrap;
+    text-align: center;
+    padding-inline: 1rem;
+  }
+
+  .ticker-word-item.word-visible {
+    opacity: 1;
+    transform: scale(1);
+  }
+
+  /* -------------------------------------------------------------
+     FASE 2: Carrusel Continuo Limpio (Solo letras sin etiquetas)
+     ------------------------------------------------------------- */
+  .ticker-marquee-phase {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+    z-index: 1;
+    overflow: hidden;
+  }
+
+  .ticker-marquee-phase.is-active {
+    opacity: 1;
+    pointer-events: auto;
+  }
+
+  .ticker-wrapper {
+    display: flex;
+    white-space: nowrap;
+    width: max-content;
+  }
+
+  .ticker-content {
+    display: flex;
+    align-items: center;
+    animation: ticker-slide 24s linear infinite;
+    will-change: transform;
+  }
+
+  .ticker-item {
+    font-family: var(--font-body, "Inter", sans-serif);
+    font-size: 0.74rem;
+    font-weight: 700;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: rgba(255, 255, 255, 0.92);
+    padding-inline: 1.5rem;
+    display: inline-flex;
+    align-items: center;
+    white-space: nowrap;
+  }
+
+  .ticker-item::after {
+    content: '•';
+    margin-left: 1.5rem;
+    color: var(--gold-400, #e5a952);
+    font-size: 0.85rem;
+    opacity: 0.75;
+  }
+
+  @keyframes ticker-slide {
+    0% {
+      transform: translate3d(0, 0, 0);
+    }
+    100% {
+      transform: translate3d(-50%, 0, 0);
+    }
+  }
+
+  @media (max-width: 680px) {
+    .header-ticker-bar {
+      height: 28px;
+    }
+
+    .ticker-word-item {
+      font-size: 0.76rem;
+      letter-spacing: 0.1em;
+    }
+
+    .ticker-item {
+      font-size: 0.68rem;
+      letter-spacing: 0.1em;
+      padding-inline: 1rem;
+    }
+
+    .ticker-item::after {
+      margin-left: 1rem;
+    }
+  }
+</style>
+
+<script>
+  function setupHeaderTicker() {
+    const wordPhase = document.getElementById('tickerWordPhase');
+    const wordItem = document.getElementById('tickerWordItem');
+    const marqueePhase = document.getElementById('tickerMarqueePhase');
+
+    if (!wordPhase || !wordItem || !marqueePhase) return;
+
+    // Palabras individuales: Platos y especialidades de La Sabrosura del Mar
+    const tickerWords = [
+      'La Sabrosura del Mar',
+      'Pescados & Cazuelas',
+      'Arroces Marineros',
+      'Ceviches & Camarones',
+      'Sabor Costeño en Armenia'
+    ];
+
+    // Limpiar temporizadores previos para evitar ciclos concurrentes en ClientRouter
+    const win = window as any;
+    if (win.__headerTickerTimer) {
+      clearTimeout(win.__headerTickerTimer);
+      win.__headerTickerTimer = null;
+    }
+
+    let isDestroyed = false;
+
+    function runTickerCycle() {
+      if (isDestroyed) return;
+
+      // 1. Activar Fase de Palabras (Platos individuales)
+      marqueePhase.classList.remove('is-active');
+      wordPhase.classList.add('is-active');
+
+      let wordIndex = 0;
+
+      function showNextWord() {
+        if (isDestroyed) return;
+
+        if (wordIndex < tickerWords.length) {
+          wordItem.textContent = tickerWords[wordIndex];
+          wordItem.classList.add('word-visible');
+
+          // Visible durante 1.4s
+          win.__headerTickerTimer = setTimeout(() => {
+            wordItem.classList.remove('word-visible');
+
+            // 380ms de transición de salida antes de la siguiente palabra
+            win.__headerTickerTimer = setTimeout(() => {
+              wordIndex++;
+              showNextWord();
+            }, 380);
+          }, 1400);
+        } else {
+          // 2. Al completar los platos -> Transicionar a Fase de Marquee limpio
+          wordPhase.classList.remove('is-active');
+
+          win.__headerTickerTimer = setTimeout(() => {
+            if (isDestroyed) return;
+            marqueePhase.classList.add('is-active');
+
+            // Ejecutar el carrusel durante 16 segundos antes de reiniciar el ciclo
+            win.__headerTickerTimer = setTimeout(() => {
+              runTickerCycle();
+            }, 16000);
+          }, 500);
+        }
+      }
+
+      showNextWord();
+    }
+
+    runTickerCycle();
+
+    // Pausar y reanudar al cambiar de pestaña
+    const handleVisibility = () => {
+      if (document.hidden) {
+        if (win.__headerTickerTimer) clearTimeout(win.__headerTickerTimer);
+      } else {
+        runTickerCycle();
+      }
+    };
+
+    document.removeEventListener('visibilitychange', handleVisibility);
+    document.addEventListener('visibilitychange', handleVisibility);
+  }
+
+  // Inicialización inmediata y con ClientRouter
+  setupHeaderTicker();
+  document.addEventListener('DOMContentLoaded', setupHeaderTicker);
+  document.addEventListener('astro:page-load', setupHeaderTicker);
+</script>

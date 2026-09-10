@@ -1,59 +1,571 @@
 ---
 import Icon from '../icons/Icon.astro';
 
-interface Canal {
-  id: string;
-  icono: string;
-  titulo: string;
-  subtitulo: string;
-  textoPrincipal?: string;
-  enlaces?: Array<{
-    texto: string;
-    href: string;
-    destacado?: boolean;
-  }>;
-}
-
 interface Props {
-  eyebrow: string;
-  title: string;
-  lead: string;
-  canales: Canal[];
-  avisoReservas: string;
+  eyebrow?: string;
+  title?: string;
+  titleEmphasis?: string;
+  lead?: string;
+  avisoReservas?: string;
 }
 
-const { eyebrow, title, lead, canales, avisoReservas } = Astro.props;
+const {
+  eyebrow = "Contacto",
+  title = "Estamos listos para",
+  titleEmphasis = "atenderte",
+  lead = "Consulta nuestra carta, elige la sede más cercana o comunícate directamente con nuestro equipo de sala.",
+  avisoReservas = "No manejamos reservas. La atención se realiza directamente en nuestras dos sedes, por orden de llegada.",
+} = Astro.props;
 ---
 
-<section class="section section--sand" id="contacto">
+<section class="section section--sand contact-section" id="contacto">
   <div class="container">
-    <div class="section-head section-head--center reveal">
+    <div class="section-head section-head--center" data-sr data-sr-direction="up">
       <span class="eyebrow">{eyebrow}</span>
-      <h2>{title}</h2>
-      <p>{lead}</p>
+      <h2>
+        {title} {titleEmphasis && <em>{titleEmphasis}</em>}
+      </h2>
+      <p class="lead">{lead}</p>
     </div>
 
-    <div class="contact-grid reveal">
-      {canales.map((c) => (
-        <div class="contact-card">
-          <div class="feature__icon">
-            <Icon name={c.icono} size={24} />
+    <div class="contact-grid">
+      <!-- Card 1: Teléfono & WhatsApp -->
+      <div
+        class="contact-card"
+        data-sr
+        data-sr-direction="zoom"
+        data-sr-delay="0.08"
+      >
+        <div class="contact-card__header">
+          <div class="contact-card__icon contact-card__icon--warm" aria-hidden="true">
+            <Icon name="smartphone" size={24} />
           </div>
-          <h3>{c.titulo}</h3>
-          <p>{c.subtitulo}</p>
-          {c.textoPrincipal && (
-            <span class="big" style="display:block">{c.textoPrincipal}</span>
-          )}
-          {c.enlaces?.map((enlace) => (
-            <a class="big" href={enlace.href}>{enlace.texto}</a>
-          ))}
         </div>
-      ))}
+
+        <div class="contact-card__body">
+          <h3>Teléfono & WhatsApp</h3>
+          <p class="contact-card__sub">Atención prioritaria y consultas al instante</p>
+
+          <div class="contact-card__section">
+            <span class="contact-card__label">LÍNEA MÓVIL OFICIAL</span>
+            <span class="contact-card__main-num tabular-num">311 309 3429</span>
+
+            <div class="contact-card__btn-row">
+              <button
+                type="button"
+                class="contact-btn contact-btn--copy"
+                data-copy-text="3113093429"
+                title="Copiar número al portapapeles"
+                aria-label="Copiar número de teléfono 311 309 3429"
+              >
+                <Icon name="copy" size={15} />
+                <span>Copiar</span>
+                <span class="copy-feedback" aria-live="polite">¡Copiado!</span>
+              </button>
+
+              <a
+                class="contact-btn contact-btn--chat"
+                href="https://wa.me/573113093429?text=Hola%2C%20estoy%20interesado%20en%20pedir%20al%20restaurante"
+                target="_blank"
+                rel="noopener"
+                data-track-event="whatsapp_click"
+                data-track-location="contact_card_phone"
+                title="Chatear por WhatsApp"
+              >
+                <Icon name="whatsapp" size={16} />
+                <span>Chatear</span>
+              </a>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Card 2: Pedidos y Consultas -->
+      <div
+        class="contact-card"
+        data-sr
+        data-sr-direction="zoom"
+        data-sr-delay="0.16"
+      >
+        <div class="contact-card__header">
+          <div class="contact-card__icon contact-card__icon--teal" aria-hidden="true">
+            <Icon name="utensils" size={24} />
+          </div>
+        </div>
+
+        <div class="contact-card__body">
+          <h3>Pedidos y Consultas</h3>
+          <p class="contact-card__sub">Líneas habilitadas para solicitudes y pedidos</p>
+
+          <div class="contact-card__lines-stack">
+            <!-- Línea Móvil / WhatsApp -->
+            <div class="contact-line-box">
+              <div class="contact-line-box__info">
+                <span class="contact-line-box__label">MÓVIL / WHATSAPP</span>
+                <strong class="contact-line-box__num tabular-num">311 309 3429</strong>
+              </div>
+              <div class="contact-line-box__actions">
+                <button
+                  type="button"
+                  class="contact-icon-btn"
+                  data-copy-text="3113093429"
+                  title="Copiar número móvil"
+                  aria-label="Copiar número móvil 311 309 3429"
+                >
+                  <Icon name="copy" size={16} />
+                  <span class="copy-feedback">¡Copiado!</span>
+                </button>
+                <a
+                  class="contact-icon-btn contact-icon-btn--wa"
+                  href="https://wa.me/573113093429?text=Hola%2C%20estoy%20interesado%20en%20pedir%20al%20restaurante"
+                  target="_blank"
+                  rel="noopener"
+                  data-track-event="whatsapp_click"
+                  data-track-location="contact_card_orders"
+                  title="Abrir WhatsApp"
+                  aria-label="Abrir WhatsApp con 311 309 3429"
+                >
+                  <Icon name="whatsapp" size={16} />
+                </a>
+              </div>
+            </div>
+
+            <!-- Línea Teléfono Fijo -->
+            <div class="contact-line-box">
+              <div class="contact-line-box__info">
+                <span class="contact-line-box__label">TELÉFONO FIJO</span>
+                <strong class="contact-line-box__num tabular-num">606 747 7424</strong>
+              </div>
+              <div class="contact-line-box__actions">
+                <button
+                  type="button"
+                  class="contact-icon-btn"
+                  data-copy-text="6067477424"
+                  title="Copiar teléfono fijo"
+                  aria-label="Copiar teléfono fijo 606 747 7424"
+                >
+                  <Icon name="copy" size={16} />
+                  <span class="copy-feedback">¡Copiado!</span>
+                </button>
+                <a
+                  class="contact-icon-btn contact-icon-btn--phone"
+                  href="tel:+576067477424"
+                  data-track-event="call_click"
+                  data-track-location="contact_card_landline"
+                  title="Llamar al teléfono fijo"
+                  aria-label="Llamar al teléfono fijo 606 747 7424"
+                >
+                  <Icon name="phone" size={16} />
+                </a>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Card 3: Horario de atención -->
+      <div
+        class="contact-card"
+        data-sr
+        data-sr-direction="zoom"
+        data-sr-delay="0.24"
+      >
+        <div class="contact-card__header">
+          <div class="contact-card__icon contact-card__icon--mint" aria-hidden="true">
+            <Icon name="clock" size={24} />
+          </div>
+        </div>
+
+        <div class="contact-card__body">
+          <h3>Horario de atención</h3>
+          <p class="contact-card__sub">Todos los días, incluidos festivos</p>
+
+          <div class="contact-card__section contact-card__section--schedule">
+            <span class="contact-card__label">JORNADA CONTINUA</span>
+            <span class="contact-card__main-num contact-card__main-num--schedule tabular-num">
+              11:00 a. m. – 5:00 p. m.
+            </span>
+          </div>
+        </div>
+      </div>
     </div>
 
-    <div class="notice reveal">
+    <!-- Aviso institucional de reservas -->
+    <div class="notice" data-sr data-sr-direction="up" data-sr-delay="0.2">
       <Icon name="notice" size={20} />
       <p><strong>Atención al público:</strong> {avisoReservas}</p>
     </div>
   </div>
 </section>
+
+<style>
+  .contact-section h2 em {
+    font-style: italic;
+    font-family: var(--font-display);
+    font-weight: 400;
+    color: var(--gold-600, #b27520);
+  }
+
+  .contact-grid {
+    display: grid;
+    gap: 1.5rem;
+    grid-template-columns: repeat(auto-fit, minmax(min(100%, 300px), 1fr));
+    align-items: stretch;
+  }
+
+  .contact-card {
+    background: #ffffff;
+    border: 1px solid var(--line, rgba(10, 37, 64, 0.12));
+    border-radius: var(--radius-lg, 22px);
+    padding: clamp(1.6rem, 3.2vw, 2.2rem);
+    box-shadow: 0 4px 20px rgba(10, 37, 64, 0.05);
+    display: flex;
+    flex-direction: column;
+    text-align: left;
+    transition: transform 0.35s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.35s ease, border-color 0.3s ease;
+  }
+
+  .contact-card:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 12px 30px rgba(10, 37, 64, 0.09);
+    border-color: rgba(14, 90, 114, 0.25);
+  }
+
+  .contact-card__header {
+    margin-bottom: 1.25rem;
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+  }
+
+  /* Contenedores de Icono con fondo suave */
+  .contact-card__icon {
+    width: 48px;
+    height: 48px;
+    border-radius: 14px;
+    display: grid;
+    place-items: center;
+    flex-shrink: 0;
+    transition: transform 0.3s ease;
+  }
+
+  .contact-card:hover .contact-card__icon {
+    transform: scale(1.08);
+  }
+
+  .contact-card__icon--warm {
+    background: #fff4e5;
+    color: #c07d23;
+  }
+
+  .contact-card__icon--teal {
+    background: #e6f6f9;
+    color: #0e6b82;
+  }
+
+  .contact-card__icon--mint {
+    background: #e8f7f0;
+    color: #1a8754;
+  }
+
+  .contact-card__body {
+    display: flex;
+    flex-direction: column;
+    flex: 1;
+  }
+
+  .contact-card__body h3 {
+    font-family: var(--font-display, serif);
+    font-size: 1.35rem;
+    font-weight: 700;
+    color: var(--navy-900, #0a2540);
+    margin: 0 0 0.35rem;
+    line-height: 1.2;
+  }
+
+  .contact-card__sub {
+    font-size: 0.88rem;
+    color: var(--muted, #64748b);
+    margin: 0 0 1.6rem;
+    line-height: 1.45;
+  }
+
+  /* Sección inferior de la tarjeta */
+  .contact-card__section {
+    margin-top: auto;
+    padding-top: 1.25rem;
+    border-top: 1px dashed var(--line, rgba(10, 37, 64, 0.14));
+    display: flex;
+    flex-direction: column;
+  }
+
+  .contact-card__section--schedule {
+    padding-bottom: 0.5rem;
+  }
+
+  .contact-card__label {
+    font-size: 0.72rem;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--muted, #64748b);
+    margin-bottom: 0.35rem;
+    display: block;
+  }
+
+  .contact-card__main-num {
+    font-family: var(--font-display, serif);
+    font-size: 1.48rem;
+    font-weight: 750;
+    color: var(--navy-900, #0a2540);
+    line-height: 1.15;
+    margin-bottom: 1.15rem;
+  }
+
+  .contact-card__main-num--schedule {
+    font-size: clamp(1.22rem, 2.2vw, 1.42rem);
+    margin-bottom: 0;
+  }
+
+  /* Fila de Botones en Tarjeta 1 */
+  .contact-card__btn-row {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 0.75rem;
+  }
+
+  .contact-btn {
+    position: relative;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+    padding: 0.65rem 1rem;
+    border-radius: 999px;
+    font-family: var(--font-body);
+    font-size: 0.88rem;
+    font-weight: 650;
+    text-decoration: none;
+    border: none;
+    cursor: pointer;
+    transition: all 0.22s cubic-bezier(0.16, 1, 0.3, 1);
+    -webkit-user-select: none;
+    user-select: none;
+  }
+
+  .contact-btn--copy {
+    background: #f1f5f9;
+    color: var(--navy-900, #0a2540);
+    border: 1px solid #e2e8f0;
+  }
+
+  .contact-btn--copy:hover {
+    background: #e2e8f0;
+    color: var(--navy-950);
+    transform: translateY(-1px);
+  }
+
+  .contact-btn--chat {
+    background: #008f5a;
+    color: #ffffff;
+    box-shadow: 0 4px 12px rgba(0, 143, 90, 0.25);
+  }
+
+  .contact-btn--chat:hover {
+    background: #007a4d;
+    color: #ffffff;
+    transform: translateY(-1px);
+    box-shadow: 0 6px 16px rgba(0, 143, 90, 0.35);
+  }
+
+  /* Tarjeta 2: Cajas de Líneas Apiladas */
+  .contact-card__lines-stack {
+    margin-top: auto;
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+  }
+
+  .contact-line-box {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 0.75rem;
+    background: #f8fafc;
+    border: 1px solid #e2e8f0;
+    border-radius: 14px;
+    padding: 0.75rem 0.95rem;
+    transition: background-color 0.2s ease, border-color 0.2s ease;
+  }
+
+  .contact-line-box:hover {
+    background: #f1f5f9;
+    border-color: #cbd5e1;
+  }
+
+  .contact-line-box__info {
+    display: flex;
+    flex-direction: column;
+    min-width: 0;
+  }
+
+  .contact-line-box__label {
+    font-size: 0.68rem;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--muted, #64748b);
+    line-height: 1.1;
+    margin-bottom: 0.2rem;
+  }
+
+  .contact-line-box__num {
+    font-family: var(--font-display, serif);
+    font-size: 1.12rem;
+    color: var(--navy-900, #0a2540);
+    font-weight: 700;
+    line-height: 1.1;
+  }
+
+  .contact-line-box__actions {
+    display: flex;
+    align-items: center;
+    gap: 0.45rem;
+    flex-shrink: 0;
+  }
+
+  .contact-icon-btn {
+    position: relative;
+    width: 36px;
+    height: 36px;
+    border-radius: 10px;
+    border: 1px solid #e2e8f0;
+    background: #ffffff;
+    color: var(--navy-900, #0a2540);
+    display: grid;
+    place-items: center;
+    cursor: pointer;
+    text-decoration: none;
+    transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+  }
+
+  .contact-icon-btn:hover {
+    background: #e2e8f0;
+    transform: translateY(-1px);
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+  }
+
+  .contact-icon-btn--wa {
+    background: #e8f7f0;
+    color: #008f5a;
+    border-color: rgba(0, 143, 90, 0.25);
+  }
+
+  .contact-icon-btn--wa:hover {
+    background: #008f5a;
+    color: #ffffff;
+    border-color: #008f5a;
+  }
+
+  .contact-icon-btn--phone {
+    background: #e6f6f9;
+    color: #0e6b82;
+    border-color: rgba(14, 107, 130, 0.25);
+  }
+
+  .contact-icon-btn--phone:hover {
+    background: #0e6b82;
+    color: #ffffff;
+    border-color: #0e6b82;
+  }
+
+  /* Tooltip de Feedback de Copiado */
+  .copy-feedback {
+    position: absolute;
+    bottom: calc(100% + 6px);
+    left: 50%;
+    transform: translateX(-50%) translateY(4px);
+    background: #051423;
+    color: #ffffff;
+    font-size: 0.72rem;
+    font-weight: 700;
+    padding: 0.25rem 0.65rem;
+    border-radius: 6px;
+    pointer-events: none;
+    opacity: 0;
+    white-space: nowrap;
+    transition: opacity 0.2s ease, transform 0.2s ease;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+    z-index: 10;
+  }
+
+  .copy-feedback::after {
+    content: '';
+    position: absolute;
+    top: 100%;
+    left: 50%;
+    transform: translateX(-50%);
+    border: 4px solid transparent;
+    border-top-color: #051423;
+  }
+
+  .copy-feedback.is-shown {
+    opacity: 1;
+    transform: translateX(-50%) translateY(0);
+  }
+
+  @media (max-width: 480px) {
+    .contact-card__btn-row {
+      grid-template-columns: 1fr;
+    }
+  }
+</style>
+
+<script>
+  function setupContactCopyButtons() {
+    const copyButtons = document.querySelectorAll<HTMLButtonElement>('[data-copy-text]');
+
+    copyButtons.forEach((btn) => {
+      // Evitar registrar listeners duplicados en ClientRouter
+      if ((btn as any).__hasCopyListener) return;
+      (btn as any).__hasCopyListener = true;
+
+      btn.addEventListener('click', async (e) => {
+        e.preventDefault();
+        const textToCopy = btn.getAttribute('data-copy-text');
+        if (!textToCopy) return;
+
+        try {
+          if (navigator.clipboard && window.isSecureContext) {
+            await navigator.clipboard.writeText(textToCopy);
+          } else {
+            // Fallback para contextos no seguros
+            const textarea = document.createElement('textarea');
+            textarea.value = textToCopy;
+            textarea.style.position = 'fixed';
+            textarea.style.opacity = '0';
+            document.body.appendChild(textarea);
+            textarea.focus();
+            textarea.select();
+            document.execCommand('copy');
+            document.body.removeChild(textarea);
+          }
+
+          const feedback = btn.querySelector('.copy-feedback');
+          if (feedback) {
+            feedback.classList.add('is-shown');
+            setTimeout(() => {
+              feedback.classList.remove('is-shown');
+            }, 1800);
+          }
+        } catch (err) {
+          console.error('Error al copiar:', err);
+        }
+      });
+    });
+  }
+
+  setupContactCopyButtons();
+  document.addEventListener('DOMContentLoaded', setupContactCopyButtons);
+  document.addEventListener('astro:page-load', setupContactCopyButtons);
+</script>

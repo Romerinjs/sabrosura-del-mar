@@ -54,32 +54,6 @@ const money = (n: number) => '$' + n.toLocaleString('es-CO');
           </span>
         )}
       </div>
-
-      <button
-        type="button"
-        class="menu-feature__order-btn"
-        data-dish-add
-        data-dish-name={f.nombre}
-        data-dish-price={f.precio || 0}
-        data-track-event="add_dish_to_bag"
-        data-track-product={f.nombre}
-        data-track-location="menu_feature"
-        title={`Añadir ${f.nombre} a mi pedido`}
-        aria-label={`Añadir ${f.nombre} a mi pedido`}
-      >
-        <span class="btn-icon" aria-hidden="true">
-          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.8" stroke-linecap="round" stroke-linejoin="round">
-            <line x1="12" y1="5" x2="12" y2="19"></line>
-            <line x1="5" y1="12" x2="19" y2="12"></line>
-          </svg>
-        </span>
-        <span class="btn-text">Añadir a mi pedido</span>
-        <span class="btn-check-icon" aria-hidden="true">
-          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round">
-            <polyline points="20 6 9 17 4 12"></polyline>
-          </svg>
-        </span>
-      </button>
     </div>
   </div>
 </div>
@@ -97,11 +71,14 @@ const money = (n: number) => '$' + n.toLocaleString('es-CO');
     height: 100%;
     object-fit: cover;
     display: block;
-    transition: transform 0.4s ease;
+    transform: scale(1);
+    transition: transform 2s cubic-bezier(0.16, 1, 0.3, 1), filter 1.2s cubic-bezier(0.16, 1, 0.3, 1);
+    will-change: transform;
   }
 
   .menu-feature:hover .menu-feature__media img {
-    transform: scale(1.03);
+    transform: scale(1.06);
+    filter: brightness(1.025);
   }
 
   .menu-feature__img-tag {
@@ -180,125 +157,5 @@ const money = (n: number) => '$' + n.toLocaleString('es-CO');
     color: var(--muted, #64748b);
   }
 
-  /* -------------------------------------------------------------
-     Botón Moderno Interactivo para Plato Recomendado
-     ------------------------------------------------------------- */
-  .menu-feature__order-btn {
-    position: relative;
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    gap: 0.5rem;
-    padding: 0.56rem 1.25rem;
-    background: linear-gradient(135deg, #071f38 0%, #0a2e52 48%, #0e5a72 100%);
-    color: #ffffff;
-    font-family: var(--font-body);
-    font-size: 0.84rem;
-    font-weight: 750;
-    border: 1.5px solid var(--gold-400, #e2a842);
-    border-radius: 999px;
-    cursor: pointer;
-    box-shadow: 0 4px 14px rgba(5, 20, 35, 0.25), 0 0 10px rgba(226, 168, 66, 0.22);
-    transition: transform 0.22s cubic-bezier(0.16, 1, 0.3, 1),
-                box-shadow 0.22s ease,
-                background-color 0.22s ease,
-                border-color 0.22s ease;
-    white-space: nowrap;
-    overflow: hidden;
-    user-select: none;
-    -webkit-user-select: none;
-    text-decoration: none;
-  }
-
-  /* Reflejo / Destello deslizante suave al pasar el cursor */
-  .menu-feature__order-btn::before {
-    content: "";
-    position: absolute;
-    top: 0;
-    left: -80%;
-    width: 55%;
-    height: 100%;
-    background: linear-gradient(
-      90deg,
-      transparent,
-      rgba(255, 255, 255, 0.28),
-      transparent
-    );
-    transform: skewX(-22deg);
-    transition: left 0.65s cubic-bezier(0.16, 1, 0.3, 1);
-    pointer-events: none;
-  }
-
-  .menu-feature__order-btn:hover {
-    background: linear-gradient(135deg, #0a2e52 0%, #0e5a72 55%, #13718c 100%);
-    border-color: var(--gold-300, #f6c86a);
-    transform: translateY(-2px) scale(1.02);
-    box-shadow: 0 8px 22px rgba(5, 20, 35, 0.32), 0 0 16px rgba(226, 168, 66, 0.42);
-    color: #ffffff;
-  }
-
-  .menu-feature__order-btn:hover::before {
-    left: 135%;
-  }
-
-  .menu-feature__order-btn:active {
-    transform: translateY(0) scale(0.96);
-    box-shadow: 0 2px 6px rgba(5, 20, 35, 0.25);
-  }
-
-  .menu-feature__order-btn .btn-icon {
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    transition: transform 0.26s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-    color: var(--gold-400, #e2a842);
-  }
-
-  .menu-feature__order-btn:hover .btn-icon {
-    transform: rotate(90deg) scale(1.15);
-    color: #ffffff;
-  }
-
-  .menu-feature__order-btn .btn-check-icon {
-    display: none;
-  }
-
-  /* Estado dinámico ¡Añadido! con feedback táctil y checkmark */
-  .menu-feature__order-btn.is-added {
-    background: linear-gradient(135deg, #059669 0%, #10b981 100%) !important;
-    border-color: #6ee7b7 !important;
-    box-shadow: 0 0 20px rgba(16, 185, 129, 0.5) !important;
-    transform: scale(1.03);
-    color: #ffffff !important;
-  }
-
-  .menu-feature__order-btn.is-added .btn-icon {
-    display: none;
-  }
-
-  .menu-feature__order-btn.is-added .btn-check-icon {
-    display: inline-flex;
-    animation: checkPop 0.28s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-    color: #ffffff;
-  }
-
-  @keyframes checkPop {
-    from { transform: scale(0); }
-    to { transform: scale(1); }
-  }
-
-  @media (max-width: 520px) {
-    .menu-feature__bottom-row {
-      flex-direction: column;
-      align-items: stretch;
-      gap: 0.65rem;
-    }
-
-    .menu-feature__order-btn {
-      width: 100%;
-      padding: 0.58rem 1rem;
-      font-size: 0.83rem;
-    }
-  }
 </style>
 

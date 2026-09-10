@@ -11,6 +11,7 @@ interface Props {
   descripcion?: string;
   destacado?: boolean;
   imagen?: string;
+  index?: number;
 }
 
 const {
@@ -23,6 +24,7 @@ const {
   descripcion,
   destacado,
   imagen,
+  index = 0,
 } = Astro.props;
 
 const money = (n: number) => '$' + n.toLocaleString('es-CO');
@@ -37,12 +39,16 @@ const knownImages: Record<string, string> = {
 const dishKey = nombre.toLowerCase().trim();
 const photoSrc = imagen || knownImages[dishKey] || null;
 const dishSlug = dishKey.replace(/[^a-z0-9]/g, '-');
+const itemDelay = ((index % 6) * 0.05).toFixed(2);
 ---
 
 <li
   class="menu-item menu-dish-card"
   data-dish-name={nombre.toLowerCase()}
   data-dish-desc={descripcion ? descripcion.toLowerCase() : ''}
+  data-sr
+  data-sr-direction="up"
+  data-sr-delay={itemDelay}
 >
   <!-- Fila principal clickeable (Trigger de acordeón vertical) -->
   <div
@@ -102,22 +108,6 @@ const dishSlug = dishKey.replace(/[^a-z0-9]/g, '-');
         )}
       </div>
 
-      <button
-        type="button"
-        class="menu-item__add-btn"
-        data-dish-add
-        data-dish-name={nombre}
-        data-dish-price={precio || 0}
-        data-track-event="add_dish_to_bag"
-        data-track-product={nombre}
-        data-track-location="menu_item"
-        title={`Añadir ${nombre} a mi pedido`}
-        aria-label={`Añadir ${nombre} a mi pedido`}
-      >
-        <span aria-hidden="true">+</span>
-        <span class="sr-only">Añadir a mi pedido</span>
-      </button>
-
       <span class="menu-dish-chevron" aria-hidden="true">
         <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
           <polyline points="6 9 12 15 18 9"></polyline>
@@ -150,29 +140,6 @@ const dishSlug = dishKey.replace(/[^a-z0-9]/g, '-');
             ℹ️ {notaPrecio}
           </p>
         )}
-
-        <button
-          type="button"
-          class="accordion-order-cta"
-          data-dish-add
-          data-dish-name={nombre}
-          data-dish-price={precio || 0}
-          title={`Añadir ${nombre} a mi pedido`}
-          aria-label={`Añadir ${nombre} a mi pedido`}
-        >
-          <span class="btn-icon" aria-hidden="true">
-            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.8" stroke-linecap="round" stroke-linejoin="round">
-              <line x1="12" y1="5" x2="12" y2="19"></line>
-              <line x1="5" y1="12" x2="19" y2="12"></line>
-            </svg>
-          </span>
-          <span class="btn-text">Añadir a mi pedido {precio ? `(${money(precio)})` : ''}</span>
-          <span class="btn-check-icon" aria-hidden="true">
-            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round">
-              <polyline points="20 6 9 17 4 12"></polyline>
-            </svg>
-          </span>
-        </button>
       </div>
     </div>
   </div>
@@ -346,38 +313,7 @@ const dishSlug = dishKey.replace(/[^a-z0-9]/g, '-');
     margin-top: 0.15rem;
   }
 
-  /* Botón (+) circular con medidas precisas e indeformables */
-  .menu-item__add-btn {
-    width: 30px !important;
-    height: 30px !important;
-    min-width: 30px !important;
-    max-width: 30px !important;
-    border-radius: 50% !important;
-    border: 1.5px solid var(--teal-600) !important;
-    background: #ffffff !important;
-    color: var(--teal-700) !important;
-    font-size: 1.15rem !important;
-    font-weight: 750 !important;
-    line-height: 1 !important;
-    display: inline-flex !important;
-    align-items: center !important;
-    justify-content: center !important;
-    cursor: pointer !important;
-    transition: all 0.18s ease !important;
-    padding: 0 !important;
-    flex-shrink: 0 !important;
-    box-sizing: border-box !important;
-  }
 
-  .menu-item__add-btn:hover {
-    background: var(--teal-600) !important;
-    color: #ffffff !important;
-    transform: scale(1.1) !important;
-  }
-
-  .menu-item__add-btn:active {
-    transform: scale(0.94) !important;
-  }
 
   /* Indicador chevron de acordeón con rotación fluida */
   .menu-dish-chevron {
@@ -421,9 +357,9 @@ const dishSlug = dishKey.replace(/[^a-z0-9]/g, '-');
     gap: 0.75rem;
     opacity: 0;
     transform: translateY(-12px);
-    transition: opacity 0.38s ease,
-                transform 0.42s cubic-bezier(0.16, 1, 0.3, 1),
-                padding 0.42s cubic-bezier(0.16, 1, 0.3, 1);
+    transition: opacity 0.65s ease,
+                transform 0.75s cubic-bezier(0.16, 1, 0.3, 1),
+                padding 0.75s cubic-bezier(0.16, 1, 0.3, 1);
   }
 
   .menu-dish-card.is-expanded .menu-dish-accordion__body {
@@ -432,7 +368,7 @@ const dishSlug = dishKey.replace(/[^a-z0-9]/g, '-');
     padding: 0.95rem 0.4rem 0.65rem 4rem;
   }
 
-  /* Foto ampliada con zoom suave al abrirse */
+  /* Foto ampliada con zoom suave al abrirse (0.85s) */
   .accordion-photo-wrap {
     width: 100%;
     max-width: 280px;
@@ -440,8 +376,8 @@ const dishSlug = dishKey.replace(/[^a-z0-9]/g, '-');
     overflow: hidden;
     border: 1px solid var(--line);
     box-shadow: 0 4px 16px rgba(5, 20, 35, 0.1);
-    transform: scale(0.96);
-    transition: transform 0.45s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.3s ease;
+    transform: scale(0.95);
+    transition: transform 0.85s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.6s ease;
   }
 
   .menu-dish-card.is-expanded .accordion-photo-wrap {
@@ -502,127 +438,6 @@ const dishSlug = dishKey.replace(/[^a-z0-9]/g, '-');
     margin: 0;
   }
 
-  .accordion-order-cta {
-    position: relative;
-    display: inline-flex;
-    align-items: center;
-    gap: 0.5rem;
-    background: linear-gradient(135deg, #071f38 0%, #0a2e52 48%, #0e5a72 100%);
-    color: #ffffff;
-    font-family: var(--font-body);
-    font-size: 0.84rem;
-    font-weight: 750;
-    padding: 0.52rem 1.2rem;
-    border-radius: 999px;
-    border: 1.5px solid rgba(226, 168, 66, 0.45);
-    cursor: pointer;
-    width: fit-content;
-    margin-top: 0.35rem;
-    box-shadow: 0 4px 14px rgba(5, 20, 35, 0.22), 0 0 10px rgba(226, 168, 66, 0.18);
-    transform: scale(0.96);
-    transition: all 0.22s cubic-bezier(0.16, 1, 0.3, 1);
-    overflow: hidden;
-    user-select: none;
-    -webkit-user-select: none;
-  }
-
-  .accordion-order-cta::before {
-    content: "";
-    position: absolute;
-    top: 0;
-    left: -80%;
-    width: 50%;
-    height: 100%;
-    background: linear-gradient(
-      90deg,
-      transparent,
-      rgba(255, 255, 255, 0.25),
-      transparent
-    );
-    transform: skewX(-20deg);
-    transition: left 0.6s ease;
-    pointer-events: none;
-  }
-
-  .menu-dish-card.is-expanded .accordion-order-cta {
-    transform: scale(1);
-  }
-
-  .accordion-order-cta:hover {
-    background: linear-gradient(135deg, #0a2e52 0%, #0e5a72 55%, #13718c 100%);
-    border-color: var(--gold-300);
-    transform: translateY(-2px) scale(1.02);
-    box-shadow: 0 6px 18px rgba(5, 20, 35, 0.3), 0 0 14px rgba(226, 168, 66, 0.35);
-  }
-
-  .accordion-order-cta:hover::before {
-    left: 130%;
-  }
-
-  .accordion-order-cta:active {
-    transform: translateY(0) scale(0.96);
-  }
-
-  .accordion-order-cta .btn-icon {
-    display: inline-flex;
-    align-items: center;
-    transition: transform 0.25s ease;
-    color: var(--gold-400);
-  }
-
-  .accordion-order-cta:hover .btn-icon {
-    transform: rotate(90deg);
-    color: #ffffff;
-  }
-
-  .accordion-order-cta .btn-check-icon {
-    display: none;
-  }
-
-  .accordion-order-cta.is-added {
-    background: linear-gradient(135deg, #059669 0%, #10b981 100%) !important;
-    border-color: #6ee7b7 !important;
-    box-shadow: 0 0 18px rgba(16, 185, 129, 0.5) !important;
-    transform: scale(1.03);
-    color: #ffffff !important;
-  }
-
-  .accordion-order-cta.is-added .btn-icon {
-    display: none;
-  }
-
-  .accordion-order-cta.is-added .btn-check-icon {
-    display: inline-flex;
-    color: #ffffff;
-  }
-
-  /* Resalte moderno exclusivo para platos con badge 'Favorito' */
-  .menu-dish-card:has(.menu-item__badge) .menu-item__add-btn {
-    border-color: var(--gold-500) !important;
-    color: var(--gold-600) !important;
-    background: #fffdf8 !important;
-    box-shadow: 0 0 10px rgba(226, 168, 66, 0.3) !important;
-  }
-
-  .menu-dish-card:has(.menu-item__badge) .menu-item__add-btn:hover {
-    background: var(--gold-500) !important;
-    color: var(--navy-950) !important;
-    border-color: var(--gold-400) !important;
-    box-shadow: 0 4px 14px rgba(226, 168, 66, 0.45) !important;
-  }
-
-  .menu-dish-card:has(.menu-item__badge) .accordion-order-cta {
-    border: 1.5px solid var(--gold-400);
-    box-shadow: 0 4px 14px rgba(5, 20, 35, 0.25), 0 0 12px rgba(226, 168, 66, 0.26);
-  }
-
-  .menu-item__add-btn.is-added {
-    background: #10b981 !important;
-    border-color: #10b981 !important;
-    color: #ffffff !important;
-    transform: scale(1.15) !important;
-  }
-
   .sr-only {
     position: absolute;
     width: 1px;
@@ -654,14 +469,6 @@ const dishSlug = dishKey.replace(/[^a-z0-9]/g, '-');
       font-size: 0.92rem;
     }
 
-    .menu-item__add-btn {
-      width: 28px !important;
-      height: 28px !important;
-      min-width: 28px !important;
-      max-width: 28px !important;
-      font-size: 1.05rem !important;
-    }
-
     .menu-dish-accordion__body {
       padding: 0 0.2rem;
     }
@@ -681,11 +488,6 @@ const dishSlug = dishKey.replace(/[^a-z0-9]/g, '-');
     document.addEventListener('click', (e) => {
       const target = e.target as HTMLElement | null;
       if (!target) return;
-
-      // Si el usuario hace clic en añadir plato (+), no alternar el acordeón
-      if (target.closest('[data-dish-add]')) {
-        return;
-      }
 
       const summary = target.closest('.menu-dish-summary') as HTMLElement | null;
       if (summary) {

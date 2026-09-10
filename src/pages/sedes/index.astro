@@ -1,7 +1,6 @@
 ---
 import { getCollection } from 'astro:content';
 import BaseLayout from '../../layouts/BaseLayout.astro';
-import VenueCard from '../../components/home/VenueCard.astro';
 import VenuesShowcase from '../../components/home/VenuesShowcase.astro';
 import Icon from '../../components/icons/Icon.astro';
 
@@ -10,15 +9,15 @@ const sedes = await getCollection('sedes');
 
 <BaseLayout
   title="Nuestras sedes en Armenia | La Sabrosura del Mar"
-  description="Conoce nuestras dos sedes en Armenia, Quindío: Sede Centro (Cra. 13 con servicio a domicilio) y Sede Norte (Cra. 19 Proviteq, más amplia y con parqueadero)."
+  description="Conoce nuestras dos sedes en Armenia, Quindío: Sede Centro (Cra. 13) y Sede Norte (Cra. 19 Proviteq, más amplia y con parqueadero)."
   canonicalUrl="https://lasabrosuradelmar.com/sedes"
   activePage="inicio"
 >
   <section class="page-hero">
     <div class="container">
-      <span class="eyebrow">Ubicaciones</span>
-      <h1>Nuestras sedes en Armenia</h1>
-      <p>Dos espacios con el mismo auténtico sabor costeño. Elige la sede más conveniente para ti.</p>
+      <span class="eyebrow" data-sr data-sr-instant data-sr-delay="0.06">Ubicaciones</span>
+      <h1 data-sr data-sr-instant data-sr-delay="0.16">Nuestras sedes en Armenia</h1>
+      <p data-sr data-sr-instant data-sr-delay="0.26">Dos espacios con el mismo auténtico sabor costeño. Elige la sede más conveniente para ti.</p>
     </div>
   </section>
 
@@ -26,7 +25,7 @@ const sedes = await getCollection('sedes');
     <div class="container">
       <VenuesShowcase sedes={sedes} />
 
-      <div class="notice reveal" style="margin-top:3rem">
+      <div class="notice" data-sr data-sr-delay="0.2" style="margin-top:3rem">
         <Icon name="notice" size={20} />
         <p><strong>Atención en mesa:</strong> No manejamos reservas en ninguna de nuestras dos sedes. La atención se realiza directamente por orden de llegada.</p>
       </div>

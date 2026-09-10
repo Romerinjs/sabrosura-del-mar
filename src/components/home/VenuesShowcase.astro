@@ -28,7 +28,7 @@ function getMapEmbedUrl(sedeId: string) {
 
 <div class="venues-showcase" data-venues-showcase>
   <!-- Selector de pestañas píldora (Centro a la izquierda, Norte a la derecha) -->
-  <div class="venues-tabs-nav" role="tablist" aria-label="Seleccionar sede">
+  <div class="venues-tabs-nav" role="tablist" aria-label="Seleccionar sede" data-sr data-sr-delay="0.05">
     {sortedSedes.map((sede, idx) => {
       const slug = sede.data.id.replace('sede-', '');
       const isActive = idx === 0;
@@ -50,17 +50,19 @@ function getMapEmbedUrl(sedeId: string) {
   </div>
 
   <!-- Contenedor inmersivo tipo tarjeta -->
-  <div class="venues-card-container">
+  <div class="venues-card-container" data-sr data-sr-direction="zoom" data-sr-delay="0.15">
     {sortedSedes.map((sede, idx) => {
       const slug = sede.data.id.replace('sede-', '');
       const isNorte = slug === 'norte';
       const isActive = idx === 0;
       const mapUrl = getMapEmbedUrl(sede.data.id);
       const bgImg = sede.data.imagen || (isNorte ? '/assets/sede-norte.jpg' : '/assets/sede-centro.jpg');
-      const waUrl = `https://wa.me/${sede.data.whatsapp.phone}?text=${encodeURIComponent(sede.data.whatsapp.mensaje)}`;
+      const defaultWaMsg = isNorte ? 'Hola, quiero información de la Sede Norte' : 'Hola, estoy interesado en pedir al restaurante';
+      const waMsg = isNorte ? (sede.data.whatsapp.mensaje || defaultWaMsg) : 'Hola, estoy interesado en pedir al restaurante';
+      const waUrl = `https://wa.me/${sede.data.whatsapp.phone}?text=${encodeURIComponent(waMsg)}`;
       const detailUrl = `/sedes/${slug}`;
       const eyebrowText = isNorte ? 'SECTOR PROVITEQ · ARMENIA' : 'CENTRO · ARMENIA';
-      const primaryBtnText = isNorte ? 'CONTACTAR' : 'PEDIR A DOMICILIO';
+      const primaryBtnText = isNorte ? 'CONTACTAR' : 'PEDIR POR WHATSAPP';
 
       return (
         <article
@@ -105,7 +107,7 @@ function getMapEmbedUrl(sedeId: string) {
                   </p>
                 ) : (
                   <p class="venues-panel__extra">
-                    <strong>Servicios:</strong> Atención en mesa y despacho de domicilios en Armenia.
+                    <strong>Servicios:</strong> Atención en mesa y pedidos directos en Armenia.
                   </p>
                 )}
                 <p class="venues-panel__notice">
@@ -233,13 +235,13 @@ function getMapEmbedUrl(sedeId: string) {
     min-height: 520px;
   }
 
-  /* Paneles de Sede */
+  /* Paneles de Sede con transición cinematográfica de 0.85s */
   .venues-panel {
     display: none;
     position: relative;
     width: 100%;
     min-height: 520px;
-    animation: venueFadeIn 0.35s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+    animation: venueFadeIn 0.85s cubic-bezier(0.16, 1, 0.3, 1) forwards;
   }
 
   .venues-panel.is-active {
@@ -249,11 +251,11 @@ function getMapEmbedUrl(sedeId: string) {
   @keyframes venueFadeIn {
     from {
       opacity: 0;
-      transform: translateY(6px);
+      transform: translateY(12px) scale(0.985);
     }
     to {
       opacity: 1;
-      transform: translateY(0);
+      transform: translateY(0) scale(1);
     }
   }
 
@@ -273,12 +275,14 @@ function getMapEmbedUrl(sedeId: string) {
     object-fit: cover;
     object-position: center;
     filter: brightness(0.78);
-    transform: scale(1.02);
-    transition: transform 1.2s ease;
+    transform: scale(1);
+    transition: transform 2s cubic-bezier(0.16, 1, 0.3, 1), filter 1.2s cubic-bezier(0.16, 1, 0.3, 1);
+    will-change: transform;
   }
 
-  .venues-panel.is-active .venues-panel__bg-img {
-    transform: scale(1);
+  .venues-card-container:hover .venues-panel.is-active .venues-panel__bg-img {
+    transform: scale(1.055);
+    filter: brightness(0.85);
   }
 
   .venues-panel__overlay {

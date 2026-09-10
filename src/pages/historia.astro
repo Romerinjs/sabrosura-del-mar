@@ -14,9 +14,9 @@ const historia = (await getEntry('landing', 'historia'))?.data;
 >
   <section class="page-hero">
     <div class="container">
-      <span class="eyebrow">Sobre nosotros</span>
-      <h1>Nuestra historia</h1>
-      <p>El sueño de Candelaria de traer la auténtica cocina del mar al corazón del Eje Cafetero.</p>
+      <span class="eyebrow" data-sr data-sr-instant data-sr-delay="0.06">Sobre nosotros</span>
+      <h1 data-sr data-sr-instant data-sr-delay="0.16">Nuestra historia</h1>
+      <p data-sr data-sr-instant data-sr-delay="0.26">El sueño de Candelaria de traer la auténtica cocina del mar al corazón del Eje Cafetero.</p>
     </div>
   </section>
 
@@ -32,12 +32,12 @@ const historia = (await getEntry('landing', 'historia'))?.data;
   )}
 
   <section class="section">
-    <div class="container" style="max-width:800px;text-align:center">
+    <div class="container" style="max-width:800px;text-align:center" data-sr data-sr-direction="zoom">
       <h2 style="font-size:var(--step-2);margin-bottom:1rem">Ven a vivir la experiencia</h2>
       <p class="lead" style="margin-bottom:2rem">
         Hoy te esperamos en nuestras dos sedes en Armenia para que disfrutes platos preparados al momento con pescado fresco y sabor costeño.
       </p>
-      <div class="btn-row btn-row--center">
+      <div class="btn-row btn-row--center" data-sr data-sr-delay="0.15">
         <a class="btn btn--primary" href="/carta">Ver la carta digital</a>
         <a class="btn btn--outline" href="/sedes">Conocer nuestras sedes</a>
       </div>

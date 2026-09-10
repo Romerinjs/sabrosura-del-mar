@@ -89,16 +89,16 @@ const schemaRestaurant = {
 >
   <section class="page-hero">
     <div class="container">
-      <div style="display:flex;gap:0.6rem;align-items:center;margin-bottom:0.8rem">
+      <div style="display:flex;gap:0.6rem;align-items:center;margin-bottom:0.8rem" data-sr data-sr-instant data-sr-delay="0.04">
         <a href="/" style="color:var(--gold-300);text-decoration:none;font-size:0.85rem">Inicio</a>
         <span style="color:rgba(255,255,255,0.4)">/</span>
         <a href="/sedes" style="color:var(--gold-300);text-decoration:none;font-size:0.85rem">Sedes</a>
         <span style="color:rgba(255,255,255,0.4)">/</span>
         <span style="color:#fff;font-size:0.85rem">{sede.nombre}</span>
       </div>
-      <span class={`venue__badge venue__badge--${sede.badge.tipo}`}>{sede.badge.texto}</span>
-      <h1>{sede.nombre}</h1>
-      <p>{sede.descripcion}</p>
+      <span class={`venue__badge venue__badge--${sede.badge.tipo}`} data-sr data-sr-instant data-sr-delay="0.08">{sede.badge.texto}</span>
+      <h1 data-sr data-sr-instant data-sr-delay="0.16">{sede.nombre}</h1>
+      <p data-sr data-sr-instant data-sr-delay="0.24">{sede.descripcion}</p>
     </div>
   </section>
 
@@ -106,7 +106,7 @@ const schemaRestaurant = {
     <div class="container" style="max-width:1100px">
       <div class="venue-detail-card">
         <!-- Columna Izquierda: Información detallada de la sede -->
-        <div class="venue-detail-info">
+        <div class="venue-detail-info" data-sr data-sr-direction="left" data-sr-delay="0.08">
           <div>
             <h2 style="font-size:var(--step-2);margin-bottom:1.2rem">Información de la sede</h2>
             <ul class="info-list" style="font-size:1.02rem;gap:1.15rem">
@@ -150,10 +150,10 @@ const schemaRestaurant = {
             </ul>
 
             <div style="margin-top:1.6rem">
-              {sede.domicilios ? (
-                <div><span class="pill-note">Servicio a domicilio disponible en Armenia</span></div>
+              {isNorte ? (
+                <div><span class="pill-note pill-note--muted">Atención en mesa · Parqueadero propio vigilado</span></div>
               ) : (
-                <div><span class="pill-note pill-note--muted">Esta sede opera exclusivamente para atención en mesa</span></div>
+                <div><span class="pill-note">Atención en mesa y pedidos directos en Armenia</span></div>
               )}
             </div>
           </div>
@@ -162,7 +162,7 @@ const schemaRestaurant = {
           <div class="btn-row" style="margin-top:2rem">
             <a class="btn btn--navy" href={`https://wa.me/${sede.whatsapp.phone}?text=${encodeURIComponent(sede.whatsapp.mensaje)}`} target="_blank" rel="noopener" data-track-event="whatsapp_click" data-track-location={sede.id}>
               <Icon name="whatsapp" size={18} />
-              {sede.domicilios ? 'Pedir a domicilio' : 'Contactar por WhatsApp'}
+              {isNorte ? 'Contactar por WhatsApp' : 'Pedir al restaurante'}
             </a>
             <a class="btn btn--outline" href="/carta">
               <Icon name="book-open" size={18} />
@@ -172,7 +172,7 @@ const schemaRestaurant = {
         </div>
 
         <!-- Columna Derecha: Mapa embebido interactivo -->
-        <div class="venue-detail-map">
+        <div class="venue-detail-map" data-sr data-sr-direction="right" data-sr-delay="0.15">
           <div class="venue-detail-map__header">
             <div class="venue-detail-map__title">
               <Icon name="map-pin" size={16} />
@@ -202,7 +202,7 @@ const schemaRestaurant = {
         </div>
       </div>
 
-      <div style="margin-top:2.5rem;text-align:center">
+      <div style="margin-top:2.5rem;text-align:center" data-sr data-sr-delay="0.2">
         <a href="/sedes" style="color:var(--teal-700);font-weight:600;text-decoration:none;display:inline-flex;align-items:center;gap:0.4rem">
           &larr; Volver al directorio de sedes
         </a>

@@ -1,0 +1,163 @@
+/* ==========================================================================
+   SCROLL REVEAL ENGINE - KEYFRAME HARDWARE ACCELERATED ANIMATIONS
+   Garantiza animaciones fluidas, visibles y resistentes a sobreescrituras CSS.
+   ========================================================================== */
+
+/* 1. Variables globales con valores por defecto */
+:root {
+  --sr-duration: 0.85s;
+  --sr-ease: cubic-bezier(0.16, 1, 0.3, 1);
+  --sr-distance: 38px;
+  --sr-blur: 8px;
+  --sr-delay: 0s;
+}
+
+/* 2. Keyframes de animación por dirección */
+@keyframes srFadeUp {
+  0% {
+    opacity: 0;
+    transform: translate3d(0, var(--sr-distance, 38px), 0);
+    filter: blur(var(--sr-blur, 8px));
+  }
+  100% {
+    opacity: 1;
+    transform: translate3d(0, 0, 0);
+    filter: blur(0);
+  }
+}
+
+@keyframes srFadeDown {
+  0% {
+    opacity: 0;
+    transform: translate3d(0, calc(var(--sr-distance, 38px) * -1), 0);
+    filter: blur(var(--sr-blur, 8px));
+  }
+  100% {
+    opacity: 1;
+    transform: translate3d(0, 0, 0);
+    filter: blur(0);
+  }
+}
+
+@keyframes srFadeLeft {
+  0% {
+    opacity: 0;
+    transform: translate3d(calc(var(--sr-distance, 38px) * -1), 0, 0);
+    filter: blur(var(--sr-blur, 8px));
+  }
+  100% {
+    opacity: 1;
+    transform: translate3d(0, 0, 0);
+    filter: blur(0);
+  }
+}
+
+@keyframes srFadeRight {
+  0% {
+    opacity: 0;
+    transform: translate3d(var(--sr-distance, 38px), 0, 0);
+    filter: blur(var(--sr-blur, 8px));
+  }
+  100% {
+    opacity: 1;
+    transform: translate3d(0, 0, 0);
+    filter: blur(0);
+  }
+}
+
+@keyframes srFadeZoom {
+  0% {
+    opacity: 0;
+    transform: scale(0.92) translate3d(0, 20px, 0);
+    filter: blur(var(--sr-blur, 8px));
+  }
+  100% {
+    opacity: 1;
+    transform: scale(1) translate3d(0, 0, 0);
+    filter: blur(0);
+  }
+}
+
+@keyframes srFadeOnly {
+  0% {
+    opacity: 0;
+    filter: blur(var(--sr-blur, 8px));
+  }
+  100% {
+    opacity: 1;
+    filter: blur(0);
+  }
+}
+
+/* 3. Estado inicial: Oculto antes de entrar al viewport */
+[data-sr],
+[data-animate],
+.reveal {
+  opacity: 0;
+  will-change: opacity, transform, filter;
+}
+
+[data-sr]:not([data-sr-direction]),
+[data-sr][data-sr-direction="up"],
+[data-animate]:not([data-sr-direction]),
+.reveal {
+  transform: translate3d(0, var(--sr-distance, 38px), 0);
+}
+
+[data-sr][data-sr-direction="down"] {
+  transform: translate3d(0, calc(var(--sr-distance, 38px) * -1), 0);
+}
+
+[data-sr][data-sr-direction="left"] {
+  transform: translate3d(calc(var(--sr-distance, 38px) * -1), 0, 0);
+}
+
+[data-sr][data-sr-direction="right"] {
+  transform: translate3d(var(--sr-distance, 38px), 0, 0);
+}
+
+[data-sr][data-sr-direction="zoom"] {
+  transform: scale(0.92) translate3d(0, 20px, 0);
+}
+
+/* 4. Disparo de animaciones keyframe al activarse .is-in-view */
+[data-sr].is-in-view:not([data-sr-direction]),
+[data-sr].is-in-view[data-sr-direction="up"],
+[data-animate].is-in-view:not([data-sr-direction]),
+.reveal.is-in-view {
+  animation: srFadeUp var(--sr-duration, 0.85s) var(--sr-ease, cubic-bezier(0.16, 1, 0.3, 1)) var(--sr-delay, 0s) both;
+}
+
+[data-sr].is-in-view[data-sr-direction="down"] {
+  animation: srFadeDown var(--sr-duration, 0.85s) var(--sr-ease, cubic-bezier(0.16, 1, 0.3, 1)) var(--sr-delay, 0s) both;
+}
+
+[data-sr].is-in-view[data-sr-direction="left"] {
+  animation: srFadeLeft var(--sr-duration, 0.85s) var(--sr-ease, cubic-bezier(0.16, 1, 0.3, 1)) var(--sr-delay, 0s) both;
+}
+
+[data-sr].is-in-view[data-sr-direction="right"] {
+  animation: srFadeRight var(--sr-duration, 0.85s) var(--sr-ease, cubic-bezier(0.16, 1, 0.3, 1)) var(--sr-delay, 0s) both;
+}
+
+[data-sr].is-in-view[data-sr-direction="zoom"] {
+  animation: srFadeZoom var(--sr-duration, 0.85s) var(--sr-ease, cubic-bezier(0.16, 1, 0.3, 1)) var(--sr-delay, 0s) both;
+}
+
+[data-sr].is-in-view[data-sr-direction="fade"],
+[data-sr].is-in-view[data-sr-direction="none"] {
+  animation: srFadeOnly var(--sr-duration, 0.85s) var(--sr-ease, cubic-bezier(0.16, 1, 0.3, 1)) var(--sr-delay, 0s) both;
+}
+
+/* Fallback de seguridad si JavaScript está deshabilitado */
+noscript [data-sr],
+noscript [data-animate],
+noscript .reveal,
+.no-js [data-sr],
+.no-js [data-animate],
+.no-js .reveal {
+  opacity: 1 !important;
+  transform: none !important;
+  filter: none !important;
+  animation: none !important;
+}

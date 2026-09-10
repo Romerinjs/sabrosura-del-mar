@@ -17,16 +17,23 @@ interface Props {
 const { eyebrow, title, diferenciales } = Astro.props;
 ---
 
-<section class="section section--navy" style="padding-top:.5rem;padding-bottom:clamp(2rem,4vw,3rem)">
+<section class="section section--navy diferenciales-section" style="padding-top:.5rem;padding-bottom:clamp(2.5rem,5vw,4rem)">
   <div class="container">
-    <div class="section-head section-head--center reveal">
+    <div class="section-head section-head--center" data-sr data-sr-direction="up">
       <span class="eyebrow">{eyebrow}</span>
       <h2>{title}</h2>
     </div>
 
-    <div class="feature-grid reveal">
-      {diferenciales.map((d) => (
-        <div class="feature">
+    <!-- Cuadrícula fija de 4 tarjetas elegantes apiladas desde el lado derecho con scroll reveal -->
+    <div class="feature-grid diferenciales-grid">
+      {diferenciales.map((d, idx) => (
+        <div
+          class="feature diferencial-card"
+          data-sr
+          data-sr-direction="right"
+          data-sr-delay={`${(0.08 + (idx * 0.12)).toFixed(2)}`}
+          data-sr-distance="60px"
+        >
           <div class="feature__icon">
             <Icon name={d.icono} size={24} />
           </div>
@@ -37,3 +44,64 @@ const { eyebrow, title, diferenciales } = Astro.props;
     </div>
   </div>
 </section>
+
+<style>
+  .diferenciales-section {
+    position: relative;
+    overflow: hidden;
+  }
+
+  .diferenciales-grid {
+    display: grid;
+    gap: 1.5rem;
+    grid-template-columns: repeat(auto-fit, minmax(min(100%, 240px), 1fr));
+    align-items: stretch;
+  }
+
+  .diferencial-card {
+    display: flex;
+    flex-direction: column;
+    padding: 1.85rem 1.6rem;
+    background: rgba(255, 255, 255, 0.045);
+    border: 1px solid rgba(255, 255, 255, 0.13);
+    border-radius: var(--radius);
+    transition: transform 0.4s ease, border-color 0.4s ease, box-shadow 0.4s ease;
+  }
+
+  .diferencial-card:hover {
+    transform: translateY(-5px);
+    border-color: var(--gold-500);
+    box-shadow: 0 14px 32px rgba(217, 154, 63, 0.22);
+  }
+
+  .diferencial-card .feature__icon {
+    width: 48px;
+    height: 48px;
+    border-radius: 12px;
+    display: grid;
+    place-items: center;
+    margin-bottom: 1.15rem;
+    background: rgba(217, 154, 63, 0.18);
+    color: var(--gold-300);
+    transition: transform 0.3s ease;
+  }
+
+  .diferencial-card:hover .feature__icon {
+    transform: scale(1.08);
+  }
+
+  .diferencial-card h3 {
+    font-size: 1.18rem;
+    color: #ffffff;
+    margin-bottom: 0.5rem;
+    font-weight: 700;
+  }
+
+  .diferencial-card p {
+    font-size: 0.92rem;
+    color: rgba(232, 238, 244, 0.82);
+    margin: 0;
+    line-height: 1.6;
+    flex: 1;
+  }
+</style>

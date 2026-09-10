@@ -45,8 +45,10 @@ const {
 } = Astro.props;
 
 const sedeSlug = id ? id.replace('sede-', '') : (nombre.toLowerCase().includes('norte') ? 'norte' : 'centro');
+const isNorte = nombre.toLowerCase().includes('norte');
 const sedeUrl = `/sedes/${sedeSlug}`;
-const waUrl = `https://wa.me/${whatsapp.phone}?text=${encodeURIComponent(whatsapp.mensaje)}`;
+const waMsg = isNorte ? 'Hola, quiero información de la Sede Norte' : 'Hola, estoy interesado en pedir al restaurante';
+const waUrl = `https://wa.me/${whatsapp.phone}?text=${encodeURIComponent(waMsg)}`;
 ---
 
 <article
@@ -96,9 +98,9 @@ const waUrl = `https://wa.me/${whatsapp.phone}?text=${encodeURIComponent(whatsap
       </div>
 
       <p class="venue__summary">
-        {domicilios
-          ? 'Atención en mesa y servicio a domicilio en Armenia · 11:00 a. m. a 5:00 p. m.'
-          : 'Atención en mesa · Parqueadero propio vigilado · 11:00 a. m. a 5:00 p. m.'}
+        {isNorte
+          ? 'Atención en mesa · Parqueadero propio vigilado · 11:00 a. m. a 5:00 p. m.'
+          : 'Atención en mesa y pedidos directos · 11:00 a. m. a 5:00 p. m.'}
       </p>
 
       <div class="venue__cta-row">
@@ -166,12 +168,14 @@ const waUrl = `https://wa.me/${whatsapp.phone}?text=${encodeURIComponent(whatsap
     height: 100%;
     object-fit: cover;
     object-position: center;
-    transform: scale(1.01);
-    transition: transform 0.75s cubic-bezier(0.22, 1, 0.36, 1);
+    transform: scale(1);
+    transition: transform 2s cubic-bezier(0.16, 1, 0.3, 1), filter 1.2s ease;
+    will-change: transform;
   }
 
   .venue:hover .venue__bg-img {
-    transform: scale(1.05);
+    transform: scale(1.06);
+    filter: brightness(1.03);
   }
 
   /* Escudo degradado continuo para alta armonía y legibilidad */
@@ -370,3 +374,34 @@ const waUrl = `https://wa.me/${whatsapp.phone}?text=${encodeURIComponent(whatsap
     }
   }
 </style>
+
+<script>
+  function setupVenueCards() {
+    document.querySelectorAll<HTMLElement>('[data-venue-card]').forEach((card) => {
+      if ((card as any).__venueCardBound) return;
+      (card as any).__venueCardBound = true;
+
+      const navigate = (e: Event) => {
+        const target = e.target as HTMLElement | null;
+        if (target?.closest('.venue-inner-link') || target?.closest('a')) return;
+        const url = card.getAttribute('data-venue-url');
+        if (url) window.location.href = url;
+      };
+
+      card.addEventListener('click', navigate);
+      card.addEventListener('keydown', (e) => {
+        const ke = e as KeyboardEvent;
+        if (ke.key === 'Enter' || ke.key === ' ') {
+          const target = ke.target as HTMLElement | null;
+          if (target?.closest('.venue-inner-link') || target?.closest('a')) return;
+          ke.preventDefault();
+          navigate(e);
+        }
+      });
+    });
+  }
+
+  setupVenueCards();
+  document.addEventListener('DOMContentLoaded', setupVenueCards);
+  document.addEventListener('astro:page-load', setupVenueCards);
+</script>

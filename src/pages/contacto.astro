@@ -1,6 +1,7 @@
 ---
 import BaseLayout from '../layouts/BaseLayout.astro';
 import ContactCard from '../components/home/ContactCard.astro';
+import VenuesShowcase from '../components/home/VenuesShowcase.astro';
 import { getEntry, getCollection } from 'astro:content';
 
 const contacto = (await getEntry('landing', 'contacto'))?.data;
@@ -15,9 +16,9 @@ const sedes = await getCollection('sedes');
 >
   <section class="page-hero">
     <div class="container">
-      <span class="eyebrow">Canales de atención</span>
-      <h1>Contacto</h1>
-      <p>Estamos disponibles para resolver tus dudas y atender tus pedidos en Armenia.</p>
+      <span class="eyebrow" data-sr data-sr-instant data-sr-delay="0.06">Canales de atención</span>
+      <h1 data-sr data-sr-instant data-sr-delay="0.16">Contacto</h1>
+      <p data-sr data-sr-instant data-sr-delay="0.26">Estamos disponibles para resolver tus dudas y atender tus pedidos en Armenia.</p>
     </div>
   </section>
 
@@ -25,39 +26,22 @@ const sedes = await getCollection('sedes');
     <ContactCard
       eyebrow={contacto.eyebrow}
       title={contacto.title}
+      titleEmphasis={contacto.titleEmphasis}
       lead={contacto.lead}
-      canales={contacto.canales}
       avisoReservas={contacto.avisoReservas}
     />
   )}
 
-  <section class="section" style="padding-top:0">
+  <section class="section" id="sedes" style="padding-top:1rem">
     <div class="container">
-      <div class="section-head section-head--center">
+      <div class="section-head section-head--center" data-sr data-sr-direction="up">
         <span class="eyebrow">Dónde encontrarnos</span>
         <h2>Direcciones de nuestras dos sedes</h2>
+        <p>Visítanos en nuestras dos ubicaciones estratégicas en Armenia o comunícate directamente con la sede de tu preferencia.</p>
       </div>
 
-      <div class="venue-grid">
-        {sedes.map((s) => (
-          <div style="background:#fff;border:1px solid var(--line);border-radius:var(--radius);padding:1.8rem;box-shadow:var(--shadow-sm)">
-            <h3 style="font-size:1.3rem;margin-bottom:.4rem">{s.data.nombre}</h3>
-            <p style="color:var(--muted);font-size:.92rem;margin-bottom:1rem">
-              📍 {s.data.direccion} {s.data.sector && `(${s.data.sector})`}, {s.data.ciudad}
-            </p>
-            <p style="font-size:.9rem;margin-bottom:1.4rem">
-              ⏰ {s.data.horario.texto} · {s.data.horario.detalle}
-            </p>
-            <div class="btn-row">
-              <a class="btn btn--navy btn--sm" href={s.data.mapsUrl} target="_blank" rel="noopener">
-                Ver en Google Maps
-              </a>
-              <a class="btn btn--outline btn--sm" href={`/sedes/${s.data.id.replace('sede-', '')}`}>
-                Ver detalles
-              </a>
-            </div>
-          </div>
-        ))}
+      <div data-sr data-sr-delay="0.1">
+        <VenuesShowcase sedes={sedes} />
       </div>
     </div>
   </section>

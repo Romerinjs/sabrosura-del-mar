@@ -7,9 +7,10 @@ import DishCard from '../components/home/DishCard.astro';
 import Diferenciales from '../components/home/Diferenciales.astro';
 import WaveDivider from '../components/home/WaveDivider.astro';
 import Timeline from '../components/home/Timeline.astro';
-import VenueCard from '../components/home/VenueCard.astro';
 import VenuesShowcase from '../components/home/VenuesShowcase.astro';
 import ContactCard from '../components/home/ContactCard.astro';
+
+import Marquee from '../components/common/Marquee.astro';
 
 // Cargar módulos MDX
 const site = (await getEntry('meta', 'site'))?.data;
@@ -108,10 +109,13 @@ const schemaJsonLd = {
       titleEmphasis={hero.titleEmphasis}
       lead={hero.lead}
       image={hero.image}
+      images={hero.images}
       ctas={hero.ctas}
       badges={hero.badges}
     />
   )}
+
+  <Marquee />
 
   {intro && (
     <Intro
@@ -132,19 +136,26 @@ const schemaJsonLd = {
   {platosDestacados && (
     <section class="section" id="destacados">
       <div class="container">
-        <div class="section-head section-head--center reveal">
+        <div class="section-head section-head--center" data-sr data-sr-direction="up">
           <span class="eyebrow">{platosDestacados.eyebrow}</span>
           <h2>{platosDestacados.title}</h2>
           <p>{platosDestacados.lead}</p>
         </div>
 
-        <div class="dish-grid reveal">
-          {platosDestacados.platos.map((plato: any) => (
-            <DishCard {...plato} />
+        <div class="dish-grid">
+          {platosDestacados.platos.map((plato: any, idx: number) => (
+            <div
+              data-sr
+              data-sr-direction="zoom"
+              data-sr-delay={`${(0.08 + (idx % 4) * 0.12).toFixed(2)}`}
+              style="height: 100%; display: flex; flex-direction: column;"
+            >
+              <DishCard {...plato} />
+            </div>
           ))}
         </div>
 
-        <div class="btn-row btn-row--center" style="margin-top:2.6rem">
+        <div class="btn-row btn-row--center" data-sr data-sr-delay="0.2" style="margin-top:2.6rem">
           <a class="btn btn--navy" href={platosDestacados.cta.href}>
             {platosDestacados.cta.label}
           </a>
@@ -178,13 +189,13 @@ const schemaJsonLd = {
 
   <section class="section" id="sedes">
     <div class="container">
-      <div class="section-head section-head--center reveal">
+      <div class="section-head section-head--center" data-sr data-sr-direction="up">
         <span class="eyebrow">Sedes</span>
         <h2>Dos sedes, el mismo sabor</h2>
         <p>Elige la sede más conveniente y disfruta nuestra carta de comida de mar en Armenia.</p>
       </div>
 
-      <div class="reveal">
+      <div data-sr data-sr-delay="0.1">
         <VenuesShowcase sedes={sedes} />
       </div>
     </div>
@@ -193,15 +204,17 @@ const schemaJsonLd = {
   <!-- CTA Band -->
   <section class="cta-band">
     <div class="cta-band__media">
-      <img src="/assets/camarones-apanados.jpg" alt="" role="presentation" width="1400" height="933" loading="lazy" />
+      <img src="/assets/camarones-apanados.jpg" alt="" role="presentation" width="1400" height="933" loading="lazy" data-parallax data-parallax-speed="22" />
     </div>
-    <div class="container">
+    <div class="container" data-sr data-sr-direction="zoom">
       <span class="eyebrow" style="color:var(--gold-300)">¿Se te antojó?</span>
       <h2>Descubre nuestra carta</h2>
       <p>Disfruta auténtica comida de mar sin salir de Armenia.</p>
-      <div class="btn-row btn-row--center">
+      <div class="btn-row btn-row--center" data-sr data-sr-delay="0.15">
         <a class="btn btn--primary" href="/carta">Explorar la carta</a>
-        <a class="btn btn--ghost-light" href="#sedes">Elegir sede</a>
+        <a class="btn btn--ghost-light" href="https://wa.me/573113093429?text=Hola%2C%20estoy%20interesado%20en%20pedir%20al%20restaurante" target="_blank" rel="noopener" data-track-event="whatsapp_click" data-track-location="cta_band">
+          Pedir por WhatsApp
+        </a>
       </div>
     </div>
   </section>
@@ -210,8 +223,8 @@ const schemaJsonLd = {
     <ContactCard
       eyebrow={contacto.eyebrow}
       title={contacto.title}
+      titleEmphasis={contacto.titleEmphasis}
       lead={contacto.lead}
-      canales={contacto.canales}
       avisoReservas={contacto.avisoReservas}
     />
   )}

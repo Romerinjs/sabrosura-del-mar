@@ -21,29 +21,130 @@ interface Props {
 const { eyebrow, title, lead, logo, timeline, conclusion } = Astro.props;
 ---
 
-<section class="section section--sand" id="historia" style="padding-top:1rem">
+<section class="section section--sand" id="historia" style="padding-top:1.5rem">
   <div class="container">
     <div class="story-grid">
-      <div class="story-mark reveal">
+      <div class="story-mark" data-sr data-sr-direction="left">
+        <!-- Resplandor ambiental pulsante (Ambient Pulse Glow) -->
+        <div class="ambient-glow" aria-hidden="true"></div>
         <img src={logo.src} alt={logo.alt} width={logo.width} height={logo.height} loading="lazy" />
       </div>
 
-      <div class="reveal">
+      <div data-sr data-sr-direction="right" data-sr-delay="0.1">
         <span class="eyebrow">{eyebrow}</span>
         <h2 style="font-size:var(--step-3)">{title}</h2>
         <p class="lead">{lead}</p>
 
+        <!-- Contadores numéricos dinámicos on-scroll (Efecto 3) -->
+        <div class="story-stats-row" data-sr data-sr-direction="zoom" data-sr-delay="0.15">
+          <div class="story-stat-card">
+            <span class="story-stat-number"><span data-counter data-number="14" data-speed="1600">0</span>+</span>
+            <span class="story-stat-label">Años de tradición costeña</span>
+          </div>
+          <div class="story-stat-card">
+            <span class="story-stat-number"><span data-counter data-number="2" data-speed="1200">0</span></span>
+            <span class="story-stat-label">Sedes en Armenia</span>
+          </div>
+          <div class="story-stat-card">
+            <span class="story-stat-number"><span data-counter data-number="100" data-speed="1500">0</span>%</span>
+            <span class="story-stat-label">Pesca fresca seleccionada</span>
+          </div>
+        </div>
+
         <ul class="timeline">
-          {timeline.map((item) => (
-            <li>
+          {timeline.map((item, idx) => (
+            <li data-sr data-sr-delay={`${(0.1 + (idx * 0.08)).toFixed(2)}`}>
               <b>{item.hito}</b>
               <p>{item.descripcion}</p>
             </li>
           ))}
         </ul>
 
-        <p style="margin-top:1.8rem;font-weight:500;color:var(--ink)">{conclusion}</p>
+        <p data-sr data-sr-delay="0.3" style="margin-top:1.8rem;font-weight:500;color:var(--ink)">{conclusion}</p>
       </div>
     </div>
   </div>
 </section>
+
+<style>
+  .story-mark {
+    position: relative;
+  }
+
+  /* Resplandor ambiental dorado orgánico */
+  .ambient-glow {
+    position: absolute;
+    width: 220px;
+    height: 220px;
+    border-radius: 50%;
+    background: radial-gradient(circle, rgba(217, 154, 63, 0.45) 0%, rgba(217, 154, 63, 0) 70%);
+    filter: blur(45px);
+    pointer-events: none;
+    z-index: 1;
+    animation: pulseGlow 5s infinite ease-in-out;
+  }
+
+  @keyframes pulseGlow {
+    0%, 100% {
+      opacity: 0.45;
+      transform: scale(0.92);
+    }
+    50% {
+      opacity: 0.85;
+      transform: scale(1.15);
+    }
+  }
+
+  /* Fila de contadores de impacto */
+  .story-stats-row {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 1rem;
+    margin: 1.6rem 0 2rem;
+    padding: 1.1rem 1.2rem;
+    background: #ffffff;
+    border: 1px solid var(--line);
+    border-radius: var(--radius);
+    box-shadow: var(--shadow-sm);
+  }
+
+  .story-stat-card {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+  }
+
+  .story-stat-number {
+    font-family: var(--font-display);
+    font-size: clamp(1.45rem, 3.2vw, 1.95rem);
+    font-weight: 800;
+    color: var(--teal-700);
+    line-height: 1.1;
+    font-variant-numeric: tabular-nums;
+  }
+
+  .story-stat-label {
+    font-family: var(--font-body);
+    font-size: 0.76rem;
+    color: var(--muted);
+    font-weight: 600;
+    margin-top: 0.25rem;
+    line-height: 1.25;
+  }
+
+  @media (max-width: 600px) {
+    .story-stats-row {
+      grid-template-columns: 1fr;
+      gap: 0.85rem;
+    }
+    .story-stat-card {
+      border-bottom: 1px dashed var(--line);
+      padding-bottom: 0.75rem;
+    }
+    .story-stat-card:last-child {
+      border-bottom: none;
+      padding-bottom: 0;
+    }
+  }
+</style>

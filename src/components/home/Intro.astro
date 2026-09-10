@@ -21,7 +21,7 @@ const { eyebrow, title, figure, ctas } = Astro.props;
 <section class="section section--sand">
   <div class="container">
     <div class="intro-grid">
-      <div class="reveal">
+      <div data-sr data-sr-direction="left">
         <span class="eyebrow">{eyebrow}</span>
         <h2 style="font-size:var(--step-3)">{title}</h2>
         <slot />
@@ -30,7 +30,7 @@ const { eyebrow, title, figure, ctas } = Astro.props;
           <a class="btn btn--outline" href={ctas.secondary.href}>{ctas.secondary.label}</a>
         </div>
       </div>
-      <figure class="intro-figure reveal" style="margin:0">
+      <figure class="intro-figure" data-sr data-sr-direction="right" data-sr-delay="0.15" style="margin:0">
         <img src={figure.src} alt={figure.alt} width={figure.width} height={figure.height} loading="lazy" />
         <figcaption>{figure.caption}</figcaption>
       </figure>
