@@ -1,45 +1,127 @@
 ---
-import Icon from '../icons/Icon.astro';
-
 interface Diferencial {
   id: string;
-  icono: string;
+  icono?: string;
   titulo: string;
   descripcion: string;
+  imagen?: string;
 }
 
 interface Props {
-  eyebrow: string;
-  title: string;
-  diferenciales: Diferencial[];
+  eyebrow?: string;
+  title?: string;
+  diferenciales?: Diferencial[];
 }
 
-const { eyebrow, title, diferenciales } = Astro.props;
+const {
+  eyebrow = "¿Por qué elegir",
+  title = "La Sabrosura del Mar?",
+} = Astro.props;
+
+// Lista de los 4 pilares ordenados exactamente como en la imagen 2 de referencia
+const pilares = [
+  {
+    id: "pescado-fresco",
+    titulo: "Pescado fresco",
+    descripcion: "Seleccionamos diariamente ingredientes del mar de la más alta frescura para garantizar el sabor inconfundible de cada preparación.",
+    imagen: "/assets/diferencial-pescado-fresco.jpg",
+    alt: "Pescado fresco seleccionado para La Sabrosura del Mar"
+  },
+  {
+    id: "dos-sedes",
+    titulo: "Dos sedes en Armenia",
+    descripcion: "Visítanos en la tradicional Sede Centro o disfruta la amplitud y comodidad de nuestra nueva Sede Norte con parqueadero propio.",
+    imagen: "/assets/diferencial-dos-sedes.jpg",
+    alt: "Sede de La Sabrosura del Mar en Armenia"
+  },
+  {
+    id: "sabor-costeno",
+    titulo: "Auténtico sabor costeño",
+    descripcion: "Nuestra cocina preserva el toque especial de Candelaria y la auténtica tradición gastronómica del Caribe y Pacífico colombiano.",
+    imagen: "/assets/diferencial-sabor-costeno.jpg",
+    alt: "Variedad de platos y sazón costeño en la mesa"
+  },
+  {
+    id: "porciones-generosas",
+    titulo: "Porciones generosas",
+    descripcion: "Platos abundantes, completos y preparados con dedicación para que cada visita sea una experiencia memorable y satisfactoria.",
+    imagen: "/assets/diferencial-porciones-generosas.jpg",
+    alt: "Porciones generosas y exquisita comida de mar"
+  }
+];
 ---
 
-<section class="section section--navy diferenciales-section" style="padding-top:.5rem;padding-bottom:clamp(2.5rem,5vw,4rem)">
-  <div class="container">
-    <div class="section-head section-head--center" data-sr data-sr-direction="up">
-      <span class="eyebrow">{eyebrow}</span>
-      <h2>{title}</h2>
+<section class="section section--navy diferenciales-section" id="por-que-elegirnos">
+  <!-- Ilustraciones marinas decorativas de fondo -->
+  <div class="marine-decor marine-decor--left" aria-hidden="true">
+    <svg width="240" height="340" viewBox="0 0 240 340" fill="none" stroke="currentColor">
+      <path d="M70 160 C75 140, 80 120, 88 100 C93 118, 102 135, 115 150 C135 152, 155 158, 172 166 C156 178, 142 192, 134 210 C140 230, 145 252, 146 272 C130 260, 114 250, 96 246 C80 258, 62 272, 44 282 C50 262, 54 240, 56 220 C42 204, 26 190, 10 180 C30 174, 50 168, 70 160 Z" stroke-width="1.6" stroke-dasharray="2 3" opacity="0.35"/>
+      <circle cx="88" cy="185" r="3" fill="currentColor" opacity="0.4"/>
+      <circle cx="98" cy="175" r="2.5" fill="currentColor" opacity="0.3"/>
+      <circle cx="80" cy="195" r="2.5" fill="currentColor" opacity="0.3"/>
+      <path d="M10 260 C40 240, 80 250, 110 280 C130 300, 140 330, 140 340 C120 330, 90 320, 60 330 C35 340, 20 320, 10 300 Z" stroke-width="1.5" opacity="0.25"/>
+    </svg>
+  </div>
+
+  <div class="marine-decor marine-decor--right" aria-hidden="true">
+    <svg width="240" height="340" viewBox="0 0 240 340" fill="none" stroke="currentColor">
+      <path d="M220 70 C180 50, 130 65, 90 100 C60 128, 45 160, 50 175 C70 165, 110 160, 150 175 C190 190, 215 160, 230 130 C240 105, 235 85, 220 70 Z" stroke-width="1.6" opacity="0.3"/>
+      <path d="M90 100 L40 70 L50 120 Z" stroke-width="1.5" opacity="0.25"/>
+      <circle cx="195" cy="105" r="4" stroke-width="1.5" opacity="0.4"/>
+      <path d="M210 210 C175 195, 130 205, 100 230 C75 252, 65 280, 70 295 C90 285, 125 282, 155 295 C190 310, 210 285, 220 260 Z" stroke-width="1.4" opacity="0.25"/>
+    </svg>
+  </div>
+
+  <div class="container relative-z">
+    <!-- Encabezado de la Sección -->
+    <div class="diferenciales-header" data-sr data-sr-direction="up">
+      <h2 class="diferenciales-title">
+        <span class="title-eyebrow">¿Por qué elegir</span>
+        <span class="title-brand">La Sabrosura del Mar?</span>
+      </h2>
     </div>
 
-    <!-- Cuadrícula fija de 4 tarjetas elegantes apiladas desde el lado derecho con scroll reveal -->
-    <div class="feature-grid diferenciales-grid">
-      {diferenciales.map((d, idx) => (
-        <div
-          class="feature diferencial-card"
-          data-sr
-          data-sr-direction="right"
-          data-sr-delay={`${(0.08 + (idx * 0.12)).toFixed(2)}`}
-          data-sr-distance="60px"
+    <!-- Acordeón Horizontal: Los 4 paneles unidos como UNA SOLA CARD continua con bordes redondeados (Imagen 2) -->
+    <div
+      class="accordion-container"
+      id="philosophy-accordion"
+      data-sr
+      data-sr-direction="up"
+      data-sr-delay="0.1"
+      role="region"
+      aria-label="Pilares que nos diferencian"
+    >
+      {pilares.map((pilar, index) => (
+        <article
+          class="accordion-card group"
+          tabindex="0"
+          role="region"
+          aria-label={pilar.titulo}
+          data-index={index}
         >
-          <div class="feature__icon">
-            <Icon name={d.icono} size={24} />
+          <!-- Imagen de fondo de alta definición -->
+          <div class="card-bg-wrap">
+            <img
+              src={pilar.imagen}
+              alt={pilar.alt}
+              loading="lazy"
+              decoding="async"
+              class="card-img"
+            />
           </div>
-          <h3>{d.titulo}</h3>
-          <p>{d.descripcion}</p>
-        </div>
+
+          <!-- Overlay base de contraste con gradiente inferior -->
+          <div class="card-overlay" aria-hidden="true"></div>
+
+          <!-- Contenido textual alineado abajo a la izquierda (idéntico a la imagen 2) -->
+          <div class="card-content">
+            <div class="card-content-inner">
+              <span class="card-number">0{index + 1}</span>
+              <h3 class="card-heading">{pilar.titulo}</h3>
+              <p class="card-desc">{pilar.descripcion}</p>
+            </div>
+          </div>
+        </article>
       ))}
     </div>
   </div>
@@ -47,61 +129,328 @@ const { eyebrow, title, diferenciales } = Astro.props;
 
 <style>
   .diferenciales-section {
+    background-color: #07192d;
     position: relative;
+    overflow: hidden;
+    padding-top: clamp(2.5rem, 5vw, 4.5rem);
+    padding-bottom: clamp(3.5rem, 6vw, 5.5rem);
+    color: #ffffff;
+  }
+
+  .relative-z {
+    position: relative;
+    z-index: 2;
+  }
+
+  /* Ilustraciones decorativas marinas */
+  .marine-decor {
+    position: absolute;
+    pointer-events: none;
+    z-index: 1;
+    color: #7ab8e6;
+  }
+
+  .marine-decor--left {
+    top: 5%;
+    left: -20px;
+  }
+
+  .marine-decor--right {
+    top: 10%;
+    right: -20px;
+  }
+
+  /* Encabezado */
+  .diferenciales-header {
+    text-align: center;
+    margin-bottom: clamp(2.2rem, 4vw, 3.5rem);
+  }
+
+  .diferenciales-title {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.25rem;
+    font-family: var(--font-display, "Fraunces", serif);
+    line-height: 1.15;
+    margin: 0;
+  }
+
+  .title-eyebrow {
+    font-size: clamp(1.8rem, 3.8vw, 2.85rem);
+    font-weight: 500;
+    color: #ffffff;
+  }
+
+  .title-brand {
+    font-size: clamp(2rem, 4.2vw, 3.2rem);
+    font-weight: 600;
+    color: var(--gold-300, #f2b866);
+    text-shadow: 0 0 25px rgba(242, 184, 102, 0.25);
+  }
+
+  /* -------------------------------------------------------------
+     UNA SOLA CARD CONTINUA (Pegadas sin separación) - Imagen 2
+     ------------------------------------------------------------- */
+  .accordion-container {
+    display: flex;
+    width: 100%;
+    height: 480px;
+    gap: 0; /* Totalmente pegadas formando una sola card */
+    border-radius: 26px; /* Borde redondeado exterior del bloque maestro */
+    overflow: hidden;
+    box-shadow: 0 24px 60px rgba(0, 0, 0, 0.55), 0 2px 10px rgba(0, 0, 0, 0.35);
+    border: 1px solid rgba(255, 255, 255, 0.12);
+    background: #051424;
+  }
+
+  .accordion-card {
+    position: relative;
+    flex: 1 1 0%;
+    min-width: 0;
+    min-height: 0;
+    overflow: hidden;
+    cursor: pointer;
+    outline: none;
+    border-right: 1px solid rgba(255, 255, 255, 0.08); /* Separador sutil interno */
+    transition: flex 0.55s cubic-bezier(0.25, 1, 0.5, 1);
+    will-change: flex;
+    isolation: isolate;
+  }
+
+  .accordion-card:last-child {
+    border-right: none;
+  }
+
+  .accordion-card:focus-visible {
+    box-shadow: inset 0 0 0 2px var(--gold-400, #d99a3f);
+  }
+
+  /* Capas de Fondo y Zooms */
+  .card-bg-wrap {
+    position: absolute;
+    inset: 0;
+    z-index: -3;
     overflow: hidden;
   }
 
-  .diferenciales-grid {
-    display: grid;
-    gap: 1.5rem;
-    grid-template-columns: repeat(auto-fit, minmax(min(100%, 240px), 1fr));
-    align-items: stretch;
+  .card-img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: center;
+    transform: scale(1);
+    filter: brightness(0.88);
+    transition: transform 0.75s cubic-bezier(0.16, 1, 0.3, 1), filter 0.5s ease;
   }
 
-  .diferencial-card {
+  .accordion-card:hover .card-img,
+  .accordion-card.is-active .card-img {
+    transform: scale(1.06);
+    filter: brightness(0.95);
+  }
+
+  /* Overlay de degradado oscuro inferior para legibilidad impecable */
+  .card-overlay {
+    position: absolute;
+    inset: 0;
+    z-index: -1;
+    background: linear-gradient(
+      to top,
+      rgba(4, 15, 26, 0.96) 0%,
+      rgba(4, 15, 26, 0.75) 32%,
+      rgba(4, 15, 26, 0.28) 65%,
+      rgba(4, 15, 26, 0.1) 100%
+    );
+    transition: background 0.4s ease;
+  }
+
+  .accordion-card:hover .card-overlay,
+  .accordion-card.is-active .card-overlay {
+    background: linear-gradient(
+      to top,
+      rgba(4, 15, 26, 0.98) 0%,
+      rgba(4, 15, 26, 0.82) 42%,
+      rgba(4, 15, 26, 0.32) 75%,
+      rgba(4, 15, 26, 0.12) 100%
+    );
+  }
+
+  /* Contenido Textual (Alineado a la izquierda al fondo) */
+  .card-content {
+    position: absolute;
+    inset: 0;
+    z-index: 2;
     display: flex;
     flex-direction: column;
-    padding: 1.85rem 1.6rem;
-    background: rgba(255, 255, 255, 0.045);
-    border: 1px solid rgba(255, 255, 255, 0.13);
-    border-radius: var(--radius);
-    transition: transform 0.4s ease, border-color 0.4s ease, box-shadow 0.4s ease;
+    justify-content: flex-end;
+    padding: 1.75rem 1.45rem;
+    pointer-events: none;
+    text-align: left;
   }
 
-  .diferencial-card:hover {
-    transform: translateY(-5px);
-    border-color: var(--gold-500);
-    box-shadow: 0 14px 32px rgba(217, 154, 63, 0.22);
+  .card-content-inner {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    position: relative;
+    width: 100%;
   }
 
-  .diferencial-card .feature__icon {
-    width: 48px;
-    height: 48px;
-    border-radius: 12px;
-    display: grid;
-    place-items: center;
-    margin-bottom: 1.15rem;
-    background: rgba(217, 154, 63, 0.18);
-    color: var(--gold-300);
-    transition: transform 0.3s ease;
-  }
-
-  .diferencial-card:hover .feature__icon {
-    transform: scale(1.08);
-  }
-
-  .diferencial-card h3 {
-    font-size: 1.18rem;
-    color: #ffffff;
-    margin-bottom: 0.5rem;
+  /* Estado Normal: SOLO se ve el número */
+  .card-number {
+    font-family: var(--font-body, "Inter", sans-serif);
+    font-size: 1.25rem;
     font-weight: 700;
+    letter-spacing: 0.12em;
+    color: var(--gold-300, #f2b866);
+    margin-bottom: 0;
+    display: inline-block;
+    opacity: 1;
+    max-height: 40px;
+    transform: translateY(0);
+    transition: opacity 0.35s ease, transform 0.35s cubic-bezier(0.16, 1, 0.3, 1), max-height 0.35s ease;
   }
 
-  .diferencial-card p {
-    font-size: 0.92rem;
-    color: rgba(232, 238, 244, 0.82);
+  /* Estado Normal: El título está oculto */
+  .card-heading {
+    font-family: var(--font-display, "Fraunces", serif);
+    font-size: clamp(1.2rem, 1.8vw, 1.55rem);
+    font-weight: 600;
+    color: #ffffff;
+    line-height: 1.22;
     margin: 0;
+    text-shadow: 0 2px 10px rgba(0, 0, 0, 0.85);
+    opacity: 0;
+    max-height: 0;
+    transform: translateY(12px);
+    transition: opacity 0.35s ease, transform 0.35s cubic-bezier(0.16, 1, 0.3, 1), max-height 0.35s ease, margin 0.35s ease;
+    overflow: hidden;
+  }
+
+  /* Estado Normal: La descripción está oculta */
+  .card-desc {
+    font-family: var(--font-body, "Inter", sans-serif);
+    font-size: 0.92rem;
     line-height: 1.6;
-    flex: 1;
+    color: rgba(255, 255, 255, 0.92);
+    margin: 0;
+    max-width: 28rem;
+    opacity: 0;
+    max-height: 0;
+    transform: translateY(12px);
+    transition: opacity 0.45s ease, transform 0.45s cubic-bezier(0.16, 1, 0.3, 1), max-height 0.45s ease;
+    overflow: hidden;
+  }
+
+  /* Al hacer Hover / Activa / Focus: DESAPARECE el número y aparece SOLO el texto */
+  .accordion-card:hover .card-number,
+  .accordion-card:focus-within .card-number,
+  .accordion-card.is-active .card-number {
+    opacity: 0;
+    max-height: 0;
+    transform: translateY(-8px);
+    pointer-events: none;
+  }
+
+  .accordion-card:hover .card-heading,
+  .accordion-card:focus-within .card-heading,
+  .accordion-card.is-active .card-heading {
+    opacity: 1;
+    max-height: 120px;
+    transform: translateY(0);
+    margin-bottom: 0.45rem;
+  }
+
+  .accordion-card:hover .card-desc,
+  .accordion-card:focus-within .card-desc,
+  .accordion-card.is-active .card-desc {
+    opacity: 1;
+    max-height: 180px;
+    transform: translateY(0);
+    margin-top: 0.25rem;
+  }
+
+  /* Desktop Flex Physics (>= 1024px) */
+  @media (min-width: 1024px) {
+    .accordion-container:hover .accordion-card {
+      flex: 0.7 1 0%;
+    }
+
+    .accordion-container .accordion-card:hover,
+    .accordion-container .accordion-card:focus-within,
+    .accordion-container .accordion-card.is-active {
+      flex: 2.3 1 0%;
+    }
+  }
+
+  /* Tablets (< 1024px) */
+  @media (max-width: 1023px) {
+    .accordion-container {
+      height: 440px;
+    }
+
+    .accordion-container:hover .accordion-card {
+      flex: 0.75 1 0%;
+    }
+
+    .accordion-container .accordion-card:hover,
+    .accordion-container .accordion-card:focus-within,
+    .accordion-container .accordion-card.is-active {
+      flex: 2.1 1 0%;
+    }
+  }
+
+  /* Mobile Pequeño (< 680px) */
+  @media (max-width: 680px) {
+    .accordion-container {
+      flex-direction: column;
+      height: 640px;
+    }
+
+    .accordion-card {
+      border-right: none;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+      flex: 1 1 0%;
+    }
+
+    .accordion-card:last-child {
+      border-bottom: none;
+    }
+
+    .accordion-container .accordion-card.is-active,
+    .accordion-container .accordion-card:hover {
+      flex: 2.6 1 0%;
+    }
+
+    .card-content {
+      padding: 1.15rem 1.15rem;
+    }
+
+    .card-desc {
+      font-size: 0.85rem;
+    }
   }
 </style>
+
+<script>
+  // Soporte interactivo táctil para dispositivos móviles / tablets
+  document.addEventListener('DOMContentLoaded', () => {
+    const cards = document.querySelectorAll<HTMLElement>('.accordion-card');
+    
+    // Por defecto, dejar la primera tarjeta activa en pantallas pequeñas para mostrar contenido
+    if (window.innerWidth <= 1023 && cards.length > 0) {
+      cards[0].classList.add('is-active');
+    }
+
+    cards.forEach((card) => {
+      card.addEventListener('click', () => {
+        const wasActive = card.classList.contains('is-active');
+        cards.forEach((c) => c.classList.remove('is-active'));
+        if (!wasActive) {
+          card.classList.add('is-active');
+        }
+      });
+    });
+  });
+</script>

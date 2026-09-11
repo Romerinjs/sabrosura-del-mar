@@ -3,14 +3,13 @@ import { getEntry, getCollection } from 'astro:content';
 import BaseLayout from '../layouts/BaseLayout.astro';
 import Hero from '../components/home/Hero.astro';
 import Intro from '../components/home/Intro.astro';
-import DishCard from '../components/home/DishCard.astro';
+import PlatosDestacadosCarousel from '../components/home/PlatosDestacadosCarousel.astro';
 import Diferenciales from '../components/home/Diferenciales.astro';
 import WaveDivider from '../components/home/WaveDivider.astro';
 import Timeline from '../components/home/Timeline.astro';
 import VenuesShowcase from '../components/home/VenuesShowcase.astro';
 import ContactCard from '../components/home/ContactCard.astro';
-
-import Marquee from '../components/common/Marquee.astro';
+import CtaAntojo from '../components/home/CtaAntojo.astro';
 
 // Cargar módulos MDX
 const site = (await getEntry('meta', 'site'))?.data;
@@ -106,73 +105,41 @@ const schemaJsonLd = {
     <Hero
       eyebrow={hero.eyebrow}
       title={hero.title}
-      titleEmphasis={hero.titleEmphasis}
+      subtitleLine1={hero.subtitleLine1}
+      subtitleLine2={hero.subtitleLine2}
+      subtitleEmphasis={hero.subtitleEmphasis}
       lead={hero.lead}
       image={hero.image}
-      images={hero.images}
       ctas={hero.ctas}
-      badges={hero.badges}
     />
   )}
 
-  <Marquee />
-
   {intro && (
     <Intro
-      eyebrow={intro.eyebrow}
-      title={intro.title}
       figure={intro.figure}
       ctas={intro.ctas}
-    >
-      <p class="lead">
-        En La Sabrosura del Mar encuentras una carta llena de sabores: pescados, cazuelas, ceviches, arroces marineros, camarones, langostinos, pastas y especialidades de la casa.
-      </p>
-      <p class="lead">
-        Cada plato combina ingredientes de calidad, pescado fresco y el toque costeño de Candelaria para ofrecerte una experiencia auténtica, abundante y llena de sabor.
-      </p>
-    </Intro>
+    />
   )}
 
   {platosDestacados && (
-    <section class="section" id="destacados">
-      <div class="container">
-        <div class="section-head section-head--center" data-sr data-sr-direction="up">
-          <span class="eyebrow">{platosDestacados.eyebrow}</span>
-          <h2>{platosDestacados.title}</h2>
-          <p>{platosDestacados.lead}</p>
-        </div>
-
-        <div class="dish-grid">
-          {platosDestacados.platos.map((plato: any, idx: number) => (
-            <div
-              data-sr
-              data-sr-direction="zoom"
-              data-sr-delay={`${(0.08 + (idx % 4) * 0.12).toFixed(2)}`}
-              style="height: 100%; display: flex; flex-direction: column;"
-            >
-              <DishCard {...plato} />
-            </div>
-          ))}
-        </div>
-
-        <div class="btn-row btn-row--center" data-sr data-sr-delay="0.2" style="margin-top:2.6rem">
-          <a class="btn btn--navy" href={platosDestacados.cta.href}>
-            {platosDestacados.cta.label}
-          </a>
-        </div>
-      </div>
-    </section>
+    <PlatosDestacadosCarousel
+      eyebrow={platosDestacados.eyebrow}
+      title={platosDestacados.title}
+      lead={platosDestacados.lead}
+      platos={platosDestacados.platos}
+      cta={platosDestacados.cta}
+    />
   )}
 
   {diferenciales && (
     <>
-      <WaveDivider position="top" fill="#0a2540" />
+      <WaveDivider position="top" fill="#07192d" />
       <Diferenciales
         eyebrow={diferenciales.eyebrow}
         title={diferenciales.title}
         diferenciales={diferenciales.diferenciales}
       />
-      <WaveDivider position="bottom" fill="#0a2540" />
+      <WaveDivider position="bottom" fill="#07192d" />
     </>
   )}
 
@@ -201,23 +168,8 @@ const schemaJsonLd = {
     </div>
   </section>
 
-  <!-- CTA Band -->
-  <section class="cta-band">
-    <div class="cta-band__media">
-      <img src="/assets/camarones-apanados.jpg" alt="" role="presentation" width="1400" height="933" loading="lazy" data-parallax data-parallax-speed="22" />
-    </div>
-    <div class="container" data-sr data-sr-direction="zoom">
-      <span class="eyebrow" style="color:var(--gold-300)">¿Se te antojó?</span>
-      <h2>Descubre nuestra carta</h2>
-      <p>Disfruta auténtica comida de mar sin salir de Armenia.</p>
-      <div class="btn-row btn-row--center" data-sr data-sr-delay="0.15">
-        <a class="btn btn--primary" href="/carta">Explorar la carta</a>
-        <a class="btn btn--ghost-light" href="https://wa.me/573113093429?text=Hola%2C%20estoy%20interesado%20en%20pedir%20al%20restaurante" target="_blank" rel="noopener" data-track-event="whatsapp_click" data-track-location="cta_band">
-          Pedir por WhatsApp
-        </a>
-      </div>
-    </div>
-  </section>
+  <!-- Sección Se Te Antojó (CTA Band con podio de 3 platos PNG) -->
+  <CtaAntojo />
 
   {contacto && (
     <ContactCard

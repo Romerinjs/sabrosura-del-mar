@@ -1,0 +1,554 @@
+---
+interface Plato {
+  id: string;
+  nombre: string;
+  descripcion: string;
+  precio: number;
+  imagen?: string | null;
+  alt?: string;
+  badge?: string;
+  destacado?: boolean;
+}
+
+interface Props {
+  eyebrow: string;
+  title: string;
+  lead: string;
+  platos: Plato[];
+  cta: {
+    label: string;
+    href: string;
+  };
+}
+
+const { eyebrow, title, lead, platos, cta } = Astro.props;
+
+// Tomamos al menos 11 platos (incluyendo los que no tienen imagen aún como placeholders)
+const listaPlatos = platos.slice(0, 11);
+
+const formatMoney = (n: number) => '$' + n.toLocaleString('es-CO');
+---
+
+<section class="section section--destacados" id="destacados">
+  <div class="container">
+    <!-- Encabezado de la sección (estilo de Foto 2) -->
+    <div class="destacados-header" data-sr data-sr-direction="up">
+      <div class="destacados-header__top-left">
+        <span class="destacados-eyebrow">{eyebrow}</span>
+        <h2 class="destacados-title">{title}</h2>
+      </div>
+      <p class="destacados-lead">{lead}</p>
+    </div>
+ 
+    <!-- Contenedor del Carrusel con Botones Izquierda y Derecha -->
+    <div class="carousel-wrapper" data-sr data-sr-direction="up" data-sr-delay="0.1">
+      <!-- Botón de navegación hacia la Izquierda -->
+      <button
+        class="carousel-arrow carousel-arrow--prev"
+        id="carousel-btn-prev"
+        type="button"
+        aria-label="Ver platos anteriores"
+      >
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round">
+          <polyline points="15 18 9 12 15 6"></polyline>
+        </svg>
+      </button>
+
+      <!-- Pista horizontal deslizable -->
+      <div
+        class="carousel-track"
+        id="platos-carousel-track"
+        tabindex="0"
+        role="region"
+        aria-label="Carrusel de platos destacados"
+      >
+        {listaPlatos.map((plato) => (
+          <article class="carousel-card">
+            <!-- Imagen del plato o marco placeholder reservado para foto -->
+            <div class="card-media">
+              {plato.imagen ? (
+                <img
+                  src={plato.imagen}
+                  alt={plato.alt || plato.nombre}
+                  width="600"
+                  height="450"
+                  loading="lazy"
+                />
+              ) : (
+                <div class="card-media--placeholder">
+                  <svg width="34" height="34" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" class="ph-icon">
+                    <path d="M14.5 4h-5L7 7H4a2 2 0 0 0-2 2v9a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V9a2 2 0 0 0-2-2h-3l-2.5-3z"></path>
+                    <circle cx="12" cy="13" r="3"></circle>
+                  </svg>
+                  <span class="ph-text">Foto próximamente</span>
+                </div>
+              )}
+
+              {plato.badge && (
+                <div class="card-badge">
+                  <span class="badge-stars">★★★</span>
+                  <span class="badge-text">RECOMENDADO</span>
+                </div>
+              )}
+            </div>
+
+            <!-- Información del plato -->
+            <div class="card-info">
+              <h3 class="card-title">{plato.nombre}</h3>
+              <div class="card-price">{formatMoney(plato.precio)}</div>
+              <a class="card-btn" href="/carta" title={`Ver ${plato.nombre} en la carta digital`}>
+                Ver Carta
+              </a>
+            </div>
+          </article>
+        ))}
+      </div>
+
+      <!-- Botón de navegación hacia la Derecha -->
+      <button
+        class="carousel-arrow carousel-arrow--next"
+        id="carousel-btn-next"
+        type="button"
+        aria-label="Ver siguientes platos"
+      >
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round">
+          <polyline points="9 18 15 12 9 6"></polyline>
+        </svg>
+      </button>
+    </div>
+
+    <!-- Botón inferior centrado: Ver el menú completo -->
+    <div class="destacados-footer" data-sr data-sr-direction="up" data-sr-delay="0.2">
+      <a class="btn-menu-completo" href={cta.href}>
+        {cta.label}
+      </a>
+    </div>
+  </div>
+</section>
+
+<style>
+  .section--destacados {
+    background: #ffffff;
+    padding-top: clamp(3.5rem, 6vw, 5.5rem);
+    padding-bottom: clamp(3.5rem, 6vw, 5rem);
+    position: relative;
+    overflow: hidden;
+  }
+
+  .destacados-header {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    text-align: left;
+    width: 100%;
+    margin-bottom: clamp(2rem, 3.8vw, 3.2rem);
+  }
+
+  .destacados-header__top-left {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    text-align: left;
+  }
+
+  .destacados-eyebrow {
+    display: inline-block;
+    font-family: var(--font-body, "Inter", sans-serif);
+    font-size: 0.82rem;
+    font-weight: 600;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: #1a2b3c;
+    margin-bottom: 0.55rem;
+    text-align: left;
+  }
+
+  .destacados-title {
+    font-family: var(--font-display, "Fraunces", serif);
+    font-size: clamp(2rem, 3.8vw, 3.1rem);
+    font-weight: 500;
+    line-height: 1.18;
+    color: #0a2540;
+    margin: 0 0 1.2rem 0;
+    text-align: left;
+    max-width: 620px;
+  }
+
+  .destacados-lead {
+    font-family: var(--font-body, "Inter", sans-serif);
+    font-size: 0.88rem;
+    color: #4a5c6d;
+    line-height: 1.65;
+    margin: 0 auto;
+    text-align: center;
+    max-width: 540px;
+  }
+
+  @media (max-width: 768px) {
+    .destacados-header {
+      align-items: center;
+      text-align: center;
+    }
+
+    .destacados-header__top-left {
+      align-items: center;
+      text-align: center;
+    }
+
+    .destacados-eyebrow,
+    .destacados-title,
+    .destacados-lead {
+      text-align: center;
+      margin-inline: auto;
+    }
+  }
+
+  /* Carrusel Wrapper */
+  .carousel-wrapper {
+    position: relative;
+    width: 100%;
+    margin-bottom: 2.8rem;
+  }
+
+  .carousel-track {
+    display: flex;
+    gap: 1.5rem;
+    overflow-x: auto;
+    scroll-snap-type: x mandatory;
+    scroll-behavior: smooth;
+    padding: 0.8rem 0.6rem 1.6rem;
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: none;
+  }
+
+  .carousel-track::-webkit-scrollbar {
+    display: none;
+  }
+
+  /* Tarjeta Individual exacta a la imagen de referencia */
+  .carousel-card {
+    flex: 0 0 250px;
+    width: 250px;
+    scroll-snap-align: start;
+    background: #fbf5ea;
+    border-radius: 22px;
+    padding: 0.85rem;
+    display: flex;
+    flex-direction: column;
+    box-shadow: 0 8px 24px rgba(10, 37, 64, 0.06);
+    transition: transform 0.35s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.35s ease;
+  }
+
+  .carousel-card:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 14px 32px rgba(10, 37, 64, 0.12);
+  }
+
+  /* Foto del Plato */
+  .card-media {
+    position: relative;
+    width: 100%;
+    aspect-ratio: 1 / 0.82;
+    border-radius: 16px;
+    overflow: hidden;
+    background: #eedfd0;
+  }
+
+  .card-media img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+    transition: transform 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+  }
+
+  .carousel-card:hover .card-media img {
+    transform: scale(1.06);
+  }
+
+  /* Placeholder vacío reservado para fotos pendientes */
+  .card-media--placeholder {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+    background: linear-gradient(135deg, #f2e6d6 0%, #e8d7c4 100%);
+    color: #8c735d;
+    text-align: center;
+    padding: 1rem;
+  }
+
+  .ph-icon {
+    opacity: 0.65;
+  }
+
+  .ph-text {
+    font-family: var(--font-body, "Inter", sans-serif);
+    font-size: 0.78rem;
+    font-weight: 600;
+    color: #7a634e;
+  }
+
+  /* Badge Recomendado idéntico a la imagen */
+  .card-badge {
+    position: absolute;
+    bottom: 0.55rem;
+    left: 0.55rem;
+    background: rgba(18, 14, 10, 0.82);
+    backdrop-filter: blur(4px);
+    border-radius: 6px;
+    padding: 0.22rem 0.55rem;
+    display: flex;
+    align-items: center;
+    gap: 0.32rem;
+  }
+
+  .badge-stars {
+    color: #f2b866;
+    font-size: 0.7rem;
+    letter-spacing: 0.05em;
+  }
+
+  .badge-text {
+    font-family: var(--font-body, "Inter", sans-serif);
+    font-size: 0.65rem;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    color: #ffffff;
+  }
+
+  /* Info y Acciones */
+  .card-info {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    text-align: left;
+    padding: 0.75rem 0.4rem 0.35rem;
+    flex: 1;
+  }
+
+  .card-title {
+    font-family: var(--font-display, "Fraunces", serif);
+    font-size: 1.08rem;
+    font-weight: 600;
+    color: #0a2540;
+    margin: 0 0 0.25rem 0;
+    line-height: 1.25;
+    text-align: left;
+    width: 100%;
+    min-height: 2.5rem;
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+  }
+
+  .card-price {
+    font-family: var(--font-body, "Inter", sans-serif);
+    font-size: 0.98rem;
+    font-weight: 700;
+    color: #1e3a5a;
+    margin-bottom: 0.55rem;
+    text-align: left;
+    width: 100%;
+  }
+
+  .card-btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    background: #0a2540;
+    color: #ffffff !important;
+    font-family: var(--font-body, "Inter", sans-serif);
+    font-size: 0.9rem;
+    font-weight: 700;
+    padding: 0.6rem 1.2rem;
+    border-radius: 999px;
+    text-decoration: none;
+    transition: all 0.22s cubic-bezier(0.16, 1, 0.3, 1);
+    box-shadow: 0 4px 12px rgba(10, 37, 64, 0.16);
+    margin-top: auto;
+  }
+
+  .card-btn:hover {
+    background: #153c63;
+    transform: translateY(-2px);
+    box-shadow: 0 6px 16px rgba(10, 37, 64, 0.25);
+  }
+
+  /* Flechas Circulares Flotantes (Izquierda y Derecha) */
+  .carousel-arrow {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 48px;
+    height: 48px;
+    border-radius: 50%;
+    background: #ffffff;
+    border: 1.5px solid #1a2b3c;
+    color: #0a2540;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    box-shadow: 0 4px 18px rgba(0, 0, 0, 0.15);
+    transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+    z-index: 10;
+  }
+
+  .carousel-arrow--prev {
+    left: -20px;
+  }
+
+  .carousel-arrow--next {
+    right: -20px;
+  }
+
+  .carousel-arrow--prev:hover {
+    background: #0a2540;
+    color: #ffffff;
+    border-color: #0a2540;
+    transform: translateY(-50%) translateX(-3px) scale(1.08);
+  }
+
+  .carousel-arrow--next:hover {
+    background: #0a2540;
+    color: #ffffff;
+    border-color: #0a2540;
+    transform: translateY(-50%) translateX(3px) scale(1.08);
+  }
+
+  .carousel-arrow:active {
+    transform: translateY(-50%) scale(0.95);
+  }
+
+  @media (max-width: 640px) {
+    .carousel-arrow {
+      display: none;
+    }
+  }
+
+  /* Footer del Carrusel: Botón Ver el menú completo */
+  .destacados-footer {
+    display: flex;
+    justify-content: center;
+    margin-top: 0.5rem;
+  }
+
+  .btn-menu-completo {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    background: #ffffff;
+    border: 1.5px solid #243a4e;
+    color: #0a2540 !important;
+    font-family: var(--font-body, "Inter", sans-serif);
+    font-size: 0.96rem;
+    font-weight: 600;
+    padding: 0.68rem 2.3rem;
+    border-radius: 999px;
+    text-decoration: none;
+    transition: all 0.25s ease;
+  }
+
+  .btn-menu-completo:hover {
+    background: #0a2540;
+    color: #ffffff !important;
+    border-color: #0a2540;
+    transform: translateY(-2px);
+    box-shadow: 0 6px 18px rgba(10, 37, 64, 0.15);
+  }
+</style>
+
+<script>
+  function setupPlatosCarousel() {
+    const track = document.getElementById('platos-carousel-track');
+    const prevBtn = document.getElementById('carousel-btn-prev');
+    const nextBtn = document.getElementById('carousel-btn-next');
+
+    if (!track) return;
+
+    // Evitar múltiples bindings
+    if ((track as any).__carouselBound) return;
+    (track as any).__carouselBound = true;
+
+    let isAnimating = false;
+
+    const smoothScrollTo = (targetLeft: number, duration: number = 600) => {
+      if (isAnimating) return;
+      isAnimating = true;
+
+      const startLeft = track.scrollLeft;
+      const distance = targetLeft - startLeft;
+      const startTime = performance.now();
+
+      // Desactivar snap durante la transición animada para fluidez total
+      track.style.scrollSnapType = 'none';
+      track.classList.add('is-sliding');
+
+      // Curva de animación suave estilo cubic-bezier (easeOutQuart)
+      const easeOutQuart = (t: number) => 1 - Math.pow(1 - t, 4);
+
+      const stepAnimation = (currentTime: number) => {
+        const elapsed = currentTime - startTime;
+        const progress = Math.min(elapsed / duration, 1);
+        const easeProgress = easeOutQuart(progress);
+
+        track.scrollLeft = startLeft + distance * easeProgress;
+
+        if (progress < 1) {
+          requestAnimationFrame(stepAnimation);
+        } else {
+          track.style.scrollSnapType = '';
+          track.classList.remove('is-sliding');
+          isAnimating = false;
+        }
+      };
+
+      requestAnimationFrame(stepAnimation);
+    };
+
+    const getScrollStep = () => {
+      const card = track.querySelector<HTMLElement>('.carousel-card');
+      if (!card) return 274;
+      const style = window.getComputedStyle(track);
+      const gap = parseFloat(style.gap) || 24;
+      return (card.offsetWidth + gap) * 2;
+    };
+
+    if (nextBtn) {
+      nextBtn.addEventListener('click', () => {
+        const step = getScrollStep();
+        const maxScroll = track.scrollWidth - track.clientWidth;
+        let target = track.scrollLeft + step;
+        if (track.scrollLeft >= maxScroll - 15) {
+          target = 0;
+        } else if (target > maxScroll) {
+          target = maxScroll;
+        }
+        smoothScrollTo(target);
+      });
+    }
+
+    if (prevBtn) {
+      prevBtn.addEventListener('click', () => {
+        const step = getScrollStep();
+        const maxScroll = track.scrollWidth - track.clientWidth;
+        let target = track.scrollLeft - step;
+        if (track.scrollLeft <= 15) {
+          target = maxScroll;
+        } else if (target < 0) {
+          target = 0;
+        }
+        smoothScrollTo(target);
+      });
+    }
+  }
+
+  setupPlatosCarousel();
+  document.addEventListener('DOMContentLoaded', setupPlatosCarousel);
+  document.addEventListener('astro:page-load', setupPlatosCarousel);
+</script>

@@ -1,0 +1,422 @@
+---
+interface Props {
+  eyebrow?: string;
+  title?: string;
+  subtitle?: string;
+}
+
+const {
+  eyebrow = "¿Se te antojó?",
+  title = "Descubre nuestra carta",
+  subtitle = "Disfruta auténtica comida de mar sin salir de Armenia.",
+} = Astro.props;
+---
+
+<section class="cta-antojo-section" id="se-te-antojo">
+  <!-- Fondo cinemático ambiental del restaurante con copas de vino y luces cálidas -->
+  <div class="cta-antojo__bg" aria-hidden="true">
+    <img
+      src="/assets/restaurant-bg.jpg"
+      alt=""
+      role="presentation"
+      width="1920"
+      height="1080"
+      loading="lazy"
+      class="cta-antojo__bg-img"
+    />
+    <div class="cta-antojo__overlay"></div>
+  </div>
+
+  <!-- Capa de Arcos de Color del Fondo (Anclados 100% a la base inferior de la sección) -->
+  <div class="cta-antojo__podiums-bg" aria-hidden="true">
+    <div class="antojo-bg-circle antojo-bg-circle--navy"></div>
+    <div class="antojo-bg-circle antojo-bg-circle--teal"></div>
+    <div class="antojo-bg-circle antojo-bg-circle--slate"></div>
+  </div>
+
+  <div class="antojo-container">
+    <!-- Encabezado y Botones de Acción -->
+    <div class="cta-antojo__header" data-sr data-sr-direction="up">
+      <span class="cta-antojo__eyebrow">{eyebrow}</span>
+      <h2 class="cta-antojo__title">{title}</h2>
+      <p class="cta-antojo__subtitle">{subtitle}</p>
+
+      <div class="cta-antojo__btn-row" data-sr data-sr-direction="up" data-sr-delay="0.12">
+        <a class="btn-antojo-primary" href="/carta">
+          Ver Carta
+        </a>
+        <a
+          class="btn-antojo-whatsapp"
+          href="https://wa.me/573113093429?text=Hola%2C%20estoy%20interesado%20en%20pedir%20al%20restaurante"
+          target="_blank"
+          rel="noopener"
+          data-track-event="whatsapp_click"
+          data-track-location="cta_antojo"
+        >
+          Pedir por WhatsApp
+        </a>
+      </div>
+    </div>
+
+    <!-- Escenario de los 3 Platos en 3 Columnas (Al frente de los arcos) -->
+    <div class="antojo-stage" data-sr data-sr-direction="up" data-sr-delay="0.2">
+      <!-- Columna 1: Ceviche de Camarón (Izquierda) -->
+      <div class="antojo-col antojo-col--left">
+        <img
+          src="/ceviche-camaron.png"
+          alt="Ceviche de camarón fresco en bowl blanco con chips de plátano"
+          width="602"
+          height="421"
+          loading="lazy"
+          class="antojo-dish-img antojo-dish-img--ceviche"
+        />
+      </div>
+
+      <!-- Columna 2: Pescado Frito (Centro) -->
+      <div class="antojo-col antojo-col--center">
+        <img
+          src="/pescado-frito.png"
+          alt="Pescado frito crujiente con patacones y ensalada"
+          width="739"
+          height="397"
+          loading="lazy"
+          class="antojo-dish-img antojo-dish-img--pescado"
+        />
+      </div>
+
+      <!-- Columna 3: Cazuela de Mariscos (Derecha) -->
+      <div class="antojo-col antojo-col--right">
+        <img
+          src="/cazuela-mariscos.png"
+          alt="Cazuela de mariscos en cazuela de barro tradicional"
+          width="654"
+          height="541"
+          loading="lazy"
+          class="antojo-dish-img antojo-dish-img--cazuela"
+        />
+      </div>
+    </div>
+  </div>
+</section>
+
+<style>
+  .cta-antojo-section {
+    position: relative;
+    overflow: hidden;
+    padding-top: clamp(3.8rem, 5.5vw, 5.2rem);
+    padding-bottom: 0;
+    background: #040d18;
+    color: #ffffff;
+    isolation: isolate;
+  }
+
+  /* Fondo cinemático ambiental del restaurante */
+  .cta-antojo__bg {
+    position: absolute;
+    inset: 0;
+    z-index: -5;
+    overflow: hidden;
+  }
+
+  .cta-antojo__bg-img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: center 36%;
+    filter: brightness(0.72) contrast(1.12);
+  }
+
+  .cta-antojo__overlay {
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(
+      180deg,
+      rgba(4, 13, 24, 0.94) 0%,
+      rgba(4, 13, 24, 0.78) 35%,
+      rgba(4, 13, 24, 0.68) 70%,
+      rgba(4, 13, 24, 0.92) 100%
+    );
+  }
+
+  /* Capa de Podios de Fondo (Anclados a la base inferior de la sección) */
+  .cta-antojo__podiums-bg {
+    position: absolute;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    height: 380px;
+    pointer-events: none;
+    z-index: 1;
+    overflow: hidden;
+  }
+
+  .antojo-bg-circle {
+    position: absolute;
+    border-radius: 50%;
+    bottom: 0;
+    pointer-events: none;
+  }
+
+  /* Podio Azul Marino (Izquierda - Movido más a la derecha) */
+  .antojo-bg-circle--navy {
+    left: 23%;
+    width: clamp(320px, 34vw, 480px);
+    height: clamp(320px, 34vw, 480px);
+    transform: translate(-50%, 50%);
+    background: #07192b;
+    z-index: 1;
+  }
+
+  /* Podio Turquesa (Centro - Mitad exacta en el límite inferior) */
+  .antojo-bg-circle--teal {
+    left: 50%;
+    width: clamp(380px, 42vw, 600px);
+    height: clamp(380px, 42vw, 600px);
+    transform: translate(-50%, 50%);
+    background: #0d5870;
+    z-index: 2;
+  }
+
+  /* Podio Pizarra (Derecha - Movido más a la izquierda) */
+  .antojo-bg-circle--slate {
+    left: 77%;
+    width: clamp(320px, 34vw, 480px);
+    height: clamp(320px, 34vw, 480px);
+    transform: translate(-50%, 50%);
+    background: #403847;
+    z-index: 1;
+  }
+
+  .antojo-container {
+    width: 100%;
+    max-width: 1280px;
+    margin: 0 auto;
+    padding-inline: clamp(1rem, 2.5vw, 2rem);
+    position: relative;
+    z-index: 10;
+  }
+
+  /* Encabezado */
+  .cta-antojo__header {
+    text-align: center;
+    max-width: 52rem;
+    margin: 0 auto clamp(2.2rem, 4vw, 3rem);
+    position: relative;
+    z-index: 20;
+  }
+
+  .cta-antojo__eyebrow {
+    display: block;
+    font-family: var(--font-display, "Fraunces", Georgia, serif);
+    font-size: clamp(1.4rem, 2.6vw, 2.1rem);
+    font-style: italic;
+    font-weight: 500;
+    color: #d9993c;
+    margin-bottom: 0.4rem;
+    text-shadow: 0 2px 12px rgba(217, 153, 60, 0.35);
+  }
+
+  .cta-antojo__title {
+    font-family: var(--font-display, "Fraunces", Georgia, serif);
+    font-size: clamp(2.2rem, 4.8vw, 4.1rem);
+    font-weight: 600;
+    color: #ffffff;
+    line-height: 1.12;
+    margin: 0 0 0.75rem 0;
+    letter-spacing: -0.01em;
+    text-shadow: 0 4px 24px rgba(0, 0, 0, 0.75);
+  }
+
+  .cta-antojo__subtitle {
+    font-family: var(--font-body, "Inter", sans-serif);
+    font-size: clamp(0.95rem, 1.4vw, 1.1rem);
+    font-weight: 400;
+    color: rgba(255, 255, 255, 0.92);
+    margin: 0 0 1.8rem 0;
+    text-shadow: 0 2px 10px rgba(0, 0, 0, 0.7);
+  }
+
+  /* Botones de Acción (Tipografía Serif elegante como Imagen 2) */
+  .cta-antojo__btn-row {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 1.25rem;
+    flex-wrap: wrap;
+  }
+
+  .btn-antojo-primary {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    background: linear-gradient(180deg, #d38e32 0%, #b87522 100%);
+    color: #ffffff !important;
+    font-family: var(--font-display, "Fraunces", Georgia, serif);
+    font-size: 1.05rem;
+    font-weight: 500;
+    padding: 0.72rem 2.4rem;
+    border-radius: 999px;
+    text-decoration: none;
+    box-shadow: 0 4px 18px rgba(182, 115, 35, 0.4);
+    transition: all 0.25s ease;
+  }
+
+  .btn-antojo-primary:hover {
+    background: linear-gradient(180deg, #e0983a 0%, #c47e2b 100%);
+    transform: translateY(-2px);
+    box-shadow: 0 6px 24px rgba(182, 115, 35, 0.55);
+  }
+
+  .btn-antojo-whatsapp {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    background: rgba(10, 22, 36, 0.35);
+    border: 1.8px solid #ffffff;
+    color: #ffffff !important;
+    font-family: var(--font-display, "Fraunces", Georgia, serif);
+    font-size: 1.05rem;
+    font-weight: 500;
+    padding: 0.7rem 2.4rem;
+    border-radius: 999px;
+    text-decoration: none;
+    backdrop-filter: blur(8px);
+    transition: all 0.25s ease;
+  }
+
+  .btn-antojo-whatsapp:hover {
+    background: rgba(255, 255, 255, 0.2);
+    transform: translateY(-2px);
+  }
+
+  /* -------------------------------------------------------------
+     ESCENARIO HORIZONTAL DE LOS 3 PLATOS (Al frente de los arcos)
+     ------------------------------------------------------------- */
+  .antojo-stage {
+    display: grid;
+    grid-template-columns: 1fr 1.25fr 1fr;
+    align-items: end;
+    justify-items: center;
+    width: 100%;
+    margin-top: 1rem;
+    position: relative;
+    padding-bottom: 0;
+  }
+
+  .antojo-col {
+    position: relative;
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: flex-end;
+  }
+
+  .antojo-col--left {
+    z-index: 11;
+  }
+
+  .antojo-col--center {
+    z-index: 13;
+  }
+
+  .antojo-col--right {
+    z-index: 11;
+  }
+
+  /* Imágenes PNG de los Platos en alta resolución (Reducidas 10% y elevadas) */
+  .antojo-dish-img {
+    position: relative;
+    display: block;
+    height: auto;
+    object-fit: contain;
+    transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1), filter 0.4s ease;
+  }
+
+  .antojo-dish-img--ceviche {
+    width: 81%;
+    max-width: 324px;
+    margin-bottom: 0;
+    transform: translateY(-25px);
+    filter: drop-shadow(0 18px 24px rgba(0, 0, 0, 0.75));
+  }
+
+  .antojo-dish-img--pescado {
+    width: 94%;
+    max-width: 440px;
+    margin-bottom: 0;
+    transform: translateY(-32px);
+    filter: drop-shadow(0 22px 32px rgba(0, 0, 0, 0.85));
+  }
+
+  .antojo-dish-img--cazuela {
+    width: 81%;
+    max-width: 324px;
+    margin-bottom: 0;
+    transform: translateY(-25px);
+    filter: drop-shadow(0 18px 24px rgba(0, 0, 0, 0.75));
+  }
+
+  .antojo-col:hover .antojo-dish-img--ceviche {
+    transform: translateY(-33px) scale(1.02);
+  }
+
+  .antojo-col:hover .antojo-dish-img--pescado {
+    transform: translateY(-40px) scale(1.02);
+  }
+
+  .antojo-col:hover .antojo-dish-img--cazuela {
+    transform: translateY(-33px) scale(1.02);
+  }
+
+  /* Adaptación fluida para móviles (Mantiene el layout horizontal de 3 columnas a menor escala) */
+  @media (max-width: 640px) {
+    .cta-antojo-section {
+      padding-top: 2.8rem;
+    }
+
+    .cta-antojo-container {
+      padding-inline: 0.5rem;
+    }
+
+    .cta-antojo__podiums-bg {
+      height: clamp(150px, 40vw, 260px);
+    }
+
+    .antojo-bg-circle--navy {
+      left: 20%;
+      width: 55vw;
+      height: 55vw;
+    }
+
+    .antojo-bg-circle--teal {
+      left: 50%;
+      width: 70vw;
+      height: 70vw;
+    }
+
+    .antojo-bg-circle--slate {
+      left: 80%;
+      width: 55vw;
+      height: 55vw;
+    }
+
+    .antojo-stage {
+      grid-template-columns: 1fr 1.25fr 1fr;
+      gap: 0;
+    }
+
+    .antojo-dish-img--ceviche,
+    .antojo-dish-img--cazuela {
+      width: 96%;
+      max-width: 100%;
+      transform: translateY(-10px);
+    }
+
+    .antojo-dish-img--pescado {
+      width: 108%;
+      max-width: 110%;
+      transform: translateY(-16px);
+    }
+  }
+</style>

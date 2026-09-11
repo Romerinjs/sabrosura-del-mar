@@ -228,11 +228,12 @@ function getMapEmbedUrl(sedeId: string) {
   .venues-card-container {
     position: relative;
     width: 100%;
+    max-width: 100%;
     border-radius: clamp(24px, 3.2vw, 36px);
     overflow: hidden;
     background: #051423;
     box-shadow: 0 24px 60px rgba(5, 20, 35, 0.22), 0 8px 24px rgba(5, 20, 35, 0.12);
-    min-height: 520px;
+    min-height: auto;
   }
 
   /* Paneles de Sede con transición cinematográfica de 0.85s */
@@ -240,7 +241,7 @@ function getMapEmbedUrl(sedeId: string) {
     display: none;
     position: relative;
     width: 100%;
-    min-height: 520px;
+    max-width: 100%;
     animation: venueFadeIn 0.85s cubic-bezier(0.16, 1, 0.3, 1) forwards;
   }
 
@@ -302,11 +303,14 @@ function getMapEmbedUrl(sedeId: string) {
     position: relative;
     z-index: 2;
     display: grid;
-    grid-template-columns: 1fr 1.08fr;
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1.08fr);
     gap: clamp(1.8rem, 3.5vw, 3.2rem);
     align-items: center;
     padding: clamp(2rem, 4vw, 3.6rem);
-    min-height: 520px;
+    min-height: 500px;
+    width: 100%;
+    max-width: 100%;
+    box-sizing: border-box;
   }
 
   /* Columna Izquierda (Texto y Botones) */
@@ -315,6 +319,9 @@ function getMapEmbedUrl(sedeId: string) {
     flex-direction: column;
     justify-content: center;
     color: #ffffff;
+    min-width: 0;
+    width: 100%;
+    box-sizing: border-box;
   }
 
   .venues-panel__eyebrow {
@@ -354,6 +361,7 @@ function getMapEmbedUrl(sedeId: string) {
     gap: 0.45rem;
     margin-bottom: 2rem;
     max-width: 460px;
+    width: 100%;
   }
 
   .venues-panel__details p {
@@ -381,6 +389,8 @@ function getMapEmbedUrl(sedeId: string) {
     align-items: center;
     gap: 0.85rem;
     flex-wrap: wrap;
+    width: 100%;
+    box-sizing: border-box;
   }
 
   .venues-btn-primary {
@@ -400,6 +410,7 @@ function getMapEmbedUrl(sedeId: string) {
     transition: all 0.22s ease;
     box-shadow: 0 6px 18px rgba(0, 0, 0, 0.25);
     white-space: nowrap;
+    box-sizing: border-box;
   }
 
   .venues-btn-primary:hover {
@@ -428,6 +439,7 @@ function getMapEmbedUrl(sedeId: string) {
     text-decoration: none;
     transition: all 0.22s ease;
     white-space: nowrap;
+    box-sizing: border-box;
   }
 
   .venues-btn-secondary:hover {
@@ -442,19 +454,23 @@ function getMapEmbedUrl(sedeId: string) {
     align-items: center;
     justify-content: center;
     width: 100%;
+    min-width: 0;
+    box-sizing: border-box;
   }
 
   .venues-map-card {
     position: relative;
     width: 100%;
+    max-width: 100%;
     aspect-ratio: 16 / 10.5;
-    min-height: 320px;
     max-height: 420px;
     border-radius: 20px;
     overflow: hidden;
     box-shadow: 0 20px 48px rgba(0, 0, 0, 0.5);
     border: 1px solid rgba(255, 255, 255, 0.2);
     background: #0d2338;
+    margin-inline: auto;
+    box-sizing: border-box;
   }
 
   .venues-map-card iframe {
@@ -496,9 +512,10 @@ function getMapEmbedUrl(sedeId: string) {
   /* Adaptación Responsiva (Tablets y Móviles) */
   @media (max-width: 940px) {
     .venues-panel__content {
-      grid-template-columns: 1fr;
-      padding: clamp(1.8rem, 4vw, 2.5rem);
+      grid-template-columns: minmax(0, 1fr);
+      padding: clamp(1.5rem, 4vw, 2.5rem);
       gap: 2rem;
+      min-height: auto;
     }
 
     .venues-panel__overlay {
@@ -510,13 +527,52 @@ function getMapEmbedUrl(sedeId: string) {
       );
     }
 
+    .venues-panel__info-col {
+      align-items: center;
+      text-align: center;
+    }
+
+    .venues-panel__eyebrow {
+      text-align: center;
+    }
+
+    .venues-panel__title {
+      text-align: center;
+    }
+
+    .venues-panel__rule {
+      margin-inline: auto;
+    }
+
+    .venues-panel__details {
+      max-width: 100%;
+      text-align: center;
+      align-items: center;
+    }
+
+    .venues-panel__actions {
+      justify-content: center;
+      width: 100%;
+    }
+
+    .venues-panel__map-col {
+      width: 100%;
+      justify-content: center;
+    }
+
     .venues-map-card {
       aspect-ratio: 16 / 10;
-      min-height: 280px;
+      max-width: 520px;
+      margin-inline: auto;
     }
   }
 
-  @media (max-width: 480px) {
+  @media (max-width: 580px) {
+    .venues-panel__content {
+      padding: 1.25rem 1rem;
+      gap: 1.6rem;
+    }
+
     .venues-tab-btn {
       padding: 0.55rem 1.4rem;
       font-size: 0.78rem;
@@ -524,16 +580,23 @@ function getMapEmbedUrl(sedeId: string) {
 
     .venues-panel__actions {
       flex-direction: column;
+      align-items: center;
+      justify-content: center;
       width: 100%;
+      gap: 0.75rem;
     }
 
     .venues-btn-primary,
     .venues-btn-secondary {
       width: 100%;
+      max-width: 300px;
+      text-align: center;
     }
 
     .venues-map-card {
-      min-height: 250px;
+      aspect-ratio: 16 / 10.5;
+      max-width: 100%;
+      border-radius: 16px;
     }
   }
 </style>

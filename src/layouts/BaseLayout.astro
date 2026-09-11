@@ -13,7 +13,7 @@ interface Props {
   description?: string;
   ogImage?: string;
   canonicalUrl?: string;
-  activePage?: 'inicio' | 'carta';
+  activePage?: 'inicio' | 'carta' | 'sedes' | 'historia' | 'contacto' | string;
   jsonLd?: Record<string, any> | Array<Record<string, any>>;
 }
 
@@ -122,14 +122,15 @@ const {
           });
         }
 
-        // Sticky header background
+        // Sticky header background transition (scrolling past Hero)
         const updateHeader = () => {
-          if (header) {
-            if (window.scrollY > 20) {
-              header.classList.add('is-scrolled');
-            } else {
-              header.classList.remove('is-scrolled');
-            }
+          if (!header) return;
+          const hero = document.querySelector('.hero') as HTMLElement | null;
+          const threshold = hero ? hero.offsetHeight - 90 : 20;
+          if (window.scrollY > threshold) {
+            header.classList.add('is-scrolled');
+          } else {
+            header.classList.remove('is-scrolled');
           }
         };
         window.removeEventListener('scroll', updateHeader);

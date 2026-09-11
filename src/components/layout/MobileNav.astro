@@ -26,9 +26,9 @@ const { activePage = 'inicio' } = Astro.props;
   <nav class="mobile-nav__links">
     <a href="/" aria-current={activePage === 'inicio' ? 'page' : undefined}>Inicio</a>
     <a href="/carta" aria-current={activePage === 'carta' ? 'page' : undefined}>Carta</a>
-    <a href="/sedes">Sedes</a>
-    <a href="/historia">Nuestra historia</a>
-    <a href="/contacto">Contacto</a>
+    <a href="/sedes" aria-current={activePage === 'sedes' ? 'page' : undefined}>Sedes</a>
+    <a href="/historia" aria-current={activePage === 'historia' ? 'page' : undefined}>Nuestra historia</a>
+    <a href="/contacto" aria-current={activePage === 'contacto' ? 'page' : undefined}>Contacto</a>
   </nav>
 
   <div class="mobile-nav__footer">
