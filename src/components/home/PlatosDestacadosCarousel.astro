@@ -86,8 +86,7 @@ const formatMoney = (n: number) => '$' + n.toLocaleString('es-CO');
 
               {plato.badge && (
                 <div class="card-badge">
-                  <span class="badge-stars">★★★</span>
-                  <span class="badge-text">RECOMENDADO</span>
+                  <span class="badge-stars">★★★★★</span>
                 </div>
               )}
             </div>
@@ -292,7 +291,7 @@ const formatMoney = (n: number) => '$' + n.toLocaleString('es-CO');
     color: #7a634e;
   }
 
-  /* Badge Recomendado idéntico a la imagen */
+  /* Badge 5 estrellas */
   .card-badge {
     position: absolute;
     bottom: 0.55rem;
@@ -303,21 +302,12 @@ const formatMoney = (n: number) => '$' + n.toLocaleString('es-CO');
     padding: 0.22rem 0.55rem;
     display: flex;
     align-items: center;
-    gap: 0.32rem;
   }
 
   .badge-stars {
     color: #f2b866;
-    font-size: 0.7rem;
-    letter-spacing: 0.05em;
-  }
-
-  .badge-text {
-    font-family: var(--font-body, "Inter", sans-serif);
-    font-size: 0.65rem;
-    font-weight: 700;
+    font-size: 0.78rem;
     letter-spacing: 0.08em;
-    color: #ffffff;
   }
 
   /* Info y Acciones */
