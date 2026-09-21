@@ -52,8 +52,8 @@ const schemaRestaurant = {
   priceRange: '$$',
   currenciesAccepted: 'COP',
   image: isNorte
-    ? 'https://lasabrosuradelmar.com/assets/camarones-apanados.jpg'
-    : 'https://lasabrosuradelmar.com/assets/mojarra-frita.jpg',
+    ? 'https://lasabrosuradelmar.com/espacios/espacios.webp'
+    : 'https://lasabrosuradelmar.com/espacios/espacios-3.webp',
   logo: 'https://lasabrosuradelmar.com/assets/logo.png',
   url: canonicalUrl,
   hasMenu: 'https://lasabrosuradelmar.com/carta',
@@ -88,6 +88,10 @@ const schemaRestaurant = {
   activePage="sedes"
 >
   <section class="page-hero">
+    <div class="page-hero__bg" aria-hidden="true">
+      <img src={isNorte ? '/espacios/espacios-23.webp' : '/espacios/espacios-18.webp'} alt="" class="page-hero__bg-img" loading="eager" width="1400" height="600" />
+      <div class="page-hero__bg-overlay"></div>
+    </div>
     <div class="container">
       <div style="display:flex;gap:0.6rem;align-items:center;margin-bottom:0.8rem" data-sr data-sr-instant data-sr-delay="0.04">
         <a href="/" style="color:var(--gold-300);text-decoration:none;font-size:0.85rem">Inicio</a>

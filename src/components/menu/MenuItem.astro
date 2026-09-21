@@ -1,5 +1,6 @@
 ---
 import Icon from '../icons/Icon.astro';
+import { getDishGallery } from '../../utils/dishMatcher';
 
 interface Props {
   nombre: string;
@@ -29,15 +30,15 @@ const {
 
 const money = (n: number) => '$' + n.toLocaleString('es-CO');
 
-// Mapeo automático de fotos reales existentes en el proyecto
-const knownImages: Record<string, string> = {
-  'pescado frito (mojarra)': '/assets/mojarra-frita-sq.jpg',
-  'mojarra frita': '/assets/mojarra-frita-sq.jpg',
-  'camarones apanados': '/assets/camarones-apanados-sq.jpg',
-};
+// Consulta de fotos reales en el catálogo generado por el script
+const gallery = getDishGallery(nombre);
+const hasGallery = !!(gallery && gallery.photos && gallery.photos.length > 0);
+
+// Miniatura para la fila principal (usa thumbnail WebP ultra ligero de ~15KB si existe)
+const photoThumbSrc = gallery?.coverThumb || gallery?.cover || imagen || null;
+const photoFullSrc = gallery?.cover || imagen || null;
 
 const dishKey = nombre.toLowerCase().trim();
-const photoSrc = imagen || knownImages[dishKey] || null;
 const dishSlug = dishKey.replace(/[^a-z0-9]/g, '-');
 const itemDelay = ((index % 6) * 0.05).toFixed(2);
 ---
@@ -57,17 +58,18 @@ const itemDelay = ((index % 6) * 0.05).toFixed(2);
     tabindex="0"
     aria-expanded="false"
     aria-controls={`dish-desc-${dishSlug}`}
-    title={`Toca para ver detalles de ${nombre}`}
+    title={`Toca para ver fotos y detalles de ${nombre}`}
   >
     <!-- 1. Foto / Miniatura a la izquierda -->
     <div class="menu-dish-thumb">
-      {photoSrc ? (
+      {photoThumbSrc ? (
         <img
-          src={photoSrc}
+          src={photoThumbSrc}
           alt={nombre}
           width="54"
           height="54"
           loading="lazy"
+          decoding="async"
           class="dish-thumb-img"
         />
       ) : (
@@ -77,13 +79,12 @@ const itemDelay = ((index % 6) * 0.05).toFixed(2);
       )}
     </div>
 
-    <!-- 2. Información del plato (Nombre y badge de favorito) -->
+    <!-- 2. Información del plato (Nombre y badges) -->
     <div class="menu-dish-info">
       <div class="menu-dish-title-wrap">
         <span class="menu-dish-name">{nombre}</span>
         {destacado && <span class="menu-item__badge">Favorito</span>}
       </div>
-      <span class="menu-dish-hint">Toca para ver más</span>
     </div>
 
     <!-- 3. Columna fija y alineada para precio y botón (+) -->
@@ -109,35 +110,66 @@ const itemDelay = ((index % 6) * 0.05).toFixed(2);
       </div>
 
       <span class="menu-dish-chevron" aria-hidden="true">
-        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
           <polyline points="6 9 12 15 18 9"></polyline>
         </svg>
       </span>
     </div>
   </div>
 
-  <!-- Contenido desplegable vertical tipo acordeón con animación suave y visible -->
+  <!-- Contenido desplegable vertical tipo acordeón -->
   <div class="menu-dish-accordion" id={`dish-desc-${dishSlug}`}>
     <div class="menu-dish-accordion__body">
-      {photoSrc ? (
+      {hasGallery ? (
+        <!-- Bloque de Galería Ultra Limpio -->
+        <div class="dish-gallery-block">
+          <div class="dish-gallery-strip">
+            {gallery.photos.map((pUrl, pIdx) => {
+              const thumbUrl = gallery.thumbs[pIdx] || pUrl;
+              return (
+                <button
+                  type="button"
+                  class="dish-gallery-item"
+                  data-open-gallery={JSON.stringify({
+                    dishName: nombre,
+                    photos: gallery.photos,
+                    thumbs: gallery.thumbs,
+                    startIndex: pIdx
+                  })}
+                  title={`Foto ${pIdx + 1} de ${nombre}`}
+                  aria-label={`Ver foto ${pIdx + 1} de ${nombre}`}
+                >
+                  <img
+                    src={thumbUrl}
+                    alt={`${nombre} ${pIdx + 1}`}
+                    width="120"
+                    height="80"
+                    loading="lazy"
+                    decoding="async"
+                    class="dish-gallery-item__img"
+                  />
+                </button>
+              );
+            })}
+          </div>
+        </div>
+      ) : photoFullSrc ? (
         <div class="accordion-photo-wrap">
-          <img src={photoSrc} alt={nombre} width="320" height="200" loading="lazy" />
+          <img src={photoFullSrc} alt={nombre} width="320" height="200" loading="lazy" decoding="async" />
         </div>
-      ) : (
-        <div class="accordion-placeholder-wrap">
-          <Icon name="camera" size={26} />
-          <span>Foto disponible muy pronto</span>
-        </div>
-      )}
+      ) : null}
 
+      <!-- Información concisa respetando la respiración visual -->
       <div class="accordion-info-wrap">
-        <p class="accordion-desc">
-          {descripcion || 'Preparado fresco al momento con la receta tradicional de la casa, porciones generosas y el auténtico toque marinero de Armenia.'}
-        </p>
+        {descripcion && (
+          <p class="accordion-desc">
+            {descripcion}
+          </p>
+        )}
 
         {notaPrecio && (
           <p class="accordion-price-note">
-            ℹ️ {notaPrecio}
+            {notaPrecio}
           </p>
         )}
       </div>
@@ -146,37 +178,46 @@ const itemDelay = ((index % 6) * 0.05).toFixed(2);
 </li>
 
 <style>
-  /* Contenedor tipo tarjeta / fila interactiva */
+  /* Fila interactiva con línea segmentada únicamente en la parte inferior */
   .menu-dish-card {
     list-style: none;
-    display: flex;
-    flex-direction: column;
-    border-bottom: 1px dashed var(--line);
-    padding: 0.6rem 0.35rem;
-    border-radius: 12px;
-    transition: background-color 0.28s ease, border-color 0.28s ease, box-shadow 0.28s ease;
+    display: block;
+    break-inside: avoid;
+    -webkit-column-break-inside: avoid;
+    page-break-inside: avoid;
+    padding: 0.75rem 0.2rem;
+    margin-bottom: 0.1rem;
+    border-radius: 0;
+    border: none;
+    border-bottom: 1px dashed rgba(10, 37, 64, 0.14);
+    background: transparent;
+    transition: border-color 0.25s ease, background-color 0.25s ease;
   }
 
   .menu-dish-card:hover {
-    background: rgba(14, 90, 114, 0.03);
+    border-bottom-color: var(--teal-600, #14738f);
+    border-bottom-style: solid;
+    background: rgba(14, 90, 114, 0.015);
+    border-radius: 6px;
   }
 
   .menu-dish-card.is-expanded {
-    background: rgba(14, 90, 114, 0.045);
-    border-bottom-color: rgba(217, 154, 63, 0.45);
-    box-shadow: 0 4px 18px rgba(5, 20, 35, 0.05);
+    border-bottom-color: var(--teal-600, #14738f);
+    border-bottom-style: solid;
+    background: rgba(14, 90, 114, 0.025);
+    border-radius: 8px;
   }
 
   /* Fila de cabecera que actúa como botón de acordeón */
   .menu-dish-summary {
     display: flex;
     align-items: center;
-    gap: 0.75rem;
+    gap: 0.85rem;
     width: 100%;
     cursor: pointer;
     user-select: none;
     -webkit-user-select: none;
-    padding: 0.15rem 0.1rem;
+    padding: 0.1rem 0;
     border-radius: 8px;
     transition: opacity 0.2s ease;
   }
@@ -193,20 +234,15 @@ const itemDelay = ((index % 6) * 0.05).toFixed(2);
     min-width: 52px;
     border-radius: 10px;
     overflow: hidden;
-    background: var(--sand);
-    border: 1.5px solid var(--line);
+    background: rgba(0, 0, 0, 0.04);
     display: grid;
     place-items: center;
     flex-shrink: 0;
-    transition: transform 0.35s cubic-bezier(0.16, 1, 0.3, 1),
-                border-color 0.3s ease,
-                box-shadow 0.3s ease;
+    transition: transform 0.35s cubic-bezier(0.16, 1, 0.3, 1);
   }
 
   .menu-dish-card.is-expanded .menu-dish-thumb {
-    transform: scale(1.06);
-    border-color: var(--gold-500);
-    box-shadow: 0 4px 14px rgba(217, 154, 63, 0.28);
+    transform: scale(1.05);
   }
 
   .dish-thumb-img {
@@ -219,8 +255,8 @@ const itemDelay = ((index % 6) * 0.05).toFixed(2);
   .dish-thumb-placeholder {
     display: grid;
     place-items: center;
-    color: var(--muted);
-    opacity: 0.7;
+    color: var(--muted, #64748b);
+    opacity: 0.4;
   }
 
   /* 2. Información del plato */
@@ -241,22 +277,38 @@ const itemDelay = ((index % 6) * 0.05).toFixed(2);
   }
 
   .menu-dish-name {
-    font-family: var(--font-display);
+    font-family: var(--font-display, serif);
     font-weight: 600;
     font-size: 0.98rem;
-    color: var(--ink);
+    color: var(--ink, #0f172a);
     line-height: 1.25;
     transition: color 0.2s ease;
   }
 
   .menu-dish-card.is-expanded .menu-dish-name {
-    color: var(--teal-800);
+    color: var(--teal-800, #0a3d4d);
     font-weight: 700;
+  }
+
+  /* Badge indicador de fotos */
+  .menu-dish-photos-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.25rem;
+    font-size: 0.68rem;
+    font-weight: 700;
+    color: var(--teal-700, #0e5a72);
+    background: rgba(14, 90, 114, 0.1);
+    border: 1px solid rgba(14, 90, 114, 0.22);
+    padding: 0.12rem 0.42rem;
+    border-radius: 999px;
+    letter-spacing: 0.02em;
+    vertical-align: middle;
   }
 
   .menu-dish-hint {
     font-size: 0.7rem;
-    color: var(--teal-600);
+    color: var(--teal-600, #0284c7);
     font-weight: 500;
     opacity: 0.85;
     transition: opacity 0.2s ease;
@@ -266,7 +318,7 @@ const itemDelay = ((index % 6) * 0.05).toFixed(2);
     opacity: 0.5;
   }
 
-  /* 3. Columna derecha fija de precio y botón (+) */
+  /* 3. Columna derecha fija de precio y chevron */
   .menu-dish-side {
     display: flex;
     align-items: center;
@@ -281,10 +333,10 @@ const itemDelay = ((index % 6) * 0.05).toFixed(2);
   }
 
   .price-main {
-    font-family: var(--font-display);
+    font-family: var(--font-display, serif);
     font-weight: 700;
     font-size: 0.98rem;
-    color: var(--teal-700);
+    color: var(--teal-700, #0e5a72);
     white-space: nowrap;
     display: block;
     line-height: 1.1;
@@ -292,7 +344,7 @@ const itemDelay = ((index % 6) * 0.05).toFixed(2);
 
   .price-main--quote {
     font-size: 0.82rem;
-    color: var(--muted);
+    color: var(--muted, #64748b);
     font-weight: 600;
   }
 
@@ -304,20 +356,18 @@ const itemDelay = ((index % 6) * 0.05).toFixed(2);
 
   .price-sub {
     display: block;
-    font-family: var(--font-body);
+    font-family: var(--font-body, sans-serif);
     font-size: 0.68rem;
     font-weight: 500;
-    color: var(--muted);
+    color: var(--muted, #64748b);
     white-space: nowrap;
     line-height: 1.1;
     margin-top: 0.15rem;
   }
 
-
-
-  /* Indicador chevron de acordeón con rotación fluida */
+  /* Indicador chevron */
   .menu-dish-chevron {
-    color: var(--muted);
+    color: var(--muted, #64748b);
     transition: transform 0.35s cubic-bezier(0.175, 0.885, 0.32, 1.275), color 0.25s ease;
     display: grid;
     place-items: center;
@@ -327,12 +377,10 @@ const itemDelay = ((index % 6) * 0.05).toFixed(2);
 
   .menu-dish-card.is-expanded .menu-dish-chevron {
     transform: rotate(180deg);
-    color: var(--teal-700);
+    color: var(--teal-700, #0e5a72);
   }
 
-  /* -------------------------------------------------------------
-     Contenedor de Acordeón con Transición Fluida Garantizada (Grid + Opacidad)
-     ------------------------------------------------------------- */
+  /* Acordeón */
   .menu-dish-accordion {
     display: grid;
     grid-template-rows: 0fr;
@@ -347,41 +395,128 @@ const itemDelay = ((index % 6) * 0.05).toFixed(2);
     opacity: 1;
   }
 
-  /* min-height: 0 es requisito obligatorio de la especificación CSS Grid para interpolar filas */
   .menu-dish-accordion__body {
     min-height: 0;
     overflow: hidden;
-    padding: 0 0.4rem 0 4rem;
+    padding: 0 0.4rem 0 0;
     display: flex;
     flex-direction: column;
     gap: 0.75rem;
     opacity: 0;
-    transform: translateY(-12px);
-    transition: opacity 0.65s ease,
-                transform 0.75s cubic-bezier(0.16, 1, 0.3, 1),
-                padding 0.75s cubic-bezier(0.16, 1, 0.3, 1);
+    transform: translateY(-10px);
+    transition: opacity 0.5s ease,
+                transform 0.55s cubic-bezier(0.16, 1, 0.3, 1),
+                padding 0.55s cubic-bezier(0.16, 1, 0.3, 1);
   }
 
   .menu-dish-card.is-expanded .menu-dish-accordion__body {
     opacity: 1;
     transform: translateY(0);
-    padding: 0.95rem 0.4rem 0.65rem 4rem;
+    padding: 0.95rem 0.4rem 0.65rem 0;
   }
 
-  /* Foto ampliada con zoom suave al abrirse (0.85s) */
+  /* -------------------------------------------------------------
+     Bloque de Galería Ultra Limpio y Mínimo
+     ------------------------------------------------------------- */
+  .dish-gallery-block {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+    padding-left: 4rem;
+  }
+
+  /* Tira fotográfica horizontal limpia con arrastre para PC y táctil en móviles */
+  .dish-gallery-strip {
+    display: flex;
+    align-items: center;
+    gap: 0.55rem;
+    overflow-x: auto;
+    scroll-snap-type: x mandatory;
+    -webkit-overflow-scrolling: touch;
+    padding: 0.2rem 0.05rem;
+    scrollbar-width: none;
+    -ms-overflow-style: none;
+    cursor: grab;
+    cursor: -webkit-grab;
+    user-select: none;
+    -webkit-user-select: none;
+  }
+
+  .dish-gallery-strip::-webkit-scrollbar {
+    display: none;
+  }
+
+  .dish-gallery-strip.is-dragging {
+    cursor: grabbing !important;
+    cursor: -webkit-grabbing !important;
+    scroll-snap-type: none !important;
+    scroll-behavior: auto !important;
+  }
+
+  .dish-gallery-strip.is-dragging .dish-gallery-item {
+    cursor: grabbing !important;
+    cursor: -webkit-grabbing !important;
+    pointer-events: none;
+    transform: none !important;
+  }
+
+  .dish-gallery-item {
+    position: relative;
+    flex: 0 0 115px;
+    height: 80px;
+    border-radius: 8px;
+    overflow: hidden;
+    border: 1px solid var(--line, #e2e8f0);
+    padding: 0;
+    background: var(--sand, #f8f6f0);
+    cursor: pointer;
+    scroll-snap-align: start;
+    box-shadow: 0 2px 6px rgba(5, 20, 35, 0.05);
+    transition: transform 0.25s cubic-bezier(0.16, 1, 0.3, 1),
+                border-color 0.25s ease;
+    user-select: none;
+    -webkit-user-select: none;
+  }
+
+  .dish-gallery-item:hover {
+    transform: scale(1.04);
+    border-color: var(--gold-500, #d99a3f);
+  }
+
+  .dish-gallery-item__img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+    -webkit-user-drag: none;
+    user-select: none;
+    pointer-events: none;
+  }
+
+  .dish-gallery-item__index {
+    position: absolute;
+    bottom: 0.35rem;
+    right: 0.4rem;
+    font-family: var(--font-mono, monospace);
+    font-size: 0.65rem;
+    font-weight: 700;
+    background: rgba(7, 31, 56, 0.85);
+    color: #ffffff;
+    padding: 0.1rem 0.35rem;
+    border-radius: 4px;
+    border: 1px solid rgba(255, 255, 255, 0.15);
+  }
+
+  /* Foto individual previa (fallback) */
   .accordion-photo-wrap {
     width: 100%;
-    max-width: 280px;
+    max-width: 260px;
+    margin-left: 4rem;
     border-radius: 11px;
     overflow: hidden;
-    border: 1px solid var(--line);
+    border: 1px solid var(--line, #e2e8f0);
     box-shadow: 0 4px 16px rgba(5, 20, 35, 0.1);
-    transform: scale(0.95);
-    transition: transform 0.85s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.6s ease;
-  }
-
-  .menu-dish-card.is-expanded .accordion-photo-wrap {
-    transform: scale(1);
   }
 
   .accordion-photo-wrap img {
@@ -392,62 +527,39 @@ const itemDelay = ((index % 6) * 0.05).toFixed(2);
   }
 
   .accordion-placeholder-wrap {
-    background: var(--sand);
-    border: 1px dashed var(--line);
+    background: var(--sand, #f8f6f0);
+    border: 1px dashed var(--line, #e2e8f0);
     border-radius: 10px;
-    padding: 0.85rem 1.1rem;
+    padding: 0.75rem 1rem;
+    margin-left: 4rem;
     display: inline-flex;
     align-items: center;
     gap: 0.65rem;
-    color: var(--muted);
+    color: var(--muted, #64748b);
     font-size: 0.82rem;
     width: fit-content;
-    transform: scale(0.97);
-    transition: transform 0.4s ease;
-  }
-
-  .menu-dish-card.is-expanded .accordion-placeholder-wrap {
-    transform: scale(1);
   }
 
   .accordion-info-wrap {
     display: flex;
     flex-direction: column;
-    gap: 0.5rem;
-    opacity: 0;
-    transform: translateY(-6px);
-    transition: opacity 0.38s ease 0.06s, transform 0.4s cubic-bezier(0.16, 1, 0.3, 1) 0.06s;
-  }
-
-  .menu-dish-card.is-expanded .accordion-info-wrap {
-    opacity: 1;
-    transform: translateY(0);
+    gap: 0.4rem;
+    padding-left: 0;
+    width: 100%;
   }
 
   .accordion-desc {
     font-size: 0.9rem;
-    color: var(--ink-soft);
-    line-height: 1.52;
+    color: var(--ink-soft, #334155);
+    line-height: 1.5;
     margin: 0;
   }
 
   .accordion-price-note {
-    font-size: 0.8rem;
-    color: var(--muted);
+    font-size: 0.78rem;
+    color: var(--muted, #64748b);
     font-style: italic;
     margin: 0;
-  }
-
-  .sr-only {
-    position: absolute;
-    width: 1px;
-    height: 1px;
-    padding: 0;
-    margin: -1px;
-    overflow: hidden;
-    clip: rect(0, 0, 0, 0);
-    white-space: nowrap;
-    border: 0;
   }
 
   @media (max-width: 640px) {
@@ -476,6 +588,20 @@ const itemDelay = ((index % 6) * 0.05).toFixed(2);
     .menu-dish-card.is-expanded .menu-dish-accordion__body {
       padding: 0.85rem 0.25rem 0.6rem 0.25rem;
     }
+
+    .dish-gallery-block {
+      padding-left: 0;
+    }
+
+    .accordion-photo-wrap,
+    .accordion-placeholder-wrap {
+      margin-left: 0;
+    }
+
+    .dish-gallery-item {
+      flex: 0 0 135px;
+      height: 95px;
+    }
   }
 </style>
 
@@ -484,11 +610,126 @@ const itemDelay = ((index % 6) * 0.05).toFixed(2);
     if ((window as any).__dishAccordionInitialized) return;
     (window as any).__dishAccordionInitialized = true;
 
-    // Delegación de clics
+    // --- Arrastre horizontal con clic de ratón (Drag-to-scroll para PC) ---
+    let activeDragStrip: HTMLElement | null = null;
+    let startX = 0;
+    let scrollLeftStart = 0;
+    let hasDragged = false;
+    let suppressClickUntil = 0;
+
+    // Iniciar arrastre con botón izquierdo del ratón
+    document.addEventListener('mousedown', (e) => {
+      if (e.button !== 0) return; // Solo clic principal
+      const strip = (e.target as HTMLElement)?.closest('.dish-gallery-strip') as HTMLElement | null;
+      if (!strip) return;
+
+      activeDragStrip = strip;
+      startX = e.pageX;
+      scrollLeftStart = strip.scrollLeft;
+      hasDragged = false;
+    });
+
+    // Desplazamiento dinámico al mover el ratón
+    window.addEventListener('mousemove', (e) => {
+      if (!activeDragStrip) return;
+      const dx = e.pageX - startX;
+      if (!hasDragged && Math.abs(dx) > 4) {
+        hasDragged = true;
+        activeDragStrip.classList.add('is-dragging');
+        activeDragStrip.style.scrollSnapType = 'none';
+      }
+      if (hasDragged) {
+        e.preventDefault();
+        activeDragStrip.scrollLeft = scrollLeftStart - dx;
+      }
+    });
+
+    function finishDrag() {
+      if (!activeDragStrip) return;
+      const strip = activeDragStrip;
+      activeDragStrip = null;
+
+      if (hasDragged) {
+        suppressClickUntil = Date.now() + 150;
+      }
+
+      strip.classList.remove('is-dragging');
+      setTimeout(() => {
+        if (strip) strip.style.scrollSnapType = '';
+      }, 50);
+    }
+
+    window.addEventListener('mouseup', finishDrag);
+    window.addEventListener('blur', finishDrag);
+
+    // Evitar arrastre fantasma de imágenes nativo
+    document.addEventListener('dragstart', (e) => {
+      if ((e.target as HTMLElement)?.closest('.dish-gallery-strip')) {
+        e.preventDefault();
+      }
+    });
+
+    // Soporte de rueda de ratón (Mouse wheel horizontal en PC)
+    document.addEventListener(
+      'wheel',
+      (e) => {
+        const strip = (e.target as HTMLElement)?.closest('.dish-gallery-strip') as HTMLElement | null;
+        if (!strip) return;
+        if (Math.abs(e.deltaY) > Math.abs(e.deltaX)) {
+          const maxScroll = strip.scrollWidth - strip.clientWidth;
+          if (maxScroll > 0) {
+            const canLeft = strip.scrollLeft > 0 && e.deltaY < 0;
+            const canRight = strip.scrollLeft < maxScroll - 1 && e.deltaY > 0;
+            if (canLeft || canRight) {
+              e.preventDefault();
+              strip.scrollLeft += e.deltaY;
+            }
+          }
+        }
+      },
+      { passive: false }
+    );
+
+    // Interceptar clics si se estaba arrastrando para evitar abrir el modal por error
+    document.addEventListener(
+      'click',
+      (e) => {
+        if (Date.now() < suppressClickUntil) {
+          e.stopPropagation();
+          e.preventDefault();
+          suppressClickUntil = 0;
+        }
+      },
+      true // Captura prioritaria antes de disparar la galería
+    );
+
+    // Delegación de clics para acordeón y botón de apertura de galería
     document.addEventListener('click', (e) => {
       const target = e.target as HTMLElement | null;
       if (!target) return;
 
+      // Apertura de galería modal (evita colapsar el acordeón)
+      const galleryBtn = target.closest('[data-open-gallery]') as HTMLElement | null;
+      if (galleryBtn) {
+        e.stopPropagation();
+        e.preventDefault();
+        const payloadStr = galleryBtn.getAttribute('data-open-gallery');
+        if (payloadStr) {
+          try {
+            const data = JSON.parse(payloadStr);
+            if ((window as any).openDishGallery) {
+              (window as any).openDishGallery(data);
+            } else {
+              window.dispatchEvent(new CustomEvent('open-dish-gallery', { detail: data }));
+            }
+          } catch (err) {
+            console.error('Error al abrir la galería:', err);
+          }
+        }
+        return;
+      }
+
+      // Despliegue de acordeón
       const summary = target.closest('.menu-dish-summary') as HTMLElement | null;
       if (summary) {
         const card = summary.closest('.menu-dish-card');
@@ -499,7 +740,7 @@ const itemDelay = ((index % 6) * 0.05).toFixed(2);
       }
     });
 
-    // Accesibilidad mediante teclado (Enter o Barra Espaciadora)
+    // Accesibilidad mediante teclado
     document.addEventListener('keydown', (e) => {
       if (e.key === 'Enter' || e.key === ' ') {
         const target = e.target as HTMLElement | null;

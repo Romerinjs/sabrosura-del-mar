@@ -1,59 +1,193 @@
 ---
-import type { CategoriaMenu } from '../../types/menu';
+import type { CategoriaMenu, MenuItem as MenuItemType } from '../../types/menu';
 import MenuItem from './MenuItem.astro';
 import MenuFeature from './MenuFeature.astro';
 
 interface Props {
   categoria: CategoriaMenu;
+  index?: number;
 }
 
-const { categoria: c } = Astro.props;
+const CATEGORY_IMAGES: Record<string, string> = {
+  entradas: '/menu-secciones/ceviche.webp',
+  arroces: '/menu-secciones/arroces.webp',
+  cazuelas: '/menu-secciones/cazuela.webp',
+  pescados: '/menu-secciones/pescados.webp',
+  salmon: '/menu-secciones/salmon.webp',
+  camarones: '/menu-secciones/camarones-y-langostinos.webp',
+  pastas: '/menu-secciones/pasta-a-la-marinera.webp',
+  especialidades: '/menu-secciones/langosta-rellena.webp',
+  ejecutivos: '/menu-secciones/ejecutivos.webp',
+  bebidas: '/menu-secciones/bebidas.webp',
+};
+
+const { categoria: c, index = 0 } = Astro.props;
+const categoryImg = CATEGORY_IMAGES[c.id];
+const isEven = index % 2 === 0;
+const imageSide = isEven ? 'left' : 'right';
+
+function splitItems(items: MenuItemType[] = []) {
+  const mid = Math.ceil(items.length / 2);
+  return [items.slice(0, mid), items.slice(mid)];
+}
 ---
 
 <section class="menu-section" id={c.id}>
-  <div class="menu-section__head" data-sr data-sr-direction="up">
-    <h2>{c.nombre}</h2>
-    {c.resumen && <span>{c.resumen}</span>}
-  </div>
-
-  {c.destacado && (
-    <div data-sr data-sr-direction="zoom" data-sr-delay="0.1">
-      <MenuFeature feature={c.destacado} />
+  {categoryImg && (
+    <div
+      class:list={[
+        'menu-section__bg-wrap',
+        `menu-section__bg-wrap--${imageSide}`
+      ]}
+      aria-hidden="true"
+    >
+      <img
+        src={categoryImg}
+        alt=""
+        class="menu-section__bg-img"
+        loading="lazy"
+        decoding="async"
+        width="400"
+        height="400"
+      />
     </div>
   )}
 
-  {c.subgrupos ? (
-    c.subgrupos.map((sg) => (
-      <div class="menu-subgroup">
-        <h3
-          style="font-size:1.12rem;margin:1.6rem 0 .4rem;color:var(--teal-700);font-family:var(--font-display)"
-          data-sr
-          data-sr-direction="up"
-        >
-          {sg.nombre}
-        </h3>
-        <ul class="menu-list">
-          {sg.items.map((it, idx) => (
-            <MenuItem {...it} index={idx} />
-          ))}
-        </ul>
-      </div>
-    ))
-  ) : (
-    <ul class="menu-list">
-      {c.items?.map((it, idx) => (
-        <MenuItem {...it} index={idx} />
-      ))}
-    </ul>
-  )}
+  <div class="container">
+    <div class="menu-section__head" data-sr data-sr-direction="up">
+      <h2>{c.nombre}</h2>
+      {c.resumen && <span>{c.resumen}</span>}
+    </div>
 
-  {c.notaFinal && (
-    <p
-      data-sr
-      data-sr-delay="0.1"
-      style="margin-top:1.1rem;font-size:.87rem;color:var(--muted);font-style:italic"
-    >
-      Nota: {c.notaFinal}
-    </p>
-  )}
+    {c.destacado && (
+      <div data-sr data-sr-direction="zoom" data-sr-delay="0.1">
+        <MenuFeature feature={c.destacado} />
+      </div>
+    )}
+
+    {c.subgrupos ? (
+      c.subgrupos.map((sg) => {
+        const [col1, col2] = splitItems(sg.items);
+        const isSingle = col2.length === 0;
+        return (
+          <div class="menu-subgroup">
+            <h3
+              style="font-size:1.12rem;margin:1.6rem 0 .4rem;color:var(--teal-700);font-family:var(--font-display)"
+              data-sr
+              data-sr-direction="up"
+            >
+              {sg.nombre}
+            </h3>
+            <div class:list={['menu-columns', { 'menu-columns--single': isSingle }]}>
+              <ul class="menu-col">
+                {col1.map((it, idx) => (
+                  <MenuItem {...it} index={idx} />
+                ))}
+              </ul>
+              {!isSingle && (
+                <ul class="menu-col">
+                  {col2.map((it, idx) => (
+                    <MenuItem {...it} index={col1.length + idx} />
+                  ))}
+                </ul>
+              )}
+            </div>
+          </div>
+        );
+      })
+    ) : (
+      (() => {
+        const [col1, col2] = splitItems(c.items || []);
+        const isSingle = col2.length === 0;
+        return (
+          <div class:list={['menu-columns', { 'menu-columns--single': isSingle }]}>
+            <ul class="menu-col">
+              {col1.map((it, idx) => (
+                <MenuItem {...it} index={idx} />
+              ))}
+            </ul>
+            {!isSingle && (
+              <ul class="menu-col">
+                {col2.map((it, idx) => (
+                  <MenuItem {...it} index={col1.length + idx} />
+                ))}
+              </ul>
+            )}
+          </div>
+        );
+      })()
+    )}
+
+    {c.notaFinal && (
+      <p
+        data-sr
+        data-sr-delay="0.1"
+        style="margin-top:1.1rem;font-size:.87rem;color:var(--muted);font-style:italic"
+      >
+        Nota: {c.notaFinal}
+      </p>
+    )}
+  </div>
 </section>
+
+<style>
+  .menu-section {
+    position: relative;
+    overflow: hidden;
+    padding: 3rem 0;
+  }
+
+  .menu-section .container {
+    position: relative;
+    z-index: 2;
+  }
+
+  /* Imagen de fondo decorativa: más grande y adentrada en la sección */
+  .menu-section__bg-wrap {
+    position: absolute;
+    top: 50%;
+    pointer-events: none;
+    user-select: none;
+    z-index: 1;
+    width: clamp(520px, 52vw, 850px);
+    height: auto;
+    opacity: 0.35;
+    filter: drop-shadow(0 20px 40px rgba(10, 37, 64, 0.14));
+  }
+
+  .menu-section__bg-wrap--left {
+    left: 0;
+    transform: translate(-38%, -50%);
+  }
+
+  .menu-section__bg-wrap--right {
+    right: 0;
+    transform: translate(38%, -50%);
+  }
+
+  .menu-section__bg-img {
+    width: 100%;
+    height: auto;
+    display: block;
+    object-fit: contain;
+  }
+
+  @media (max-width: 768px) {
+    .menu-section {
+      padding: 2.2rem 0;
+    }
+
+    .menu-section__bg-wrap {
+      width: clamp(380px, 92vw, 580px);
+      opacity: 0.32;
+    }
+
+    .menu-section__bg-wrap--left {
+      transform: translate(-58%, -50%);
+    }
+
+    .menu-section__bg-wrap--right {
+      transform: translate(58%, -50%);
+    }
+  }
+</style>

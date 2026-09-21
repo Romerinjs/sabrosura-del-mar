@@ -3,6 +3,7 @@ import { getEntry } from 'astro:content';
 import BaseLayout from '../layouts/BaseLayout.astro';
 import MenuNav from '../components/menu/MenuNav.astro';
 import MenuSection from '../components/menu/MenuSection.astro';
+import DishGalleryModal from '../components/menu/DishGalleryModal.astro';
 import menuDataRaw from '../data/menu.json';
 import type { MenuData } from '../types/menu';
 
@@ -43,12 +44,16 @@ const schemaJsonLd = {
 <BaseLayout
   title="Carta digital | La Sabrosura del Mar — Armenia, Quindío"
   description="Carta digital de La Sabrosura del Mar en Armenia: arroces marineros, cazuelas, ceviches, pescados, salmón, camarones, langostinos, pastas y especialidades. Precios en pesos colombianos."
-  ogImage="/assets/camarones-apanados.jpg"
+  ogImage="/carta/cazuela-de-mariscos/plato-90.webp"
   canonicalUrl="https://lasabrosuradelmar.com/carta"
   activePage="carta"
   jsonLd={schemaJsonLd}
 >
   <section class="page-hero">
+    <div class="page-hero__bg" aria-hidden="true">
+      <img src="/carta/cazuela-de-mariscos/plato-90.webp" alt="" class="page-hero__bg-img" loading="eager" width="1400" height="600" />
+      <div class="page-hero__bg-overlay"></div>
+    </div>
     <div class="container">
       <span class="eyebrow" data-sr data-sr-instant data-sr-delay="0.05">{cartaInfo?.eyebrow || 'Carta digital'}</span>
       <h1 data-sr data-sr-instant data-sr-delay="0.15">{cartaInfo?.title || 'Nuestra carta'}</h1>
@@ -58,8 +63,8 @@ const schemaJsonLd = {
 
   <MenuNav categorias={navCategorias} />
 
-  <div class="container" id="carta">
-    <div class="menu-empty" id="menu-empty">
+  <div class="carta-container" id="carta">
+    <div class="container menu-empty" id="menu-empty">
       <p class="menu-empty__title" style="font-size:1.15rem;font-weight:600;color:var(--navy-900);margin-bottom:.4rem">
         No encontramos platos que coincidan con tu búsqueda
       </p>
@@ -71,43 +76,55 @@ const schemaJsonLd = {
       </button>
     </div>
 
-    {menu.categorias.map((cat) => (
-      <MenuSection categoria={cat} />
+    {menu.categorias.map((cat, index) => (
+      <MenuSection categoria={cat} index={index} />
     ))}
 
-    <!-- Banner comercial de alta conversión directa a WhatsApp -->
-    <div class="carta-commercial-box" data-sr data-sr-direction="zoom" data-sr-delay="0.1">
-      <div class="carta-commercial-box__info">
-        <span class="carta-commercial-box__badge">Atención y Pedidos</span>
-        <h2 class="carta-commercial-box__title">¿Deseas pedir al restaurante?</h2>
-        <p class="carta-commercial-box__desc">
-          Comunícate con nuestra línea directa. Te asesoramos con la carta, disponibilidad y toma de tu pedido sin complicaciones.
-        </p>
+    <div class="container">
+      <!-- Banner comercial de alta conversión directa a WhatsApp -->
+      <div class="carta-commercial-box" data-sr data-sr-direction="zoom" data-sr-delay="0.1">
+        <div class="carta-commercial-box__info">
+          <span class="carta-commercial-box__badge">Atención y Pedidos</span>
+          <h2 class="carta-commercial-box__title">¿Deseas pedir al restaurante?</h2>
+          <p class="carta-commercial-box__desc">
+            Comunícate con nuestra línea directa. Te asesoramos con la carta, disponibilidad y toma de tu pedido sin complicaciones.
+          </p>
+        </div>
+        <a
+          class="btn btn--primary btn--lg carta-commercial-box__btn"
+          href="https://wa.me/573113093429?text=Hola%2C%20estoy%20interesado%20en%20pedir%20al%20restaurante"
+          target="_blank"
+          rel="noopener"
+          data-track-event="whatsapp_click"
+          data-track-location="carta_commercial_box"
+        >
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+            <path d="M12.04 2C6.6 2 2.2 6.4 2.2 11.85c0 1.9.5 3.7 1.45 5.3L2 22l4.98-1.6a9.8 9.8 0 0 0 5.06 1.4h.01c5.44 0 9.85-4.4 9.85-9.85C21.9 6.4 17.5 2 12.04 2Zm5.77 14.06c-.24.68-1.4 1.3-1.94 1.35-.5.05-.95.24-3.2-.67-2.7-1.06-4.4-3.8-4.53-3.98-.13-.18-1.08-1.43-1.08-2.73 0-1.3.68-1.94.92-2.2.24-.27.53-.33.7-.33h.5c.16 0 .38-.06.6.46.23.55.78 1.9.85 2.03.07.14.11.3.02.48-.09.18-.14.29-.27.45-.14.16-.29.35-.41.47-.14.13-.28.28-.12.55.16.27.71 1.17 1.53 1.9 1.05.94 1.94 1.23 2.21 1.37.27.14.43.11.59-.07.16-.18.68-.79.86-1.06.18-.27.36-.23.6-.14.25.09 1.58.75 1.85.88.27.14.45.2.52.32.07.11.07.65-.17 1.32Z"/>
+          </svg>
+          Pedir al restaurante por WhatsApp
+        </a>
       </div>
-      <a
-        class="btn btn--primary btn--lg carta-commercial-box__btn"
-        href="https://wa.me/573113093429?text=Hola%2C%20estoy%20interesado%20en%20pedir%20al%20restaurante"
-        target="_blank"
-        rel="noopener"
-        data-track-event="whatsapp_click"
-        data-track-location="carta_commercial_box"
-      >
-        <svg width="22" height="22" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
-          <path d="M12.04 2C6.6 2 2.2 6.4 2.2 11.85c0 1.9.5 3.7 1.45 5.3L2 22l4.98-1.6a9.8 9.8 0 0 0 5.06 1.4h.01c5.44 0 9.85-4.4 9.85-9.85C21.9 6.4 17.5 2 12.04 2Zm5.77 14.06c-.24.68-1.4 1.3-1.94 1.35-.5.05-.95.24-3.2-.67-2.7-1.06-4.4-3.8-4.53-3.98-.13-.18-1.08-1.43-1.08-2.73 0-1.3.68-1.94.92-2.2.24-.27.53-.33.7-.33h.5c.16 0 .38-.06.6.46.23.55.78 1.9.85 2.03.07.14.11.3.02.48-.09.18-.14.29-.27.45-.14.16-.29.35-.41.47-.14.13-.28.28-.12.55.16.27.71 1.17 1.53 1.9 1.05.94 1.94 1.23 2.21 1.37.27.14.43.11.59-.07.16-.18.68-.79.86-1.06.18-.27.36-.23.6-.14.25.09 1.58.75 1.85.88.27.14.45.2.52.32.07.11.07.65-.17 1.32Z"/>
-        </svg>
-        Pedir al restaurante por WhatsApp
-      </a>
-    </div>
 
-    <footer class="carta-disclaimer" aria-label="Aviso legal de la carta" data-sr data-sr-delay="0.15">
-      <p class="carta-disclaimer__text">
-        * {cartaInfo?.notaGeneral || menu.nota || 'Los productos y precios pueden variar según disponibilidad o temporada.'}
-      </p>
-    </footer>
+      <footer class="carta-disclaimer" aria-label="Aviso legal de la carta" data-sr data-sr-delay="0.15">
+        <p class="carta-disclaimer__text">
+          * {cartaInfo?.notaGeneral || menu.nota || 'Los productos y precios pueden variar según disponibilidad o temporada.'}
+        </p>
+      </footer>
+    </div>
   </div>
+
+  <DishGalleryModal />
 </BaseLayout>
 
 <style>
+  .carta-container {
+    position: relative;
+    overflow: hidden;
+    min-height: 75vh;
+    min-height: calc(100dvh - var(--header-main-h, 70px));
+    padding-bottom: 2.5rem;
+  }
+
   .carta-commercial-box {
     margin-top: 3.5rem;
     margin-bottom: 2rem;

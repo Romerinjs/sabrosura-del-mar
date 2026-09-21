@@ -41,7 +41,7 @@ const {
   domicilios,
   mapsUrl,
   whatsapp,
-  imagen = (nombre.toLowerCase().includes('norte') ? '/assets/sede-norte.jpg' : '/assets/sede-centro.jpg'),
+  imagen = (nombre.toLowerCase().includes('norte') ? '/espacios/espacios-23.webp' : '/espacios/espacios-18.webp'),
 } = Astro.props;
 
 const sedeSlug = id ? id.replace('sede-', '') : (nombre.toLowerCase().includes('norte') ? 'norte' : 'centro');

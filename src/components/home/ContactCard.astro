@@ -29,63 +29,12 @@ const {
     </div>
 
     <div class="contact-grid">
-      <!-- Card 1: Teléfono & WhatsApp -->
+      <!-- Card 1: Pedidos y Consultas -->
       <div
         class="contact-card"
         data-sr
         data-sr-direction="zoom"
         data-sr-delay="0.08"
-      >
-        <div class="contact-card__header">
-          <div class="contact-card__icon contact-card__icon--warm" aria-hidden="true">
-            <Icon name="smartphone" size={24} />
-          </div>
-        </div>
-
-        <div class="contact-card__body">
-          <h3>Teléfono & WhatsApp</h3>
-          <p class="contact-card__sub">Atención prioritaria y consultas al instante</p>
-
-          <div class="contact-card__section">
-            <span class="contact-card__label">LÍNEA MÓVIL OFICIAL</span>
-            <span class="contact-card__main-num tabular-num">311 309 3429</span>
-
-            <div class="contact-card__btn-row">
-              <button
-                type="button"
-                class="contact-btn contact-btn--copy"
-                data-copy-text="3113093429"
-                title="Copiar número al portapapeles"
-                aria-label="Copiar número de teléfono 311 309 3429"
-              >
-                <Icon name="copy" size={15} />
-                <span>Copiar</span>
-                <span class="copy-feedback" aria-live="polite">¡Copiado!</span>
-              </button>
-
-              <a
-                class="contact-btn contact-btn--chat"
-                href="https://wa.me/573113093429?text=Hola%2C%20estoy%20interesado%20en%20pedir%20al%20restaurante"
-                target="_blank"
-                rel="noopener"
-                data-track-event="whatsapp_click"
-                data-track-location="contact_card_phone"
-                title="Chatear por WhatsApp"
-              >
-                <Icon name="whatsapp" size={16} />
-                <span>Chatear</span>
-              </a>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      <!-- Card 2: Pedidos y Consultas -->
-      <div
-        class="contact-card"
-        data-sr
-        data-sr-direction="zoom"
-        data-sr-delay="0.16"
       >
         <div class="contact-card__header">
           <div class="contact-card__icon contact-card__icon--teal" aria-hidden="true">
@@ -99,7 +48,7 @@ const {
 
           <div class="contact-card__lines-stack">
             <!-- Línea Móvil / WhatsApp -->
-            <div class="contact-line-box">
+            <div class="contact-line-box" role="button" tabindex="0" title="Toca para ver opciones de contacto">
               <div class="contact-line-box__info">
                 <span class="contact-line-box__label">MÓVIL / WHATSAPP</span>
                 <strong class="contact-line-box__num tabular-num">311 309 3429</strong>
@@ -131,7 +80,7 @@ const {
             </div>
 
             <!-- Línea Teléfono Fijo -->
-            <div class="contact-line-box">
+            <div class="contact-line-box" role="button" tabindex="0" title="Toca para ver opciones de contacto">
               <div class="contact-line-box__info">
                 <span class="contact-line-box__label">TELÉFONO FIJO</span>
                 <strong class="contact-line-box__num tabular-num">606 747 7424</strong>
@@ -163,12 +112,12 @@ const {
         </div>
       </div>
 
-      <!-- Card 3: Horario de atención -->
+      <!-- Card 2: Horario de atención -->
       <div
         class="contact-card"
         data-sr
         data-sr-direction="zoom"
-        data-sr-delay="0.24"
+        data-sr-delay="0.16"
       >
         <div class="contact-card__header">
           <div class="contact-card__icon contact-card__icon--mint" aria-hidden="true">
@@ -206,23 +155,28 @@ const {
     color: var(--gold-600, #b27520);
   }
 
+  /* 2 columnas centradas en escritorio y 1 columna en móvil */
   .contact-grid {
     display: grid;
-    gap: 1.5rem;
-    grid-template-columns: repeat(auto-fit, minmax(min(100%, 300px), 1fr));
+    grid-template-columns: repeat(2, 1fr);
+    gap: 1.25rem;
     align-items: stretch;
+    max-width: 780px;
+    margin: 0 auto;
+    width: 100%;
   }
 
   .contact-card {
     background: #ffffff;
     border: 1px solid var(--line, rgba(10, 37, 64, 0.12));
-    border-radius: var(--radius-lg, 22px);
-    padding: clamp(1.6rem, 3.2vw, 2.2rem);
+    border-radius: 20px;
+    padding: 1.6rem 1.4rem;
     box-shadow: 0 4px 20px rgba(10, 37, 64, 0.05);
     display: flex;
     flex-direction: column;
     text-align: left;
     transition: transform 0.35s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.35s ease, border-color 0.3s ease;
+    min-width: 0;
   }
 
   .contact-card:hover {
@@ -232,21 +186,26 @@ const {
   }
 
   .contact-card__header {
-    margin-bottom: 1.25rem;
+    margin-bottom: 1rem;
     display: flex;
     align-items: center;
     justify-content: flex-start;
   }
 
-  /* Contenedores de Icono con fondo suave */
+  /* Contenedores de Icono */
   .contact-card__icon {
-    width: 48px;
-    height: 48px;
-    border-radius: 14px;
+    width: 44px;
+    height: 44px;
+    border-radius: 12px;
     display: grid;
     place-items: center;
     flex-shrink: 0;
     transition: transform 0.3s ease;
+  }
+
+  .contact-card__icon svg {
+    width: 22px;
+    height: 22px;
   }
 
   .contact-card:hover .contact-card__icon {
@@ -276,62 +235,65 @@ const {
 
   .contact-card__body h3 {
     font-family: var(--font-display, serif);
-    font-size: 1.35rem;
+    font-size: 1.25rem;
     font-weight: 700;
     color: var(--navy-900, #0a2540);
-    margin: 0 0 0.35rem;
+    margin: 0 0 0.25rem;
     line-height: 1.2;
   }
 
   .contact-card__sub {
-    font-size: 0.88rem;
+    font-size: 0.85rem;
     color: var(--muted, #64748b);
-    margin: 0 0 1.6rem;
-    line-height: 1.45;
+    margin: 0 0 1.25rem;
+    line-height: 1.4;
   }
 
   /* Sección inferior de la tarjeta */
   .contact-card__section {
     margin-top: auto;
-    padding-top: 1.25rem;
+    padding-top: 1rem;
     border-top: 1px dashed var(--line, rgba(10, 37, 64, 0.14));
     display: flex;
     flex-direction: column;
   }
 
   .contact-card__section--schedule {
-    padding-bottom: 0.5rem;
+    padding-bottom: 0.25rem;
   }
 
   .contact-card__label {
-    font-size: 0.72rem;
+    font-size: 0.68rem;
     font-weight: 700;
-    letter-spacing: 0.08em;
+    letter-spacing: 0.06em;
     text-transform: uppercase;
     color: var(--muted, #64748b);
-    margin-bottom: 0.35rem;
+    margin-bottom: 0.25rem;
     display: block;
+    white-space: nowrap;
   }
 
   .contact-card__main-num {
     font-family: var(--font-display, serif);
-    font-size: 1.48rem;
+    font-size: 1.35rem;
     font-weight: 750;
     color: var(--navy-900, #0a2540);
     line-height: 1.15;
-    margin-bottom: 1.15rem;
+    margin-bottom: 0.85rem;
+    white-space: nowrap;
   }
 
   .contact-card__main-num--schedule {
-    font-size: clamp(1.22rem, 2.2vw, 1.42rem);
+    font-size: 1.25rem;
     margin-bottom: 0;
+    white-space: normal;
   }
 
   /* Fila de Botones en Tarjeta 1 */
   .contact-card__btn-row {
     display: grid;
     grid-template-columns: 1fr 1fr;
-    gap: 0.75rem;
+    gap: 0.6rem;
   }
 
   .contact-btn {
@@ -339,11 +301,11 @@ const {
     display: inline-flex;
     align-items: center;
     justify-content: center;
-    gap: 0.5rem;
-    padding: 0.65rem 1rem;
+    gap: 0.45rem;
+    padding: 0.55rem 0.85rem;
     border-radius: 999px;
     font-family: var(--font-body);
-    font-size: 0.88rem;
+    font-size: 0.84rem;
     font-weight: 650;
     text-decoration: none;
     border: none;
@@ -351,6 +313,12 @@ const {
     transition: all 0.22s cubic-bezier(0.16, 1, 0.3, 1);
     -webkit-user-select: none;
     user-select: none;
+    white-space: nowrap;
+  }
+
+  .contact-btn svg {
+    width: 15px;
+    height: 15px;
   }
 
   .contact-btn--copy {
@@ -383,19 +351,22 @@ const {
     margin-top: auto;
     display: flex;
     flex-direction: column;
-    gap: 0.75rem;
+    gap: 0.6rem;
   }
 
   .contact-line-box {
     display: flex;
     align-items: center;
     justify-content: space-between;
-    gap: 0.75rem;
+    gap: 0.6rem;
     background: #f8fafc;
     border: 1px solid #e2e8f0;
-    border-radius: 14px;
-    padding: 0.75rem 0.95rem;
-    transition: background-color 0.2s ease, border-color 0.2s ease;
+    border-radius: 12px;
+    padding: 0.6rem 0.85rem;
+    cursor: pointer;
+    user-select: none;
+    -webkit-user-select: none;
+    transition: background-color 0.2s ease, border-color 0.2s ease, box-shadow 0.2s ease;
   }
 
   .contact-line-box:hover {
@@ -403,42 +374,66 @@ const {
     border-color: #cbd5e1;
   }
 
+  .contact-line-box.is-active {
+    background: #ffffff;
+    border-color: var(--teal-600, #0e6b82);
+    box-shadow: 0 4px 14px rgba(14, 107, 130, 0.12);
+  }
+
   .contact-line-box__info {
     display: flex;
     flex-direction: column;
     min-width: 0;
+    flex: 1;
   }
 
   .contact-line-box__label {
-    font-size: 0.68rem;
+    font-size: 0.64rem;
     font-weight: 700;
-    letter-spacing: 0.08em;
+    letter-spacing: 0.05em;
     text-transform: uppercase;
     color: var(--muted, #64748b);
     line-height: 1.1;
-    margin-bottom: 0.2rem;
+    margin-bottom: 0.12rem;
+    white-space: nowrap;
   }
 
   .contact-line-box__num {
     font-family: var(--font-display, serif);
-    font-size: 1.12rem;
+    font-size: 1.05rem;
     color: var(--navy-900, #0a2540);
     font-weight: 700;
     line-height: 1.1;
+    white-space: nowrap;
   }
 
+  /* Opciones de acción: ocultas por defecto, reveladas únicamente al dar tap / clic */
   .contact-line-box__actions {
     display: flex;
     align-items: center;
-    gap: 0.45rem;
+    gap: 0.4rem;
     flex-shrink: 0;
+    opacity: 0;
+    visibility: hidden;
+    transform: translateX(8px) scale(0.92);
+    pointer-events: none;
+    transition: opacity 0.22s cubic-bezier(0.16, 1, 0.3, 1),
+                transform 0.22s cubic-bezier(0.16, 1, 0.3, 1),
+                visibility 0.22s ease;
+  }
+
+  .contact-line-box.is-active .contact-line-box__actions {
+    opacity: 1;
+    visibility: visible;
+    transform: translateX(0) scale(1);
+    pointer-events: auto;
   }
 
   .contact-icon-btn {
     position: relative;
-    width: 36px;
-    height: 36px;
-    border-radius: 10px;
+    width: 34px;
+    height: 34px;
+    border-radius: 9px;
     border: 1px solid #e2e8f0;
     background: #ffffff;
     color: var(--navy-900, #0a2540);
@@ -447,6 +442,11 @@ const {
     cursor: pointer;
     text-decoration: none;
     transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+  }
+
+  .contact-icon-btn svg {
+    width: 15px;
+    height: 15px;
   }
 
   .contact-icon-btn:hover {
@@ -514,9 +514,78 @@ const {
     transform: translateX(-50%) translateY(0);
   }
 
-  @media (max-width: 480px) {
-    .contact-card__btn-row {
+  /* Vista móvil: 1 columna de 3 filas con altura vertical compacta y estilizada */
+  @media (max-width: 768px) {
+    .contact-grid {
       grid-template-columns: 1fr;
+      gap: 0.75rem;
+    }
+
+    .contact-card {
+      padding: 0.9rem 1.1rem;
+      border-radius: 16px;
+    }
+
+    .contact-card__header {
+      margin-bottom: 0.45rem;
+    }
+
+    .contact-card__icon {
+      width: 38px;
+      height: 38px;
+      border-radius: 10px;
+    }
+
+    .contact-card__icon svg {
+      width: 19px;
+      height: 19px;
+    }
+
+    .contact-card__body h3 {
+      font-size: 1.1rem;
+      margin-bottom: 0.12rem;
+    }
+
+    .contact-card__sub {
+      font-size: 0.8rem;
+      margin-bottom: 0.65rem;
+    }
+
+    .contact-card__section {
+      padding-top: 0.6rem;
+    }
+
+    .contact-card__main-num {
+      font-size: 1.2rem;
+      margin-bottom: 0.55rem;
+    }
+
+    .contact-card__main-num--schedule {
+      font-size: 1.1rem;
+    }
+
+    .contact-card__btn-row {
+      grid-template-columns: 1fr 1fr;
+      gap: 0.5rem;
+    }
+
+    .contact-btn {
+      padding: 0.45rem 0.75rem;
+      font-size: 0.8rem;
+    }
+
+    .contact-line-box {
+      padding: 0.45rem 0.75rem;
+      border-radius: 10px;
+    }
+
+    .contact-line-box__num {
+      font-size: 0.98rem;
+    }
+
+    .contact-icon-btn {
+      width: 32px;
+      height: 32px;
     }
   }
 </style>
@@ -531,6 +600,7 @@ const {
       (btn as any).__hasCopyListener = true;
 
       btn.addEventListener('click', async (e) => {
+        e.stopPropagation();
         e.preventDefault();
         const textToCopy = btn.getAttribute('data-copy-text');
         if (!textToCopy) return;
@@ -565,7 +635,56 @@ const {
     });
   }
 
-  setupContactCopyButtons();
-  document.addEventListener('DOMContentLoaded', setupContactCopyButtons);
-  document.addEventListener('astro:page-load', setupContactCopyButtons);
+  function setupContactLineBoxes() {
+    const lineBoxes = document.querySelectorAll<HTMLElement>('.contact-line-box');
+
+    lineBoxes.forEach((box) => {
+      if ((box as any).__hasLineBoxListener) return;
+      (box as any).__hasLineBoxListener = true;
+
+      box.addEventListener('click', (e) => {
+        const target = e.target as HTMLElement | null;
+        if (target && target.closest('.contact-icon-btn')) {
+          return;
+        }
+
+        e.stopPropagation();
+        const isOpen = box.classList.contains('is-active');
+
+        // Cerrar otras cajas activas
+        lineBoxes.forEach((b) => b.classList.remove('is-active'));
+
+        // Alternar la caja cliqueada
+        if (!isOpen) {
+          box.classList.add('is-active');
+        }
+      });
+
+      box.addEventListener('keydown', (e) => {
+        if (e.key === 'Enter' || e.key === ' ') {
+          e.preventDefault();
+          box.click();
+        }
+      });
+    });
+
+    if (!(document as any).__hasGlobalLineBoxOutsideClick) {
+      (document as any).__hasGlobalLineBoxOutsideClick = true;
+      document.addEventListener('click', (e) => {
+        const target = e.target as HTMLElement | null;
+        if (!target || !target.closest('.contact-line-box')) {
+          document.querySelectorAll('.contact-line-box.is-active').forEach((b) => b.classList.remove('is-active'));
+        }
+      });
+    }
+  }
+
+  function initContactCard() {
+    setupContactCopyButtons();
+    setupContactLineBoxes();
+  }
+
+  initContactCard();
+  document.addEventListener('DOMContentLoaded', initContactCard);
+  document.addEventListener('astro:page-load', initContactCard);
 </script>
