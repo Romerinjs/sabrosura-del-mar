@@ -20,6 +20,7 @@
   --teal-100: #d9edf3;
   --gold-600: #c0862f;
   --gold-500: #d99a3f;
+  --gold-400: #e5a952;
   --gold-300: #eec894;
 
   /* Neutros */
@@ -1863,7 +1864,7 @@ ul {
   background-repeat: repeat;
   background-position: center top;
   background-size: 1400px auto;
-  opacity: 0.60;
+  opacity: 0.47;
   pointer-events: none;
   z-index: 0;
 }
