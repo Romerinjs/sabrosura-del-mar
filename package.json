@@ -9,6 +9,7 @@
     "preview": "astro preview",
     "astro": "astro",
     "check": "astro check",
+    "generate:og": "node scripts/generate-og-image.mjs",
     "process:fotos": "node scripts/process-all.mjs"
   },
   "dependencies": {
