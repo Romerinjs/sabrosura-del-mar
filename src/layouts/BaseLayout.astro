@@ -1,6 +1,5 @@
 ---
 import { ClientRouter } from 'astro:transitions';
-import { inject } from '@vercel/analytics';
 import Header from '../components/layout/Header.astro';
 import MobileNav from '../components/layout/MobileNav.astro';
 import Footer from '../components/layout/Footer.astro';
@@ -8,8 +7,6 @@ import WhatsAppFloat from '../components/layout/WhatsAppFloat.astro';
 import MarineWatermark from '../components/common/MarineWatermark.astro';
 import '../styles/global.css';
 import '../styles/scroll-reveal.css';
-
-inject();
 
 interface Props {
   title?: string;
@@ -289,4 +286,3 @@ const imageMimeType = isPng ? 'image/png' : 'image/jpeg';
     </script>
   </body>
 </html>
-
