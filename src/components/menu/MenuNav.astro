@@ -364,7 +364,7 @@ const { categorias } = Astro.props;
         // Mostrar u ocultar la sección completa según sus resultados
         if (sectionMatchedItems > 0) {
           section.classList.remove('is-hidden');
-          section.querySelectorAll<HTMLElement>('.menu-item:not(.is-hidden)').forEach((el) => {
+          section.querySelectorAll<HTMLElement>('.menu-item:not(.is-hidden), .menu-section__head, .menu-feature').forEach((el) => {
             el.classList.add('is-in-view', 'is-visible');
           });
         } else {

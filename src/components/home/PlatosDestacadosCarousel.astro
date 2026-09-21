@@ -1,4 +1,6 @@
 ---
+import { getDishGallery } from '../../utils/dishMatcher';
+
 interface Plato {
   id: string;
   nombre: string;
@@ -23,8 +25,8 @@ interface Props {
 
 const { eyebrow, title, lead, platos, cta } = Astro.props;
 
-// Tomamos al menos 11 platos (incluyendo los que no tienen imagen aún como placeholders)
-const listaPlatos = platos.slice(0, 11);
+// Todos los platos destacados con imágenes
+const listaPlatos = platos;
 
 const formatMoney = (n: number) => '$' + n.toLocaleString('es-CO');
 ---
@@ -62,45 +64,48 @@ const formatMoney = (n: number) => '$' + n.toLocaleString('es-CO');
         role="region"
         aria-label="Carrusel de platos destacados"
       >
-        {listaPlatos.map((plato) => (
-          <article class="carousel-card">
-            <!-- Imagen del plato o marco placeholder reservado para foto -->
-            <div class="card-media">
-              {plato.imagen ? (
-                <img
-                  src={plato.imagen}
-                  alt={plato.alt || plato.nombre}
-                  width="600"
-                  height="450"
-                  loading="lazy"
-                />
-              ) : (
-                <div class="card-media--placeholder">
-                  <svg width="34" height="34" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" class="ph-icon">
-                    <path d="M14.5 4h-5L7 7H4a2 2 0 0 0-2 2v9a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V9a2 2 0 0 0-2-2h-3l-2.5-3z"></path>
-                    <circle cx="12" cy="13" r="3"></circle>
-                  </svg>
-                  <span class="ph-text">Foto próximamente</span>
-                </div>
-              )}
+        {listaPlatos.map((plato) => {
+          const imgSrc = plato.imagen || getDishGallery(plato.nombre)?.cover || null;
+          return (
+            <article class="carousel-card">
+              <!-- Imagen del plato o marco placeholder reservado para foto -->
+              <div class="card-media">
+                {imgSrc ? (
+                  <img
+                    src={imgSrc}
+                    alt={plato.alt || plato.nombre}
+                    width="600"
+                    height="450"
+                    loading="lazy"
+                  />
+                ) : (
+                  <div class="card-media--placeholder">
+                    <svg width="34" height="34" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" class="ph-icon">
+                      <path d="M14.5 4h-5L7 7H4a2 2 0 0 0-2 2v9a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V9a2 2 0 0 0-2-2h-3l-2.5-3z"></path>
+                      <circle cx="12" cy="13" r="3"></circle>
+                    </svg>
+                    <span class="ph-text">Foto próximamente</span>
+                  </div>
+                )}
 
-              {plato.badge && (
-                <div class="card-badge">
-                  <span class="badge-stars">★★★★★</span>
-                </div>
-              )}
-            </div>
+                {plato.badge && (
+                  <div class="card-badge">
+                    <span class="badge-stars">★★★★★</span>
+                  </div>
+                )}
+              </div>
 
-            <!-- Información del plato -->
-            <div class="card-info">
-              <h3 class="card-title">{plato.nombre}</h3>
-              <div class="card-price">{formatMoney(plato.precio)}</div>
-              <a class="card-btn" href="/carta" title={`Ver ${plato.nombre} en la carta digital`}>
-                Ver Carta
-              </a>
-            </div>
-          </article>
-        ))}
+              <!-- Información del plato -->
+              <div class="card-info">
+                <h3 class="card-title">{plato.nombre}</h3>
+                <div class="card-price">{formatMoney(plato.precio)}</div>
+                <a class="card-btn" href="/carta" title={`Ver ${plato.nombre} en la carta digital`}>
+                  Ver Carta
+                </a>
+              </div>
+            </article>
+          );
+        })}
       </div>
 
       <!-- Botón de navegación hacia la Derecha -->

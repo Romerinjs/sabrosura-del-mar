@@ -33,6 +33,7 @@ function normalizeText(text: string): string {
 const STRICT_DISH_MAP: Record<string, string> = {
   // 1. Viudo de Sierra (Fotos 1 a 5)
   'viudo de sierra': 'viudo-de-sierra',
+  'viudo de pescado': 'viudo-de-sierra',
 
   // 2. Cazuela de Camarones (Fotos 6 a 9)
   'cazuela de camarones': 'cazuela-de-camarones',
@@ -64,6 +65,7 @@ const STRICT_DISH_MAP: Record<string, string> = {
 
   // 10. Limonada Cerezada (Fotos 45 a 48)
   'limonada cerezada': 'limonada-cerezada',
+  'limonada cereza': 'limonada-cerezada',
   'limonada de cereza': 'limonada-cerezada',
 
   // 11. Sancocho de Bagre (Fotos 49 a 53)
@@ -109,6 +111,7 @@ const STRICT_DISH_MAP: Record<string, string> = {
 
   // 24. Entrada de Camarones al Ajillo (Fotos 119 a 122)
   'entrada de camarones al ajillo': 'entrada-de-camarones-al-ajillo',
+  'camarones al ajillo': 'entrada-de-camarones-al-ajillo',
 
   // 25. Sierra a la Carta (Fotos 123 a 129)
   'sierra a la carta': 'sierra-a-la-carta',
