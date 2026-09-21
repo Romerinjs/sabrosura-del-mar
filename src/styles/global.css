@@ -1095,17 +1095,39 @@ ul { margin: 0; padding: 0; list-style: none; }
 /* Tarjeta destacada con foto dentro de la carta */
 .menu-feature {
   grid-column: 1 / -1;
-  display: grid; gap: 0; margin: 1.4rem 0;
-  border-radius: var(--radius); overflow: hidden;
-  border: 1px solid var(--line); box-shadow: var(--shadow-sm);
-  background: #fff;
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 0;
+  margin: 1.25rem 0 1.5rem;
+  border-radius: var(--radius, 14px);
+  overflow: hidden;
+  border: 1px solid var(--line);
+  box-shadow: 0 4px 16px -2px rgba(10, 37, 64, 0.06);
+  background: #ffffff;
+  max-width: 100%;
 }
-@media (min-width: 620px) { .menu-feature { grid-template-columns: 240px 1fr; } }
-.menu-feature img { width: 100%; height: 100%; min-height: 180px; object-fit: cover; }
-.menu-feature__body { padding: 1.3rem 1.4rem; display: flex; flex-direction: column; justify-content: center; }
-.menu-feature__body h3 { font-size: 1.28rem; margin-bottom: 0.35rem; }
-.menu-feature__body p { font-size: 0.9rem; color: var(--muted); margin-bottom: 0.8rem; }
-.menu-feature__price { font-family: var(--font-display); font-weight: 700; font-size: 1.25rem; color: var(--teal-700); }
+@media (min-width: 640px) {
+  .menu-feature {
+    grid-template-columns: 240px 1fr;
+    height: 180px;
+    max-height: 180px;
+    align-items: stretch;
+  }
+}
+.menu-feature__body {
+  padding: 1.1rem 1.25rem;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+@media (min-width: 640px) {
+  .menu-feature__body {
+    padding: 1.15rem 1.4rem;
+    height: 100%;
+    justify-content: space-between;
+    overflow: hidden;
+  }
+}
 
 .menu-empty {
   display: none; text-align: center; padding: 3rem 1rem; color: var(--muted);
