@@ -1,5 +1,6 @@
 ---
 import Icon from '../icons/Icon.astro';
+import { getDishGallery } from '../../utils/dishMatcher';
 
 interface Props {
   feature: {
@@ -14,21 +15,44 @@ interface Props {
 }
 
 const { feature: f } = Astro.props;
+const gallery = getDishGallery(f.nombre);
+const photoSrc = gallery?.cover || f.imagen || null;
+const hasGallery = !!(gallery && gallery.photos.length > 0);
 const money = (n: number) => '$' + n.toLocaleString('es-CO');
 ---
 
 <div class="menu-feature" data-dish-name={f.nombre} data-dish-desc={f.descripcion}>
-  {f.imagen ? (
-    <div class="menu-feature__media">
-      <img src={f.imagen} alt={f.alt || f.nombre} width="480" height="320" loading="lazy" />
-      <span class="menu-feature__img-tag">Recomendado</span>
+  {photoSrc ? (
+    <div
+      class={`menu-feature__media ${hasGallery ? 'is-clickable' : ''}`}
+      data-open-gallery={hasGallery ? JSON.stringify({
+        dishName: f.nombre,
+        photos: gallery.photos,
+        thumbs: gallery.thumbs,
+        startIndex: 0
+      }) : undefined}
+      title={hasGallery ? `Toca para ver galería de ${f.nombre}` : f.nombre}
+      role={hasGallery ? 'button' : undefined}
+      tabindex={hasGallery ? 0 : undefined}
+    >
+      <img
+        src={photoSrc}
+        alt={f.alt || f.nombre}
+        width="480"
+        height="320"
+        loading="lazy"
+        decoding="async"
+      />
+      {hasGallery && (
+        <span class="menu-feature__gallery-pill">
+          {gallery.totalPhotos} fotos
+        </span>
+      )}
     </div>
   ) : (
     <div class="dish__media dish__media--placeholder" style="min-height:180px">
       <div class="ph-inner">
-        <Icon name="camera" size={30} />
         <b>{f.nombre}</b>
-        <small>Foto pendiente</small>
       </div>
     </div>
   )}
@@ -36,10 +60,7 @@ const money = (n: number) => '$' + n.toLocaleString('es-CO');
   <div class="menu-feature__body">
     <div class="menu-feature__tag-wrap">
       <span class="menu-feature__chef-tag">
-        <svg width="12" height="12" viewBox="0 0 24 24" fill="currentColor">
-          <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon>
-        </svg>
-        Recomendado del chef
+        Especialidad recomendada
       </span>
     </div>
     <h3>{f.nombre}</h3>
@@ -64,6 +85,7 @@ const money = (n: number) => '$' + n.toLocaleString('es-CO');
     overflow: hidden;
     height: 100%;
     min-height: 190px;
+    border-radius: 12px;
   }
 
   .menu-feature__media img {
@@ -77,27 +99,27 @@ const money = (n: number) => '$' + n.toLocaleString('es-CO');
   }
 
   .menu-feature:hover .menu-feature__media img {
-    transform: scale(1.06);
-    filter: brightness(1.025);
+    transform: scale(1.04);
   }
 
-  .menu-feature__img-tag {
+  .menu-feature__media.is-clickable {
+    cursor: pointer;
+  }
+
+  .menu-feature__gallery-pill {
     position: absolute;
-    top: 0.75rem;
-    left: 0.75rem;
-    background: rgba(7, 31, 56, 0.88);
-    color: var(--gold-400, #e2a842);
+    bottom: 0.75rem;
+    right: 0.75rem;
+    background: rgba(7, 31, 56, 0.85);
+    color: #ffffff;
     font-family: var(--font-body);
-    font-size: 0.68rem;
-    font-weight: 750;
-    letter-spacing: 0.05em;
-    text-transform: uppercase;
-    padding: 0.22rem 0.62rem;
+    font-size: 0.72rem;
+    font-weight: 600;
+    padding: 0.25rem 0.65rem;
     border-radius: 999px;
-    backdrop-filter: blur(6px);
-    border: 1px solid rgba(226, 168, 66, 0.4);
-    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.25);
+    backdrop-filter: blur(8px);
     z-index: 2;
+    transition: background-color 0.25s, color 0.25s;
   }
 
   .menu-feature__tag-wrap {
@@ -105,23 +127,13 @@ const money = (n: number) => '$' + n.toLocaleString('es-CO');
   }
 
   .menu-feature__chef-tag {
-    display: inline-flex;
-    align-items: center;
-    gap: 0.35rem;
-    background: rgba(226, 168, 66, 0.15);
-    color: #9a6500;
+    display: inline-block;
+    color: var(--gold-600, #b45309);
     font-family: var(--font-body);
-    font-size: 0.7rem;
-    font-weight: 750;
+    font-size: 0.72rem;
+    font-weight: 700;
     text-transform: uppercase;
-    letter-spacing: 0.04em;
-    padding: 0.22rem 0.6rem;
-    border-radius: 999px;
-    border: 1px solid rgba(226, 168, 66, 0.35);
-  }
-
-  .menu-feature__chef-tag svg {
-    color: var(--gold-500, #d97706);
+    letter-spacing: 0.06em;
   }
 
   .menu-feature__bottom-row {
@@ -129,9 +141,7 @@ const money = (n: number) => '$' + n.toLocaleString('es-CO');
     align-items: center;
     justify-content: space-between;
     gap: 0.85rem;
-    margin-top: 0.75rem;
-    padding-top: 0.75rem;
-    border-top: 1px dashed var(--line, #e2e8f0);
+    margin-top: 1.2rem;
     flex-wrap: wrap;
   }
 

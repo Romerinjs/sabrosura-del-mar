@@ -13,6 +13,10 @@ const historia = (await getEntry('landing', 'historia'))?.data;
   activePage="historia"
 >
   <section class="page-hero">
+    <div class="page-hero__bg" aria-hidden="true">
+      <img src="/equipo/equipo.webp" alt="" class="page-hero__bg-img" loading="eager" width="1400" height="600" />
+      <div class="page-hero__bg-overlay"></div>
+    </div>
     <div class="container">
       <span class="eyebrow" data-sr data-sr-instant data-sr-delay="0.06">Sobre nosotros</span>
       <h1 data-sr data-sr-instant data-sr-delay="0.16">Nuestra historia</h1>

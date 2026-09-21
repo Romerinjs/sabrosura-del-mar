@@ -54,6 +54,10 @@ const schemaJsonLd = {
   jsonLd={schemaJsonLd}
 >
   <section class="page-hero">
+    <div class="page-hero__bg" aria-hidden="true">
+      <img src="/carta/cazuela-de-mariscos/plato-90.webp" alt="" class="page-hero__bg-img" loading="eager" width="1400" height="600" />
+      <div class="page-hero__bg-overlay"></div>
+    </div>
     <div class="container">
       <div style="display:flex;gap:0.6rem;align-items:center;margin-bottom:0.8rem" data-sr data-sr-instant data-sr-delay="0.04">
         <a href="/" style="color:var(--gold-300);text-decoration:none;font-size:0.85rem">Inicio</a>
@@ -84,10 +88,10 @@ const schemaJsonLd = {
     </div>
   </nav>
 
-  <div class="container" style="padding-block:3rem">
-    <MenuSection categoria={categoria} />
+  <MenuSection categoria={categoria} />
 
-    <div class="btn-row btn-row--center" data-sr data-sr-delay="0.15" style="margin-top:3rem">
+  <div class="container" style="padding-bottom:3.5rem">
+    <div class="btn-row btn-row--center" data-sr data-sr-delay="0.15" style="margin-top:2.5rem">
       <a class="btn btn--navy" href="/carta">Ver todas las categorías de la carta</a>
       <a class="btn btn--primary" href="https://wa.me/573113093429?text=Hola%2C%20estoy%20interesado%20en%20pedir%20al%20restaurante" target="_blank" rel="noopener" data-track-event="whatsapp_click" data-track-category={categoria.id}>
         Pedir al restaurante por WhatsApp

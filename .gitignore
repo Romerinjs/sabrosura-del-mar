@@ -4,4 +4,8 @@ node_modules/
 dist/
 .agents/
 .env
-.env.local
+.env.local
+fotos-pagina-web/
+fotos-pagina-web/**
+fotos-pagina-web-webp/
+fotos-organizadas/

@@ -922,25 +922,60 @@ ul { margin: 0; padding: 0; list-style: none; }
    16. CARTA DIGITAL
    ============================================================= */
 .page-hero {
-  position: relative; background: var(--navy-900); color: #fff;
-  padding-top: calc(var(--header-h) + clamp(3rem, 7vw, 5rem));
-  padding-bottom: clamp(2.5rem, 6vw, 4rem);
-  overflow: hidden; isolation: isolate;
+  position: relative;
+  background: var(--navy-950, #051423);
+  color: #fff;
+  padding-top: calc(var(--header-main-h, 70px) + clamp(2.2rem, 5vw, 3.8rem));
+  padding-bottom: clamp(2.2rem, 5vw, 3.5rem);
+  overflow: hidden;
+  isolation: isolate;
 }
-.page-hero::after {
-  content: ""; position: absolute; inset: 0; z-index: -1;
+
+.page-hero__bg {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+}
+
+.page-hero__bg-img {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center;
+  z-index: 1;
+  filter: brightness(0.95);
+}
+
+.page-hero__bg-overlay {
+  position: absolute;
+  inset: 0;
+  z-index: 2;
+  pointer-events: none;
   background:
-    radial-gradient(80% 120% at 85% 0%, rgba(20, 115, 143, 0.55) 0%, transparent 60%),
-    radial-gradient(60% 100% at 0% 100%, rgba(217, 154, 63, 0.16) 0%, transparent 65%);
+    /* Fade sutil azul oscuro de abajo hacia arriba (Efecto midfade inferior) */
+    linear-gradient(to top, #051423 0%, rgba(5, 20, 35, 0.75) 22%, rgba(5, 20, 35, 0.25) 50%, transparent 75%),
+    /* Sombra sutil de izquierda a derecha para contraste suave del texto */
+    linear-gradient(to right, rgba(5, 20, 35, 0.72) 0%, rgba(5, 20, 35, 0.4) 38%, transparent 75%);
 }
-.page-hero h1 { font-size: var(--step-3); color: #fff; max-width: 20ch; }
-.page-hero p { color: rgba(255, 255, 255, 0.82); max-width: 46ch; font-size: var(--step-1); }
-.page-hero .eyebrow { color: var(--gold-300); }
+
+.page-hero .container {
+  position: relative;
+  z-index: 10;
+}
+
+.page-hero h1 { font-size: var(--step-3); color: #fff; max-width: 20ch; text-shadow: 0 4px 20px rgba(0, 0, 0, 0.85); }
+.page-hero p { color: rgba(255, 255, 255, 0.95); max-width: 48ch; font-size: var(--step-1); text-shadow: 0 2px 12px rgba(0, 0, 0, 0.85); }
+.page-hero .eyebrow { color: var(--gold-300); text-shadow: 0 2px 10px rgba(0, 0, 0, 0.85); font-weight: 600; letter-spacing: 0.05em; }
 .page-hero .eyebrow::before { background: var(--gold-300); }
 
 /* Barra de categorías sticky */
 .menu-nav {
-  position: sticky; top: var(--header-h); z-index: 60;
+  position: sticky; top: var(--header-main-h, 70px); z-index: 60;
   background: rgba(255, 255, 255, 0.95);
   backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px);
   border-bottom: 1px solid var(--line);
@@ -978,37 +1013,68 @@ ul { margin: 0; padding: 0; list-style: none; }
 .menu-search input:focus { outline: none; border-color: var(--teal-500); background: #fff; width: 250px; }
 .menu-search svg { position: absolute; left: 0.85rem; top: 50%; transform: translateY(-50%); width: 16px; height: 16px; color: var(--muted); }
 
-/* Secciones de la carta */
+/* Secciones de la carta (Franjas alternadas a ancho completo de pantalla) */
 .menu-section {
-  padding-block: clamp(2.2rem, 5vw, 3.4rem);
-  border-bottom: 1px solid var(--line);
-  scroll-margin-top: calc(var(--header-h) + 72px);
+  width: 100%;
+  background: var(--paper, #ffffff);
+  padding-block: clamp(2.8rem, 5.2vw, 4.2rem);
+  border-bottom: 1px solid rgba(10, 37, 64, 0.08);
+  scroll-margin-top: calc(var(--header-main-h, 70px) + 115px);
+  transition: background-color 0.25s ease;
 }
-.menu-section:last-of-type { border-bottom: 0; }
-.menu-section__head { display: flex; align-items: baseline; gap: 1rem; margin-bottom: 1.6rem; flex-wrap: wrap; }
-.menu-section__head h2 { font-size: var(--step-2); margin: 0; }
-.menu-section__head span { font-size: 0.86rem; color: var(--muted); }
 
-.menu-list {
+.menu-section:nth-of-type(even) {
+  background: var(--sand, #f8f4ed);
+  border-bottom-color: rgba(239, 231, 218, 0.95);
+}
+
+.menu-section:last-of-type {
+  border-bottom: none;
+}
+.menu-section__head { display: flex; align-items: baseline; gap: 1rem; margin-bottom: 1.8rem; flex-wrap: wrap; }
+.menu-section__head h2 { font-size: var(--step-2); margin: 0; }
+.menu-section__head span { font-size: 0.88rem; color: var(--muted); }
+
+/* Columnas fijas e independientes para la carta (Evita que el acordeón rompa o empuje columnas) */
+.menu-columns {
   display: grid;
-  gap: 0.25rem;
+  grid-template-columns: 1fr;
+  gap: 0;
+}
+
+.menu-col,
+.menu-list {
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+  margin: 0;
+  padding: 0;
+  list-style: none;
 }
 
 @media (min-width: 880px) {
-  .menu-list {
+  .menu-columns {
     grid-template-columns: 1fr 1fr;
     column-gap: 3.6rem;
+    align-items: start;
     position: relative;
   }
-  /* Línea suave divisoria vertical tipo lomo de libro (Item 2) */
-  .menu-list::after {
+
+  /* Línea divisoria vertical sutil centrada entre columnas fijas */
+  .menu-columns:not(.menu-columns--single)::after {
     content: "";
     position: absolute;
     top: 0.6rem;
     bottom: 0.6rem;
     left: 50%;
     width: 1px;
-    background: linear-gradient(to bottom, transparent, rgba(10, 37, 64, 0.12) 8%, rgba(10, 37, 64, 0.12) 92%, transparent);
+    background: linear-gradient(
+      to bottom,
+      transparent,
+      rgba(10, 37, 64, 0.12) 6%,
+      rgba(10, 37, 64, 0.12) 94%,
+      transparent
+    );
     pointer-events: none;
   }
 }
@@ -1020,11 +1086,10 @@ ul { margin: 0; padding: 0; list-style: none; }
 }
 
 .menu-item__badge {
-  display: inline-block; margin-left: 0.5rem; vertical-align: middle;
-  font-family: var(--font-body); font-size: 0.6rem; font-weight: 700;
-  letter-spacing: 0.1em; text-transform: uppercase;
-  background: var(--gold-500); color: var(--navy-950);
-  padding: 0.16rem 0.5rem; border-radius: 999px;
+  display: inline-block; margin-left: 0.4rem; vertical-align: middle;
+  font-family: var(--font-body); font-size: 0.62rem; font-weight: 600;
+  letter-spacing: 0.05em; text-transform: uppercase;
+  color: var(--gold-600, #b45309);
 }
 
 /* Tarjeta destacada con foto dentro de la carta */

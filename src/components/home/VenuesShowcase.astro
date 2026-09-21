@@ -56,7 +56,7 @@ function getMapEmbedUrl(sedeId: string) {
       const isNorte = slug === 'norte';
       const isActive = idx === 0;
       const mapUrl = getMapEmbedUrl(sede.data.id);
-      const bgImg = sede.data.imagen || (isNorte ? '/assets/sede-norte.jpg' : '/assets/sede-centro.jpg');
+      const bgImg = sede.data.imagen || (isNorte ? '/espacios/espacios-23.webp' : '/espacios/espacios-18.webp');
       const defaultWaMsg = isNorte ? 'Hola, quiero información de la Sede Norte' : 'Hola, estoy interesado en pedir al restaurante';
       const waMsg = isNorte ? (sede.data.whatsapp.mensaje || defaultWaMsg) : 'Hola, estoy interesado en pedir al restaurante';
       const waUrl = `https://wa.me/${sede.data.whatsapp.phone}?text=${encodeURIComponent(waMsg)}`;

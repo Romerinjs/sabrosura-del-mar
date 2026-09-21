@@ -1,0 +1,575 @@
+[
+  {
+    "slug": "viudo-de-sierra",
+    "name": "Viudo De Sierra",
+    "cover": "/carta/viudo-de-sierra/plato-1.webp",
+    "coverThumb": "/carta/viudo-de-sierra/thumb-plato-1.webp",
+    "photos": [
+      "/carta/viudo-de-sierra/plato-1.webp",
+      "/carta/viudo-de-sierra/plato-2.webp",
+      "/carta/viudo-de-sierra/plato-3.webp",
+      "/carta/viudo-de-sierra/plato-4.webp",
+      "/carta/viudo-de-sierra/plato-5.webp"
+    ],
+    "thumbs": [
+      "/carta/viudo-de-sierra/thumb-plato-1.webp",
+      "/carta/viudo-de-sierra/thumb-plato-2.webp",
+      "/carta/viudo-de-sierra/thumb-plato-3.webp",
+      "/carta/viudo-de-sierra/thumb-plato-4.webp",
+      "/carta/viudo-de-sierra/thumb-plato-5.webp"
+    ],
+    "totalPhotos": 5
+  },
+  {
+    "slug": "cazuela-de-camarones",
+    "name": "Cazuela De Camarones",
+    "cover": "/carta/cazuela-de-camarones/plato-6.webp",
+    "coverThumb": "/carta/cazuela-de-camarones/thumb-plato-6.webp",
+    "photos": [
+      "/carta/cazuela-de-camarones/plato-6.webp",
+      "/carta/cazuela-de-camarones/plato-7.webp",
+      "/carta/cazuela-de-camarones/plato-8.webp",
+      "/carta/cazuela-de-camarones/plato-9.webp"
+    ],
+    "thumbs": [
+      "/carta/cazuela-de-camarones/thumb-plato-6.webp",
+      "/carta/cazuela-de-camarones/thumb-plato-7.webp",
+      "/carta/cazuela-de-camarones/thumb-plato-8.webp",
+      "/carta/cazuela-de-camarones/thumb-plato-9.webp"
+    ],
+    "totalPhotos": 4
+  },
+  {
+    "slug": "salmon-gratinado",
+    "name": "Salmon Gratinado",
+    "cover": "/carta/salmon-gratinado/plato-10.webp",
+    "coverThumb": "/carta/salmon-gratinado/thumb-plato-10.webp",
+    "photos": [
+      "/carta/salmon-gratinado/plato-10.webp",
+      "/carta/salmon-gratinado/plato-11.webp",
+      "/carta/salmon-gratinado/plato-12.webp",
+      "/carta/salmon-gratinado/plato-13.webp",
+      "/carta/salmon-gratinado/plato-14.webp"
+    ],
+    "thumbs": [
+      "/carta/salmon-gratinado/thumb-plato-10.webp",
+      "/carta/salmon-gratinado/thumb-plato-11.webp",
+      "/carta/salmon-gratinado/thumb-plato-12.webp",
+      "/carta/salmon-gratinado/thumb-plato-13.webp",
+      "/carta/salmon-gratinado/thumb-plato-14.webp"
+    ],
+    "totalPhotos": 5
+  },
+  {
+    "slug": "pasta-a-la-marinera",
+    "name": "Pasta A La Marinera",
+    "cover": "/carta/pasta-a-la-marinera/plato-15.webp",
+    "coverThumb": "/carta/pasta-a-la-marinera/thumb-plato-15.webp",
+    "photos": [
+      "/carta/pasta-a-la-marinera/plato-15.webp",
+      "/carta/pasta-a-la-marinera/plato-16.webp",
+      "/carta/pasta-a-la-marinera/plato-17.webp",
+      "/carta/pasta-a-la-marinera/plato-18.webp",
+      "/carta/pasta-a-la-marinera/plato-19.webp",
+      "/carta/pasta-a-la-marinera/plato-20.webp"
+    ],
+    "thumbs": [
+      "/carta/pasta-a-la-marinera/thumb-plato-15.webp",
+      "/carta/pasta-a-la-marinera/thumb-plato-16.webp",
+      "/carta/pasta-a-la-marinera/thumb-plato-17.webp",
+      "/carta/pasta-a-la-marinera/thumb-plato-18.webp",
+      "/carta/pasta-a-la-marinera/thumb-plato-19.webp",
+      "/carta/pasta-a-la-marinera/thumb-plato-20.webp"
+    ],
+    "totalPhotos": 6
+  },
+  {
+    "slug": "arroz-de-camaron-con-ostras",
+    "name": "Arroz De Camaron Con Ostras",
+    "cover": "/carta/arroz-de-camaron-con-ostras/plato-21.webp",
+    "coverThumb": "/carta/arroz-de-camaron-con-ostras/thumb-plato-21.webp",
+    "photos": [
+      "/carta/arroz-de-camaron-con-ostras/plato-21.webp",
+      "/carta/arroz-de-camaron-con-ostras/plato-22.webp",
+      "/carta/arroz-de-camaron-con-ostras/plato-23.webp",
+      "/carta/arroz-de-camaron-con-ostras/plato-24.webp",
+      "/carta/arroz-de-camaron-con-ostras/plato-25.webp"
+    ],
+    "thumbs": [
+      "/carta/arroz-de-camaron-con-ostras/thumb-plato-21.webp",
+      "/carta/arroz-de-camaron-con-ostras/thumb-plato-22.webp",
+      "/carta/arroz-de-camaron-con-ostras/thumb-plato-23.webp",
+      "/carta/arroz-de-camaron-con-ostras/thumb-plato-24.webp",
+      "/carta/arroz-de-camaron-con-ostras/thumb-plato-25.webp"
+    ],
+    "totalPhotos": 5
+  },
+  {
+    "slug": "arroz-de-camaron",
+    "name": "Arroz De Camaron",
+    "cover": "/carta/arroz-de-camaron/plato-26.webp",
+    "coverThumb": "/carta/arroz-de-camaron/thumb-plato-26.webp",
+    "photos": [
+      "/carta/arroz-de-camaron/plato-26.webp",
+      "/carta/arroz-de-camaron/plato-27.webp",
+      "/carta/arroz-de-camaron/plato-28.webp",
+      "/carta/arroz-de-camaron/plato-29.webp",
+      "/carta/arroz-de-camaron/plato-30.webp"
+    ],
+    "thumbs": [
+      "/carta/arroz-de-camaron/thumb-plato-26.webp",
+      "/carta/arroz-de-camaron/thumb-plato-27.webp",
+      "/carta/arroz-de-camaron/thumb-plato-28.webp",
+      "/carta/arroz-de-camaron/thumb-plato-29.webp",
+      "/carta/arroz-de-camaron/thumb-plato-30.webp"
+    ],
+    "totalPhotos": 5
+  },
+  {
+    "slug": "ejecutivo-de-sierra-sudada",
+    "name": "Ejecutivo De Sierra Sudada",
+    "cover": "/carta/ejecutivo-de-sierra-sudada/plato-31.webp",
+    "coverThumb": "/carta/ejecutivo-de-sierra-sudada/thumb-plato-31.webp",
+    "photos": [
+      "/carta/ejecutivo-de-sierra-sudada/plato-31.webp",
+      "/carta/ejecutivo-de-sierra-sudada/plato-32.webp",
+      "/carta/ejecutivo-de-sierra-sudada/plato-33.webp",
+      "/carta/ejecutivo-de-sierra-sudada/plato-34.webp",
+      "/carta/ejecutivo-de-sierra-sudada/plato-35.webp"
+    ],
+    "thumbs": [
+      "/carta/ejecutivo-de-sierra-sudada/thumb-plato-31.webp",
+      "/carta/ejecutivo-de-sierra-sudada/thumb-plato-32.webp",
+      "/carta/ejecutivo-de-sierra-sudada/thumb-plato-33.webp",
+      "/carta/ejecutivo-de-sierra-sudada/thumb-plato-34.webp",
+      "/carta/ejecutivo-de-sierra-sudada/thumb-plato-35.webp"
+    ],
+    "totalPhotos": 5
+  },
+  {
+    "slug": "soda-italiana-frutos-rojos",
+    "name": "Soda Italiana Frutos Rojos",
+    "cover": "/carta/soda-italiana-frutos-rojos/plato-36.webp",
+    "coverThumb": "/carta/soda-italiana-frutos-rojos/thumb-plato-36.webp",
+    "photos": [
+      "/carta/soda-italiana-frutos-rojos/plato-36.webp",
+      "/carta/soda-italiana-frutos-rojos/plato-37.webp",
+      "/carta/soda-italiana-frutos-rojos/plato-38.webp",
+      "/carta/soda-italiana-frutos-rojos/plato-39.webp"
+    ],
+    "thumbs": [
+      "/carta/soda-italiana-frutos-rojos/thumb-plato-36.webp",
+      "/carta/soda-italiana-frutos-rojos/thumb-plato-37.webp",
+      "/carta/soda-italiana-frutos-rojos/thumb-plato-38.webp",
+      "/carta/soda-italiana-frutos-rojos/thumb-plato-39.webp"
+    ],
+    "totalPhotos": 4
+  },
+  {
+    "slug": "ejecutivo-de-trucha-frita",
+    "name": "Ejecutivo De Trucha Frita",
+    "cover": "/carta/ejecutivo-de-trucha-frita/plato-40.webp",
+    "coverThumb": "/carta/ejecutivo-de-trucha-frita/thumb-plato-40.webp",
+    "photos": [
+      "/carta/ejecutivo-de-trucha-frita/plato-40.webp",
+      "/carta/ejecutivo-de-trucha-frita/plato-41.webp",
+      "/carta/ejecutivo-de-trucha-frita/plato-42.webp",
+      "/carta/ejecutivo-de-trucha-frita/plato-43.webp",
+      "/carta/ejecutivo-de-trucha-frita/plato-44.webp"
+    ],
+    "thumbs": [
+      "/carta/ejecutivo-de-trucha-frita/thumb-plato-40.webp",
+      "/carta/ejecutivo-de-trucha-frita/thumb-plato-41.webp",
+      "/carta/ejecutivo-de-trucha-frita/thumb-plato-42.webp",
+      "/carta/ejecutivo-de-trucha-frita/thumb-plato-43.webp",
+      "/carta/ejecutivo-de-trucha-frita/thumb-plato-44.webp"
+    ],
+    "totalPhotos": 5
+  },
+  {
+    "slug": "limonada-cerezada",
+    "name": "Limonada Cerezada",
+    "cover": "/carta/limonada-cerezada/plato-45.webp",
+    "coverThumb": "/carta/limonada-cerezada/thumb-plato-45.webp",
+    "photos": [
+      "/carta/limonada-cerezada/plato-45.webp",
+      "/carta/limonada-cerezada/plato-46.webp",
+      "/carta/limonada-cerezada/plato-47.webp",
+      "/carta/limonada-cerezada/plato-48.webp"
+    ],
+    "thumbs": [
+      "/carta/limonada-cerezada/thumb-plato-45.webp",
+      "/carta/limonada-cerezada/thumb-plato-46.webp",
+      "/carta/limonada-cerezada/thumb-plato-47.webp",
+      "/carta/limonada-cerezada/thumb-plato-48.webp"
+    ],
+    "totalPhotos": 4
+  },
+  {
+    "slug": "sancocho-de-bagre",
+    "name": "Sancocho De Bagre",
+    "cover": "/carta/sancocho-de-bagre/plato-49.webp",
+    "coverThumb": "/carta/sancocho-de-bagre/thumb-plato-49.webp",
+    "photos": [
+      "/carta/sancocho-de-bagre/plato-49.webp",
+      "/carta/sancocho-de-bagre/plato-50.webp",
+      "/carta/sancocho-de-bagre/plato-51.webp",
+      "/carta/sancocho-de-bagre/plato-52.webp",
+      "/carta/sancocho-de-bagre/plato-53.webp"
+    ],
+    "thumbs": [
+      "/carta/sancocho-de-bagre/thumb-plato-49.webp",
+      "/carta/sancocho-de-bagre/thumb-plato-50.webp",
+      "/carta/sancocho-de-bagre/thumb-plato-51.webp",
+      "/carta/sancocho-de-bagre/thumb-plato-52.webp",
+      "/carta/sancocho-de-bagre/thumb-plato-53.webp"
+    ],
+    "totalPhotos": 5
+  },
+  {
+    "slug": "ceviche-de-camaron",
+    "name": "Ceviche De Camaron",
+    "cover": "/carta/ceviche-de-camaron/plato-54.webp",
+    "coverThumb": "/carta/ceviche-de-camaron/thumb-plato-54.webp",
+    "photos": [
+      "/carta/ceviche-de-camaron/plato-54.webp",
+      "/carta/ceviche-de-camaron/plato-55.webp",
+      "/carta/ceviche-de-camaron/plato-56.webp",
+      "/carta/ceviche-de-camaron/plato-57.webp"
+    ],
+    "thumbs": [
+      "/carta/ceviche-de-camaron/thumb-plato-54.webp",
+      "/carta/ceviche-de-camaron/thumb-plato-55.webp",
+      "/carta/ceviche-de-camaron/thumb-plato-56.webp",
+      "/carta/ceviche-de-camaron/thumb-plato-57.webp"
+    ],
+    "totalPhotos": 4
+  },
+  {
+    "slug": "ejecutivo-mojarra",
+    "name": "Ejecutivo Mojarra",
+    "cover": "/carta/ejecutivo-mojarra/plato-58.webp",
+    "coverThumb": "/carta/ejecutivo-mojarra/thumb-plato-58.webp",
+    "photos": [
+      "/carta/ejecutivo-mojarra/plato-58.webp",
+      "/carta/ejecutivo-mojarra/plato-59.webp",
+      "/carta/ejecutivo-mojarra/plato-60.webp",
+      "/carta/ejecutivo-mojarra/plato-61.webp",
+      "/carta/ejecutivo-mojarra/plato-62.webp",
+      "/carta/ejecutivo-mojarra/plato-63.webp"
+    ],
+    "thumbs": [
+      "/carta/ejecutivo-mojarra/thumb-plato-58.webp",
+      "/carta/ejecutivo-mojarra/thumb-plato-59.webp",
+      "/carta/ejecutivo-mojarra/thumb-plato-60.webp",
+      "/carta/ejecutivo-mojarra/thumb-plato-61.webp",
+      "/carta/ejecutivo-mojarra/thumb-plato-62.webp",
+      "/carta/ejecutivo-mojarra/thumb-plato-63.webp"
+    ],
+    "totalPhotos": 6
+  },
+  {
+    "slug": "camarones-apanados",
+    "name": "Camarones Apanados",
+    "cover": "/carta/camarones-apanados/plato-64.webp",
+    "coverThumb": "/carta/camarones-apanados/thumb-plato-64.webp",
+    "photos": [
+      "/carta/camarones-apanados/plato-64.webp",
+      "/carta/camarones-apanados/plato-65.webp",
+      "/carta/camarones-apanados/plato-66.webp",
+      "/carta/camarones-apanados/plato-67.webp",
+      "/carta/camarones-apanados/plato-68.webp",
+      "/carta/camarones-apanados/plato-69.webp"
+    ],
+    "thumbs": [
+      "/carta/camarones-apanados/thumb-plato-64.webp",
+      "/carta/camarones-apanados/thumb-plato-65.webp",
+      "/carta/camarones-apanados/thumb-plato-66.webp",
+      "/carta/camarones-apanados/thumb-plato-67.webp",
+      "/carta/camarones-apanados/thumb-plato-68.webp",
+      "/carta/camarones-apanados/thumb-plato-69.webp"
+    ],
+    "totalPhotos": 6
+  },
+  {
+    "slug": "ejecutivo-de-filete-de-basa-apanado",
+    "name": "Ejecutivo De Filete De Basa Apanado",
+    "cover": "/carta/ejecutivo-de-filete-de-basa-apanado/plato-70.webp",
+    "coverThumb": "/carta/ejecutivo-de-filete-de-basa-apanado/thumb-plato-70.webp",
+    "photos": [
+      "/carta/ejecutivo-de-filete-de-basa-apanado/plato-70.webp",
+      "/carta/ejecutivo-de-filete-de-basa-apanado/plato-71.webp",
+      "/carta/ejecutivo-de-filete-de-basa-apanado/plato-72.webp",
+      "/carta/ejecutivo-de-filete-de-basa-apanado/plato-73.webp",
+      "/carta/ejecutivo-de-filete-de-basa-apanado/plato-74.webp"
+    ],
+    "thumbs": [
+      "/carta/ejecutivo-de-filete-de-basa-apanado/thumb-plato-70.webp",
+      "/carta/ejecutivo-de-filete-de-basa-apanado/thumb-plato-71.webp",
+      "/carta/ejecutivo-de-filete-de-basa-apanado/thumb-plato-72.webp",
+      "/carta/ejecutivo-de-filete-de-basa-apanado/thumb-plato-73.webp",
+      "/carta/ejecutivo-de-filete-de-basa-apanado/thumb-plato-74.webp"
+    ],
+    "totalPhotos": 5
+  },
+  {
+    "slug": "sancocho-de-pargo",
+    "name": "Sancocho De Pargo",
+    "cover": "/carta/sancocho-de-pargo/plato-75.webp",
+    "coverThumb": "/carta/sancocho-de-pargo/thumb-plato-75.webp",
+    "photos": [
+      "/carta/sancocho-de-pargo/plato-75.webp",
+      "/carta/sancocho-de-pargo/plato-76.webp",
+      "/carta/sancocho-de-pargo/plato-77.webp",
+      "/carta/sancocho-de-pargo/plato-78.webp",
+      "/carta/sancocho-de-pargo/plato-79.webp"
+    ],
+    "thumbs": [
+      "/carta/sancocho-de-pargo/thumb-plato-75.webp",
+      "/carta/sancocho-de-pargo/thumb-plato-76.webp",
+      "/carta/sancocho-de-pargo/thumb-plato-77.webp",
+      "/carta/sancocho-de-pargo/thumb-plato-78.webp",
+      "/carta/sancocho-de-pargo/thumb-plato-79.webp"
+    ],
+    "totalPhotos": 5
+  },
+  {
+    "slug": "bocachico-sudado",
+    "name": "Bocachico Sudado",
+    "cover": "/carta/bocachico-sudado/plato-80.webp",
+    "coverThumb": "/carta/bocachico-sudado/thumb-plato-80.webp",
+    "photos": [
+      "/carta/bocachico-sudado/plato-80.webp",
+      "/carta/bocachico-sudado/plato-81.webp",
+      "/carta/bocachico-sudado/plato-82.webp",
+      "/carta/bocachico-sudado/plato-83.webp",
+      "/carta/bocachico-sudado/plato-84.webp"
+    ],
+    "thumbs": [
+      "/carta/bocachico-sudado/thumb-plato-80.webp",
+      "/carta/bocachico-sudado/thumb-plato-81.webp",
+      "/carta/bocachico-sudado/thumb-plato-82.webp",
+      "/carta/bocachico-sudado/thumb-plato-83.webp",
+      "/carta/bocachico-sudado/thumb-plato-84.webp"
+    ],
+    "totalPhotos": 5
+  },
+  {
+    "slug": "mojarra-frita",
+    "name": "Mojarra Frita",
+    "cover": "/carta/mojarra-frita/plato-85.webp",
+    "coverThumb": "/carta/mojarra-frita/thumb-plato-85.webp",
+    "photos": [
+      "/carta/mojarra-frita/plato-85.webp",
+      "/carta/mojarra-frita/plato-86.webp",
+      "/carta/mojarra-frita/plato-87.webp",
+      "/carta/mojarra-frita/plato-88.webp",
+      "/carta/mojarra-frita/plato-89.webp"
+    ],
+    "thumbs": [
+      "/carta/mojarra-frita/thumb-plato-85.webp",
+      "/carta/mojarra-frita/thumb-plato-86.webp",
+      "/carta/mojarra-frita/thumb-plato-87.webp",
+      "/carta/mojarra-frita/thumb-plato-88.webp",
+      "/carta/mojarra-frita/thumb-plato-89.webp"
+    ],
+    "totalPhotos": 5
+  },
+  {
+    "slug": "cazuela-de-mariscos",
+    "name": "Cazuela De Mariscos",
+    "cover": "/carta/cazuela-de-mariscos/plato-90.webp",
+    "coverThumb": "/carta/cazuela-de-mariscos/thumb-plato-90.webp",
+    "photos": [
+      "/carta/cazuela-de-mariscos/plato-90.webp",
+      "/carta/cazuela-de-mariscos/plato-91.webp",
+      "/carta/cazuela-de-mariscos/plato-92.webp",
+      "/carta/cazuela-de-mariscos/plato-93.webp",
+      "/carta/cazuela-de-mariscos/plato-94.webp",
+      "/carta/cazuela-de-mariscos/plato-95.webp"
+    ],
+    "thumbs": [
+      "/carta/cazuela-de-mariscos/thumb-plato-90.webp",
+      "/carta/cazuela-de-mariscos/thumb-plato-91.webp",
+      "/carta/cazuela-de-mariscos/thumb-plato-92.webp",
+      "/carta/cazuela-de-mariscos/thumb-plato-93.webp",
+      "/carta/cazuela-de-mariscos/thumb-plato-94.webp",
+      "/carta/cazuela-de-mariscos/thumb-plato-95.webp"
+    ],
+    "totalPhotos": 6
+  },
+  {
+    "slug": "arroz-a-la-marinera-con-coco",
+    "name": "Arroz A La Marinera Con Coco",
+    "cover": "/carta/arroz-a-la-marinera-con-coco/plato-96.webp",
+    "coverThumb": "/carta/arroz-a-la-marinera-con-coco/thumb-plato-96.webp",
+    "photos": [
+      "/carta/arroz-a-la-marinera-con-coco/plato-96.webp",
+      "/carta/arroz-a-la-marinera-con-coco/plato-97.webp",
+      "/carta/arroz-a-la-marinera-con-coco/plato-98.webp",
+      "/carta/arroz-a-la-marinera-con-coco/plato-99.webp",
+      "/carta/arroz-a-la-marinera-con-coco/plato-100.webp"
+    ],
+    "thumbs": [
+      "/carta/arroz-a-la-marinera-con-coco/thumb-plato-96.webp",
+      "/carta/arroz-a-la-marinera-con-coco/thumb-plato-97.webp",
+      "/carta/arroz-a-la-marinera-con-coco/thumb-plato-98.webp",
+      "/carta/arroz-a-la-marinera-con-coco/thumb-plato-99.webp",
+      "/carta/arroz-a-la-marinera-con-coco/thumb-plato-100.webp"
+    ],
+    "totalPhotos": 5
+  },
+  {
+    "slug": "trucha-a-la-plancha",
+    "name": "Trucha A La Plancha",
+    "cover": "/carta/trucha-a-la-plancha/plato-101.webp",
+    "coverThumb": "/carta/trucha-a-la-plancha/thumb-plato-101.webp",
+    "photos": [
+      "/carta/trucha-a-la-plancha/plato-101.webp",
+      "/carta/trucha-a-la-plancha/plato-102.webp",
+      "/carta/trucha-a-la-plancha/plato-103.webp",
+      "/carta/trucha-a-la-plancha/plato-104.webp",
+      "/carta/trucha-a-la-plancha/plato-105.webp",
+      "/carta/trucha-a-la-plancha/plato-106.webp"
+    ],
+    "thumbs": [
+      "/carta/trucha-a-la-plancha/thumb-plato-101.webp",
+      "/carta/trucha-a-la-plancha/thumb-plato-102.webp",
+      "/carta/trucha-a-la-plancha/thumb-plato-103.webp",
+      "/carta/trucha-a-la-plancha/thumb-plato-104.webp",
+      "/carta/trucha-a-la-plancha/thumb-plato-105.webp",
+      "/carta/trucha-a-la-plancha/thumb-plato-106.webp"
+    ],
+    "totalPhotos": 6
+  },
+  {
+    "slug": "arroz-a-la-marinera",
+    "name": "Arroz A La Marinera",
+    "cover": "/carta/arroz-a-la-marinera/plato-107.webp",
+    "coverThumb": "/carta/arroz-a-la-marinera/thumb-plato-107.webp",
+    "photos": [
+      "/carta/arroz-a-la-marinera/plato-107.webp",
+      "/carta/arroz-a-la-marinera/plato-108.webp",
+      "/carta/arroz-a-la-marinera/plato-109.webp",
+      "/carta/arroz-a-la-marinera/plato-110.webp",
+      "/carta/arroz-a-la-marinera/plato-111.webp",
+      "/carta/arroz-a-la-marinera/plato-112.webp"
+    ],
+    "thumbs": [
+      "/carta/arroz-a-la-marinera/thumb-plato-107.webp",
+      "/carta/arroz-a-la-marinera/thumb-plato-108.webp",
+      "/carta/arroz-a-la-marinera/thumb-plato-109.webp",
+      "/carta/arroz-a-la-marinera/thumb-plato-110.webp",
+      "/carta/arroz-a-la-marinera/thumb-plato-111.webp",
+      "/carta/arroz-a-la-marinera/thumb-plato-112.webp"
+    ],
+    "totalPhotos": 6
+  },
+  {
+    "slug": "langosta-rellena",
+    "name": "Langosta Rellena",
+    "cover": "/carta/langosta-rellena/plato-113.webp",
+    "coverThumb": "/carta/langosta-rellena/thumb-plato-113.webp",
+    "photos": [
+      "/carta/langosta-rellena/plato-113.webp",
+      "/carta/langosta-rellena/plato-114.webp",
+      "/carta/langosta-rellena/plato-115.webp",
+      "/carta/langosta-rellena/plato-116.webp",
+      "/carta/langosta-rellena/plato-117.webp",
+      "/carta/langosta-rellena/plato-118.webp"
+    ],
+    "thumbs": [
+      "/carta/langosta-rellena/thumb-plato-113.webp",
+      "/carta/langosta-rellena/thumb-plato-114.webp",
+      "/carta/langosta-rellena/thumb-plato-115.webp",
+      "/carta/langosta-rellena/thumb-plato-116.webp",
+      "/carta/langosta-rellena/thumb-plato-117.webp",
+      "/carta/langosta-rellena/thumb-plato-118.webp"
+    ],
+    "totalPhotos": 6
+  },
+  {
+    "slug": "entrada-de-camarones-al-ajillo",
+    "name": "Entrada De Camarones Al Ajillo",
+    "cover": "/carta/entrada-de-camarones-al-ajillo/plato-119.webp",
+    "coverThumb": "/carta/entrada-de-camarones-al-ajillo/thumb-plato-119.webp",
+    "photos": [
+      "/carta/entrada-de-camarones-al-ajillo/plato-119.webp",
+      "/carta/entrada-de-camarones-al-ajillo/plato-120.webp",
+      "/carta/entrada-de-camarones-al-ajillo/plato-121.webp",
+      "/carta/entrada-de-camarones-al-ajillo/plato-122.webp"
+    ],
+    "thumbs": [
+      "/carta/entrada-de-camarones-al-ajillo/thumb-plato-119.webp",
+      "/carta/entrada-de-camarones-al-ajillo/thumb-plato-120.webp",
+      "/carta/entrada-de-camarones-al-ajillo/thumb-plato-121.webp",
+      "/carta/entrada-de-camarones-al-ajillo/thumb-plato-122.webp"
+    ],
+    "totalPhotos": 4
+  },
+  {
+    "slug": "sierra-a-la-carta",
+    "name": "Sierra A La Carta",
+    "cover": "/carta/sierra-a-la-carta/plato-123.webp",
+    "coverThumb": "/carta/sierra-a-la-carta/thumb-plato-123.webp",
+    "photos": [
+      "/carta/sierra-a-la-carta/plato-123.webp",
+      "/carta/sierra-a-la-carta/plato-124.webp",
+      "/carta/sierra-a-la-carta/plato-125.webp",
+      "/carta/sierra-a-la-carta/plato-126.webp",
+      "/carta/sierra-a-la-carta/plato-127.webp",
+      "/carta/sierra-a-la-carta/plato-128.webp",
+      "/carta/sierra-a-la-carta/plato-129.webp"
+    ],
+    "thumbs": [
+      "/carta/sierra-a-la-carta/thumb-plato-123.webp",
+      "/carta/sierra-a-la-carta/thumb-plato-124.webp",
+      "/carta/sierra-a-la-carta/thumb-plato-125.webp",
+      "/carta/sierra-a-la-carta/thumb-plato-126.webp",
+      "/carta/sierra-a-la-carta/thumb-plato-127.webp",
+      "/carta/sierra-a-la-carta/thumb-plato-128.webp",
+      "/carta/sierra-a-la-carta/thumb-plato-129.webp"
+    ],
+    "totalPhotos": 7
+  },
+  {
+    "slug": "langostinos-en-salsa-marinera",
+    "name": "Langostinos En Salsa Marinera",
+    "cover": "/carta/langostinos-en-salsa-marinera/plato-130.webp",
+    "coverThumb": "/carta/langostinos-en-salsa-marinera/thumb-plato-130.webp",
+    "photos": [
+      "/carta/langostinos-en-salsa-marinera/plato-130.webp",
+      "/carta/langostinos-en-salsa-marinera/plato-131.webp",
+      "/carta/langostinos-en-salsa-marinera/plato-132.webp",
+      "/carta/langostinos-en-salsa-marinera/plato-133.webp",
+      "/carta/langostinos-en-salsa-marinera/plato-134.webp"
+    ],
+    "thumbs": [
+      "/carta/langostinos-en-salsa-marinera/thumb-plato-130.webp",
+      "/carta/langostinos-en-salsa-marinera/thumb-plato-131.webp",
+      "/carta/langostinos-en-salsa-marinera/thumb-plato-132.webp",
+      "/carta/langostinos-en-salsa-marinera/thumb-plato-133.webp",
+      "/carta/langostinos-en-salsa-marinera/thumb-plato-134.webp"
+    ],
+    "totalPhotos": 5
+  },
+  {
+    "slug": "ejecutivo-de-basa-frita",
+    "name": "Ejecutivo De Basa Frita",
+    "cover": "/carta/ejecutivo-de-basa-frita/plato-135.webp",
+    "coverThumb": "/carta/ejecutivo-de-basa-frita/thumb-plato-135.webp",
+    "photos": [
+      "/carta/ejecutivo-de-basa-frita/plato-135.webp",
+      "/carta/ejecutivo-de-basa-frita/plato-136.webp",
+      "/carta/ejecutivo-de-basa-frita/plato-137.webp",
+      "/carta/ejecutivo-de-basa-frita/plato-138.webp"
+    ],
+    "thumbs": [
+      "/carta/ejecutivo-de-basa-frita/thumb-plato-135.webp",
+      "/carta/ejecutivo-de-basa-frita/thumb-plato-136.webp",
+      "/carta/ejecutivo-de-basa-frita/thumb-plato-137.webp",
+      "/carta/ejecutivo-de-basa-frita/thumb-plato-138.webp"
+    ],
+    "totalPhotos": 4
+  }
+]

@@ -18,16 +18,58 @@ interface Props {
   conclusion: string;
 }
 
-const { eyebrow, title, lead, logo, timeline, conclusion } = Astro.props;
+const { eyebrow, title, lead, logo: _logo, timeline, conclusion } = Astro.props;
+
+// Lista de las 28 fotografías del equipo en orden
+const equipoPhotos = [
+  '/equipo/equipo.webp',
+  ...Array.from({ length: 27 }, (_, i) => `/equipo/equipo-${i + 2}.webp`),
+];
 ---
 
 <section class="section section--sand" id="historia" style="padding-top:1.5rem">
   <div class="container">
     <div class="story-grid">
-      <div class="story-mark" data-sr data-sr-direction="left">
-        <!-- Resplandor ambiental pulsante (Ambient Pulse Glow) -->
-        <div class="ambient-glow" aria-hidden="true"></div>
-        <img src={logo.src} alt={logo.alt} width={logo.width} height={logo.height} loading="lazy" />
+      <!-- Columna visual: Imagen central + Cinta de miniaturas (5 visibles) -->
+      <div class="story-visual-column" data-sr data-sr-direction="left">
+        <!-- Tarjeta principal de visualización (Central) -->
+        <div class="story-main-card" id="storyMainCard">
+          <div class="ambient-glow" aria-hidden="true"></div>
+          <img
+            class="story-main-img is-current"
+            id="storyImgA"
+            src="/equipo/equipo.webp"
+            alt="Equipo de La Sabrosura del Mar"
+            width="640"
+            height="427"
+          />
+          <img
+            class="story-main-img"
+            id="storyImgB"
+            src=""
+            alt="Equipo de La Sabrosura del Mar"
+            width="640"
+            height="427"
+          />
+        </div>
+
+        <!-- Cinta de fotos en miniatura (exactamente 5 visibles a la vez) -->
+        <div class="story-strip-viewport" id="storyStripViewport" aria-label="Galería fotográfica del equipo">
+          <div class="story-strip-track" id="storyStripTrack">
+            {equipoPhotos.map((photo, idx) => (
+              <div
+                class={`story-strip-item ${idx === 0 ? 'is-active' : ''}`}
+                data-index={idx}
+                data-src={photo}
+                tabindex="0"
+                role="button"
+                aria-label={`Foto ${idx + 1}`}
+              >
+                <img src={photo} alt="" width="120" height="80" loading="lazy" decoding="async" />
+              </div>
+            ))}
+          </div>
+        </div>
       </div>
 
       <div data-sr data-sr-direction="right" data-sr-delay="0.1">
@@ -67,17 +109,39 @@ const { eyebrow, title, lead, logo, timeline, conclusion } = Astro.props;
 </section>
 
 <style>
-  .story-mark {
+  /* Columna visual izquierda */
+  .story-visual-column {
+    display: flex;
+    flex-direction: column;
+    gap: 0.85rem;
+    width: 100%;
+    max-width: 520px;
+    margin: 0 auto;
     position: relative;
   }
 
-  /* Resplandor ambiental dorado orgánico */
+  /* Tarjeta central principal */
+  .story-main-card {
+    position: relative;
+    width: 100%;
+    aspect-ratio: 3 / 2;
+    border-radius: var(--radius-lg, 16px);
+    overflow: hidden;
+    background: linear-gradient(145deg, #091721, #0f2c3d);
+    box-shadow: 0 16px 36px -10px rgba(12, 32, 45, 0.32), 0 4px 16px rgba(12, 32, 45, 0.08);
+    border: 1px solid rgba(217, 154, 63, 0.22);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  /* Resplandor ambiental dorado orgánico detrás */
   .ambient-glow {
     position: absolute;
     width: 220px;
     height: 220px;
     border-radius: 50%;
-    background: radial-gradient(circle, rgba(217, 154, 63, 0.45) 0%, rgba(217, 154, 63, 0) 70%);
+    background: radial-gradient(circle, rgba(217, 154, 63, 0.38) 0%, rgba(217, 154, 63, 0) 70%);
     filter: blur(45px);
     pointer-events: none;
     z-index: 1;
@@ -86,13 +150,126 @@ const { eyebrow, title, lead, logo, timeline, conclusion } = Astro.props;
 
   @keyframes pulseGlow {
     0%, 100% {
-      opacity: 0.45;
+      opacity: 0.35;
       transform: scale(0.92);
     }
     50% {
-      opacity: 0.85;
+      opacity: 0.75;
       transform: scale(1.15);
     }
+  }
+
+  /* Imágenes en la tarjeta central con transición cruzada ultra suave */
+  .story-main-img {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: center;
+    opacity: 0;
+    transform: scale(1.02);
+    transition: opacity 0.5s ease-in-out, transform 0.75s cubic-bezier(0.2, 0.8, 0.2, 1);
+    will-change: opacity, transform;
+    pointer-events: none;
+    z-index: 2;
+  }
+
+  .story-main-img.is-current {
+    opacity: 1;
+    transform: scale(1);
+    z-index: 3;
+  }
+
+  .story-main-card::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(to top, rgba(12, 32, 45, 0.25) 0%, transparent 40%);
+    pointer-events: none;
+    z-index: 4;
+  }
+
+  /* Cinta de fotos en miniatura: exactamente 5 visibles simultáneamente, juntas y compactas */
+  /* Cinta de fotos en miniatura: exactamente 5 visibles simultáneamente, juntas y compactas */
+  .story-strip-viewport {
+    position: relative;
+    width: 100%;
+    max-width: 376px;
+    margin: 0 auto;
+    overflow: hidden;
+    padding: 3px 0;
+    user-select: none;
+    -webkit-user-select: none;
+    cursor: grab;
+    cursor: -webkit-grab;
+  }
+
+  .story-strip-viewport.is-dragging {
+    cursor: grabbing !important;
+    cursor: -webkit-grabbing !important;
+  }
+
+  .story-strip-track {
+    display: flex;
+    gap: var(--strip-gap, 4px);
+    transition: transform 0.4s cubic-bezier(0.25, 1, 0.5, 1);
+    will-change: transform;
+    width: max-content;
+  }
+
+  .story-strip-track.is-dragging {
+    transition: none !important;
+  }
+
+  .story-strip-item {
+    flex: 0 0 var(--item-w, 72px);
+    width: var(--item-w, 72px);
+    height: 44px;
+    border-radius: 5px;
+    overflow: hidden;
+    cursor: grab;
+    position: relative;
+    border: 1.5px solid transparent;
+    opacity: 0.52;
+    background: #0c202d;
+    transition: opacity 0.25s ease, border-color 0.25s ease, transform 0.25s cubic-bezier(0.2, 0.8, 0.2, 1), box-shadow 0.25s ease;
+    outline: none;
+    user-select: none;
+    -webkit-user-select: none;
+  }
+
+  .story-strip-viewport.is-dragging .story-strip-item {
+    cursor: grabbing !important;
+    pointer-events: none;
+    transform: none !important;
+  }
+
+  .story-strip-item img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+    pointer-events: none;
+    -webkit-user-drag: none;
+  }
+
+  .story-strip-item:hover {
+    opacity: 0.88;
+    transform: translateY(-1.5px);
+  }
+
+  .story-strip-item:focus-visible {
+    border-color: var(--gold-500, #d99a3f);
+    box-shadow: 0 0 0 2px rgba(217, 154, 63, 0.4);
+  }
+
+  .story-strip-item.is-active {
+    opacity: 1;
+    border-color: var(--gold-500, #d99a3f);
+    box-shadow: 0 2px 8px rgba(217, 154, 63, 0.45);
+    transform: scale(1.03);
+    z-index: 2;
   }
 
   /* Fila de contadores de impacto */
@@ -134,6 +311,20 @@ const { eyebrow, title, lead, logo, timeline, conclusion } = Astro.props;
   }
 
   @media (max-width: 600px) {
+    .story-visual-column {
+      max-width: 100%;
+      gap: 0.65rem;
+    }
+
+    .story-strip-viewport {
+      max-width: 310px;
+    }
+
+    .story-strip-item {
+      border-radius: 4px;
+      height: 38px;
+    }
+
     .story-stats-row {
       grid-template-columns: 1fr;
       gap: 0.85rem;
@@ -148,3 +339,298 @@ const { eyebrow, title, lead, logo, timeline, conclusion } = Astro.props;
     }
   }
 </style>
+
+<script>
+  let autoTimer: ReturnType<typeof setInterval> | null = null;
+  let stripResizeObserver: ResizeObserver | null = null;
+
+  function initTimelineGallery() {
+    // Limpieza previa defensiva
+    cleanupTimelineGallery();
+
+    const mainCard = document.getElementById('storyMainCard');
+    const imgA = document.getElementById('storyImgA') as HTMLImageElement | null;
+    const imgB = document.getElementById('storyImgB') as HTMLImageElement | null;
+    const viewport = document.getElementById('storyStripViewport');
+    const track = document.getElementById('storyStripTrack');
+
+    if (!viewport || !track || !imgA || !imgB) return;
+
+    const items = Array.from(track.querySelectorAll<HTMLElement>('.story-strip-item'));
+    if (!items.length) return;
+
+    let currentIndex = 0;
+    let currentImg = imgA;
+    let nextImg = imgB;
+
+    // Espacio mínimo entre miniaturas ("que estén juntas")
+    function getGap(): number {
+      return window.innerWidth <= 600 ? 3 : 4;
+    }
+
+    let currentTrackX = 0;
+
+    function updateLayout() {
+      if (!viewport || !track) return;
+      const vpWidth = viewport.getBoundingClientRect().width;
+      if (!vpWidth) return;
+      const gap = getGap();
+      track.style.setProperty('--strip-gap', `${gap}px`);
+      // Exactamente 5 fotos visibles en la cinta: (ancho total - 4 huecos) / 5
+      const itemW = Math.max(0, (vpWidth - 4 * gap) / 5);
+      track.style.setProperty('--item-w', `${itemW}px`);
+      updateTrackPosition();
+    }
+
+    function updateTrackPosition() {
+      if (!viewport || !track) return;
+      const vpWidth = viewport.getBoundingClientRect().width;
+      if (!vpWidth) return;
+      const gap = getGap();
+      const itemW = Math.max(0, (vpWidth - 4 * gap) / 5);
+      const total = items.length;
+      // Mantener la foto activa centrada en los 5 slots visibles (slot 0, 1, [2], 3, 4)
+      const maxShift = Math.max(0, total - 5);
+      const shiftIndex = Math.max(0, Math.min(currentIndex - 2, maxShift));
+      const offset = shiftIndex * (itemW + gap);
+      currentTrackX = -offset;
+      track.style.transform = `translateX(-${offset}px)`;
+    }
+
+    function setMainImage(src: string) {
+      if (!imgA || !imgB) return;
+      if (currentImg.getAttribute('src') === src) return;
+
+      nextImg.src = src;
+      nextImg.classList.add('is-current');
+      currentImg.classList.remove('is-current');
+
+      const temp = currentImg;
+      currentImg = nextImg;
+      nextImg = temp;
+    }
+
+    function activateIndex(index: number) {
+      if (index < 0 || index >= items.length) return;
+      currentIndex = index;
+
+      items.forEach((item, i) => {
+        if (i === currentIndex) {
+          item.classList.add('is-active');
+          item.setAttribute('aria-current', 'true');
+        } else {
+          item.classList.remove('is-active');
+          item.removeAttribute('aria-current');
+        }
+      });
+
+      const activeItem = items[currentIndex];
+      const src = activeItem?.getAttribute('data-src');
+      if (src) {
+        setMainImage(src);
+      }
+
+      updateTrackPosition();
+    }
+
+    function nextSlide() {
+      const next = (currentIndex + 1) % items.length;
+      activateIndex(next);
+    }
+
+    function startTimer() {
+      stopTimer();
+      autoTimer = setInterval(nextSlide, 3000);
+    }
+
+    function stopTimer() {
+      if (autoTimer) {
+        clearInterval(autoTimer);
+        autoTimer = null;
+      }
+    }
+
+    // --- Arrastre horizontal con clic de ratón (Drag-to-scroll para PC) ---
+    let isDragging = false;
+    let startX = 0;
+    let startTrackX = 0;
+    let hasDragged = false;
+    let suppressClickUntil = 0;
+
+    viewport.addEventListener('mousedown', (e) => {
+      if (e.button !== 0) return; // Solo botón principal izquierdo
+      stopTimer();
+      isDragging = true;
+      startX = e.pageX;
+      startTrackX = currentTrackX;
+      hasDragged = false;
+    });
+
+    window.addEventListener('mousemove', (e) => {
+      if (!isDragging || !viewport || !track) return;
+      const dx = e.pageX - startX;
+      if (!hasDragged && Math.abs(dx) > 3) {
+        hasDragged = true;
+        viewport.classList.add('is-dragging');
+        track.classList.add('is-dragging');
+      }
+      if (hasDragged) {
+        e.preventDefault();
+        const vpWidth = viewport.getBoundingClientRect().width;
+        const gap = getGap();
+        const itemW = Math.max(0, (vpWidth - 4 * gap) / 5);
+        const total = items.length;
+        const maxOffset = Math.max(0, total - 5) * (itemW + gap);
+
+        let newX = startTrackX + dx;
+        // Resistencia suave en los límites
+        if (newX > 0) newX = newX * 0.25;
+        if (newX < -maxOffset) newX = -maxOffset + (newX + maxOffset) * 0.25;
+
+        track.style.transform = `translateX(${newX}px)`;
+      }
+    });
+
+    function finishMouseDrag() {
+      if (!isDragging || !viewport || !track) return;
+      isDragging = false;
+      viewport.classList.remove('is-dragging');
+      track.classList.remove('is-dragging');
+
+      if (hasDragged) {
+        suppressClickUntil = Date.now() + 160;
+        const vpWidth = viewport.getBoundingClientRect().width;
+        const gap = getGap();
+        const itemW = Math.max(0, (vpWidth - 4 * gap) / 5);
+        const total = items.length;
+        const maxShift = Math.max(0, total - 5);
+        const maxOffset = maxShift * (itemW + gap);
+
+        const match = track.style.transform.match(/translateX\(([-\d.]+)px\)/);
+        const currentX = match ? parseFloat(match[1]) : currentTrackX;
+
+        // Calcular la posición más cercana al soltar
+        const boundedX = Math.max(-maxOffset, Math.min(0, currentX));
+        const shiftIndex = Math.round(-boundedX / (itemW + gap));
+        const clampedShift = Math.max(0, Math.min(shiftIndex, maxShift));
+        // Centrar foto en la posición 2 de las 5 visibles
+        const targetIndex = Math.min(total - 1, Math.max(0, clampedShift + 2));
+
+        activateIndex(targetIndex);
+      }
+
+      startTimer();
+    }
+
+    window.addEventListener('mouseup', finishMouseDrag);
+    window.addEventListener('blur', finishMouseDrag);
+
+    // Evitar arrastre nativo de imágenes en el navegador
+    viewport.addEventListener('dragstart', (e) => e.preventDefault());
+
+    // Soporte de rueda de ratón para PC
+    viewport.addEventListener(
+      'wheel',
+      (e) => {
+        if (Math.abs(e.deltaY) > Math.abs(e.deltaX)) {
+          e.preventDefault();
+          stopTimer();
+          if (e.deltaY > 0) {
+            nextSlide();
+          } else {
+            const prev = (currentIndex - 1 + items.length) % items.length;
+            activateIndex(prev);
+          }
+          startTimer();
+        }
+      },
+      { passive: false }
+    );
+
+    // Interacción al cliquear cualquier miniatura
+    items.forEach((item, idx) => {
+      item.addEventListener('click', (e) => {
+        if (Date.now() < suppressClickUntil) {
+          e.stopPropagation();
+          e.preventDefault();
+          return;
+        }
+        activateIndex(idx);
+        startTimer();
+      });
+
+      item.addEventListener('keydown', (e) => {
+        if (e.key === 'Enter' || e.key === ' ') {
+          e.preventDefault();
+          activateIndex(idx);
+          startTimer();
+        }
+      });
+    });
+
+    // Pausar en hover para permitir examinar y cliquear con comodidad
+    viewport.addEventListener('mouseenter', stopTimer);
+    viewport.addEventListener('mouseleave', () => {
+      if (!isDragging) startTimer();
+    });
+    if (mainCard) {
+      mainCard.addEventListener('mouseenter', stopTimer);
+      mainCard.addEventListener('mouseleave', () => {
+        if (!isDragging) startTimer();
+      });
+    }
+
+    // Soporte táctil swipe para móviles
+    let touchStartX = 0;
+    viewport.addEventListener('touchstart', (e) => {
+      touchStartX = e.touches[0].clientX;
+      stopTimer();
+    }, { passive: true });
+
+    viewport.addEventListener('touchend', (e) => {
+      const touchEndX = e.changedTouches[0].clientX;
+      const diff = touchStartX - touchEndX;
+      if (Math.abs(diff) > 30) {
+        if (diff > 0) {
+          nextSlide();
+        } else {
+          const prev = (currentIndex - 1 + items.length) % items.length;
+          activateIndex(prev);
+        }
+      }
+      startTimer();
+    }, { passive: true });
+
+    // Observador de redimensionamiento dinámico
+    if (typeof ResizeObserver !== 'undefined') {
+      stripResizeObserver = new ResizeObserver(() => {
+        updateLayout();
+      });
+      stripResizeObserver.observe(viewport);
+    } else {
+      window.addEventListener('resize', updateLayout);
+    }
+
+    updateLayout();
+    startTimer();
+  }
+
+  function cleanupTimelineGallery() {
+    if (autoTimer) {
+      clearInterval(autoTimer);
+      autoTimer = null;
+    }
+    if (stripResizeObserver) {
+      stripResizeObserver.disconnect();
+      stripResizeObserver = null;
+    }
+  }
+
+  // Soporte para Astro ClientRouter y recarga directa
+  document.addEventListener('astro:page-load', initTimelineGallery);
+  document.addEventListener('astro:before-swap', cleanupTimelineGallery);
+
+  if (document.readyState === 'complete' || document.readyState === 'interactive') {
+    initTimelineGallery();
+  }
+</script>

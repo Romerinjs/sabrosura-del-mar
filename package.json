@@ -8,7 +8,8 @@
     "build": "astro build",
     "preview": "astro preview",
     "astro": "astro",
-    "check": "astro check"
+    "check": "astro check",
+    "process:fotos": "node scripts/process-all.mjs"
   },
   "dependencies": {
     "@astrojs/mdx": "^4.1.0",
