@@ -1,5 +1,4 @@
 ---
-import Icon from '../icons/Icon.astro';
 import { getDishGallery } from '../../utils/dishMatcher';
 
 interface Props {
@@ -34,9 +33,10 @@ const money = (n: number) => '$' + n.toLocaleString('es-CO');
 const gallery = getDishGallery(nombre);
 const hasGallery = !!(gallery && gallery.photos && gallery.photos.length > 0);
 
-// Miniatura para la fila principal (usa thumbnail WebP ultra ligero de ~15KB si existe)
+// Miniatura para la fila principal (usa thumbnail WebP ultra ligero si existe)
 const photoThumbSrc = gallery?.coverThumb || gallery?.cover || imagen || null;
 const photoFullSrc = gallery?.cover || imagen || null;
+const hasAnyPhoto = hasGallery || !!photoFullSrc;
 
 const dishKey = nombre.toLowerCase().trim();
 const dishSlug = dishKey.replace(/[^a-z0-9]/g, '-');
@@ -44,25 +44,31 @@ const itemDelay = ((index % 6) * 0.05).toFixed(2);
 ---
 
 <li
-  class="menu-item menu-dish-card"
+  class:list={[
+    'menu-item menu-dish-card',
+    { 'has-no-photo': !hasAnyPhoto }
+  ]}
   data-dish-name={nombre.toLowerCase()}
   data-dish-desc={descripcion ? descripcion.toLowerCase() : ''}
   data-sr
   data-sr-direction="up"
   data-sr-delay={itemDelay}
 >
-  <!-- Fila principal clickeable (Trigger de acordeón vertical) -->
+  <!-- Fila principal (Interactivo solo si contiene fotos para desplegar) -->
   <div
-    class="menu-dish-summary"
-    role="button"
-    tabindex="0"
-    aria-expanded="false"
-    aria-controls={`dish-desc-${dishSlug}`}
-    title={`Toca para ver fotos y detalles de ${nombre}`}
+    class:list={[
+      'menu-dish-summary',
+      { 'is-interactive': hasAnyPhoto }
+    ]}
+    role={hasAnyPhoto ? 'button' : undefined}
+    tabindex={hasAnyPhoto ? 0 : undefined}
+    aria-expanded={hasAnyPhoto ? 'false' : undefined}
+    aria-controls={hasAnyPhoto ? `dish-desc-${dishSlug}` : undefined}
+    title={hasAnyPhoto ? `Toca para ver fotos de ${nombre}` : undefined}
   >
-    <!-- 1. Foto / Miniatura a la izquierda -->
-    <div class="menu-dish-thumb">
-      {photoThumbSrc ? (
+    <!-- 1. Miniatura SOLO si tiene foto real -->
+    {photoThumbSrc && (
+      <div class="menu-dish-thumb">
         <img
           src={photoThumbSrc}
           alt={nombre}
@@ -72,22 +78,45 @@ const itemDelay = ((index % 6) * 0.05).toFixed(2);
           decoding="async"
           class="dish-thumb-img"
         />
-      ) : (
-        <div class="dish-thumb-placeholder" title="Foto en preparación">
-          <Icon name="camera" size={16} />
-        </div>
-      )}
-    </div>
+      </div>
+    )}
 
-    <!-- 2. Información del plato (Nombre y badges) -->
+    <!-- 2. Información del plato (Nombre, badge favorito y descripción visible debajo) -->
     <div class="menu-dish-info">
       <div class="menu-dish-title-wrap">
         <span class="menu-dish-name">{nombre}</span>
-        {destacado && <span class="menu-item__badge">Favorito</span>}
+        {destacado && (
+          <span
+            class="favorite-badge-wrap"
+            data-favorite-badge
+            tabindex="0"
+            role="button"
+            aria-label="Plato favorito recomendado"
+            title="Toca para ver información"
+          >
+            <img
+              src="/assets/check-favorite-plate (1).svg"
+              alt="Favorito"
+              class="favorite-badge-icon"
+              width="20"
+              height="20"
+              loading="lazy"
+            />
+            <span class="favorite-badge-tooltip" role="tooltip">Favorito</span>
+          </span>
+        )}
       </div>
+
+      {descripcion && (
+        <p class="menu-dish-desc">{descripcion}</p>
+      )}
+
+      {notaPrecio && (
+        <span class="menu-dish-price-note">{notaPrecio}</span>
+      )}
     </div>
 
-    <!-- 3. Columna fija y alineada para precio y botón (+) -->
+    <!-- 3. Columna fija y alineada para precio y chevron (solo si tiene fotos) -->
     <div class="menu-dish-side">
       <div class="menu-dish-price">
         {precioTexto ? (
@@ -109,72 +138,60 @@ const itemDelay = ((index % 6) * 0.05).toFixed(2);
         )}
       </div>
 
-      <span class="menu-dish-chevron" aria-hidden="true">
-        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-          <polyline points="6 9 12 15 18 9"></polyline>
-        </svg>
-      </span>
+      {hasAnyPhoto && (
+        <span class="menu-dish-chevron" aria-hidden="true">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <polyline points="6 9 12 15 18 9"></polyline>
+          </svg>
+        </span>
+      )}
     </div>
   </div>
 
-  <!-- Contenido desplegable vertical tipo acordeón -->
-  <div class="menu-dish-accordion" id={`dish-desc-${dishSlug}`}>
-    <div class="menu-dish-accordion__body">
-      {hasGallery ? (
-        <!-- Bloque de Galería Ultra Limpio -->
-        <div class="dish-gallery-block">
-          <div class="dish-gallery-strip">
-            {gallery.photos.map((pUrl, pIdx) => {
-              const thumbUrl = gallery.thumbs[pIdx] || pUrl;
-              return (
-                <button
-                  type="button"
-                  class="dish-gallery-item"
-                  data-open-gallery={JSON.stringify({
-                    dishName: nombre,
-                    photos: gallery.photos,
-                    thumbs: gallery.thumbs,
-                    startIndex: pIdx
-                  })}
-                  title={`Foto ${pIdx + 1} de ${nombre}`}
-                  aria-label={`Ver foto ${pIdx + 1} de ${nombre}`}
-                >
-                  <img
-                    src={thumbUrl}
-                    alt={`${nombre} ${pIdx + 1}`}
-                    width="120"
-                    height="80"
-                    loading="lazy"
-                    decoding="async"
-                    class="dish-gallery-item__img"
-                  />
-                </button>
-              );
-            })}
+  <!-- Contenido desplegable vertical tipo acordeón (solo revela fotos) -->
+  {hasAnyPhoto && (
+    <div class="menu-dish-accordion" id={`dish-desc-${dishSlug}`}>
+      <div class="menu-dish-accordion__body">
+        {hasGallery ? (
+          <div class="dish-gallery-block">
+            <div class="dish-gallery-strip">
+              {gallery.photos.map((pUrl, pIdx) => {
+                const thumbUrl = gallery.thumbs[pIdx] || pUrl;
+                return (
+                  <button
+                    type="button"
+                    class="dish-gallery-item"
+                    data-open-gallery={JSON.stringify({
+                      dishName: nombre,
+                      photos: gallery.photos,
+                      thumbs: gallery.thumbs,
+                      startIndex: pIdx
+                    })}
+                    title={`Foto ${pIdx + 1} de ${nombre}`}
+                    aria-label={`Ver foto ${pIdx + 1} de ${nombre}`}
+                  >
+                    <img
+                      src={thumbUrl}
+                      alt={`${nombre} ${pIdx + 1}`}
+                      width="120"
+                      height="80"
+                      loading="lazy"
+                      decoding="async"
+                      class="dish-gallery-item__img"
+                    />
+                  </button>
+                );
+              })}
+            </div>
           </div>
-        </div>
-      ) : photoFullSrc ? (
-        <div class="accordion-photo-wrap">
-          <img src={photoFullSrc} alt={nombre} width="320" height="200" loading="lazy" decoding="async" />
-        </div>
-      ) : null}
-
-      <!-- Información concisa respetando la respiración visual -->
-      <div class="accordion-info-wrap">
-        {descripcion && (
-          <p class="accordion-desc">
-            {descripcion}
-          </p>
-        )}
-
-        {notaPrecio && (
-          <p class="accordion-price-note">
-            {notaPrecio}
-          </p>
-        )}
+        ) : photoFullSrc ? (
+          <div class="accordion-photo-wrap">
+            <img src={photoFullSrc} alt={nombre} width="320" height="200" loading="lazy" decoding="async" />
+          </div>
+        ) : null}
       </div>
     </div>
-  </div>
+  )}
 </li>
 
 <style>
@@ -211,23 +228,28 @@ const itemDelay = ((index % 6) * 0.05).toFixed(2);
   /* Fila de cabecera que actúa como botón de acordeón */
   .menu-dish-summary {
     display: flex;
-    align-items: center;
+    align-items: flex-start;
     gap: 0.85rem;
     width: 100%;
-    cursor: pointer;
-    user-select: none;
-    -webkit-user-select: none;
+    cursor: default;
+    user-select: text;
     padding: 0.1rem 0;
     border-radius: 8px;
     transition: opacity 0.2s ease;
   }
 
-  .menu-dish-summary:focus-visible {
+  .menu-dish-summary.is-interactive {
+    cursor: pointer;
+    user-select: none;
+    -webkit-user-select: none;
+  }
+
+  .menu-dish-summary.is-interactive:focus-visible {
     outline: 2px solid var(--teal-600);
     outline-offset: 2px;
   }
 
-  /* 1. Miniatura a la izquierda con micro-animación */
+  /* 1. Miniatura a la izquierda */
   .menu-dish-thumb {
     width: 52px;
     height: 52px;
@@ -238,6 +260,7 @@ const itemDelay = ((index % 6) * 0.05).toFixed(2);
     display: grid;
     place-items: center;
     flex-shrink: 0;
+    margin-top: 0.1rem;
     transition: transform 0.35s cubic-bezier(0.16, 1, 0.3, 1);
   }
 
@@ -252,21 +275,14 @@ const itemDelay = ((index % 6) * 0.05).toFixed(2);
     display: block;
   }
 
-  .dish-thumb-placeholder {
-    display: grid;
-    place-items: center;
-    color: var(--muted, #64748b);
-    opacity: 0.4;
-  }
-
   /* 2. Información del plato */
   .menu-dish-info {
     flex: 1 1 auto;
     min-width: 0;
     display: flex;
     flex-direction: column;
-    justify-content: center;
-    gap: 0.15rem;
+    justify-content: flex-start;
+    gap: 0.2rem;
   }
 
   .menu-dish-title-wrap {
@@ -274,6 +290,77 @@ const itemDelay = ((index % 6) * 0.05).toFixed(2);
     align-items: center;
     gap: 0.45rem;
     flex-wrap: wrap;
+  }
+
+  /* Insignia de plato Favorito / Recomendado */
+  .favorite-badge-wrap {
+    position: relative;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    line-height: 1;
+    cursor: pointer;
+    vertical-align: middle;
+    outline: none;
+    -webkit-tap-highlight-color: transparent;
+  }
+
+  .favorite-badge-icon {
+    width: 20px;
+    height: 20px;
+    display: block;
+    object-fit: contain;
+    filter: drop-shadow(0 1px 3px rgba(10, 37, 64, 0.15));
+    transition: transform 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+  }
+
+  .favorite-badge-wrap:hover .favorite-badge-icon,
+  .favorite-badge-wrap:focus-visible .favorite-badge-icon {
+    transform: scale(1.18);
+  }
+
+  /* Tooltip con auto-desaparición a los 3 segundos o en hover */
+  .favorite-badge-tooltip {
+    position: absolute;
+    bottom: calc(100% + 7px);
+    left: 50%;
+    transform: translateX(-50%) translateY(4px);
+    background: #071f38;
+    color: #ffffff;
+    font-family: var(--font-body, "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif);
+    font-size: 0.68rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    padding: 0.22rem 0.6rem;
+    border-radius: 6px;
+    white-space: nowrap;
+    pointer-events: none;
+    opacity: 0;
+    visibility: hidden;
+    box-shadow: 0 4px 14px rgba(5, 20, 35, 0.28);
+    border: 1px solid rgba(226, 168, 66, 0.4);
+    transition: opacity 0.3s ease, transform 0.3s cubic-bezier(0.16, 1, 0.3, 1), visibility 0.3s ease;
+    z-index: 30;
+  }
+
+  .favorite-badge-tooltip::after {
+    content: "";
+    position: absolute;
+    top: 100%;
+    left: 50%;
+    transform: translateX(-50%);
+    border-width: 4px;
+    border-style: solid;
+    border-color: #071f38 transparent transparent transparent;
+  }
+
+  .favorite-badge-wrap.is-tooltip-visible .favorite-badge-tooltip,
+  .favorite-badge-wrap:hover .favorite-badge-tooltip,
+  .favorite-badge-wrap:focus-visible .favorite-badge-tooltip {
+    opacity: 1;
+    visibility: visible;
+    transform: translateX(-50%) translateY(0);
   }
 
   .menu-dish-name {
@@ -290,32 +377,14 @@ const itemDelay = ((index % 6) * 0.05).toFixed(2);
     font-weight: 700;
   }
 
-  /* Badge indicador de fotos */
-  .menu-dish-photos-badge {
-    display: inline-flex;
-    align-items: center;
-    gap: 0.25rem;
-    font-size: 0.68rem;
-    font-weight: 700;
-    color: var(--teal-700, #0e5a72);
-    background: rgba(14, 90, 114, 0.1);
-    border: 1px solid rgba(14, 90, 114, 0.22);
-    padding: 0.12rem 0.42rem;
-    border-radius: 999px;
-    letter-spacing: 0.02em;
-    vertical-align: middle;
-  }
-
-  .menu-dish-hint {
-    font-size: 0.7rem;
-    color: var(--teal-600, #0284c7);
-    font-weight: 500;
-    opacity: 0.85;
-    transition: opacity 0.2s ease;
-  }
-
-  .menu-dish-card.is-expanded .menu-dish-hint {
-    opacity: 0.5;
+  /* Descripción visible directamente debajo del plato */
+  .menu-dish-desc {
+    font-family: var(--font-body, "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif);
+    font-size: 0.835rem;
+    color: #4b5563;
+    line-height: 1.42;
+    margin: 0.15rem 0 0;
+    padding-right: 0.4rem;
   }
 
   /* 3. Columna derecha fija de precio y chevron */
@@ -325,6 +394,7 @@ const itemDelay = ((index % 6) * 0.05).toFixed(2);
     gap: 0.55rem;
     flex-shrink: 0;
     margin-left: auto;
+    margin-top: 0.1rem;
   }
 
   .menu-dish-price {
@@ -380,7 +450,7 @@ const itemDelay = ((index % 6) * 0.05).toFixed(2);
     color: var(--teal-700, #0e5a72);
   }
 
-  /* Acordeón */
+  /* Acordeón para revelar fotos */
   .menu-dish-accordion {
     display: grid;
     grid-template-rows: 0fr;
@@ -398,7 +468,7 @@ const itemDelay = ((index % 6) * 0.05).toFixed(2);
   .menu-dish-accordion__body {
     min-height: 0;
     overflow: hidden;
-    padding: 0 0.4rem 0 0;
+    padding: 0;
     display: flex;
     flex-direction: column;
     gap: 0.75rem;
@@ -412,18 +482,16 @@ const itemDelay = ((index % 6) * 0.05).toFixed(2);
   .menu-dish-card.is-expanded .menu-dish-accordion__body {
     opacity: 1;
     transform: translateY(0);
-    padding: 0.95rem 0.4rem 0.65rem 0;
+    padding: 0.85rem 0.2rem 0.45rem 0;
   }
 
-  /* -------------------------------------------------------------
-     Bloque de Galería Ultra Limpio y Mínimo
-     ------------------------------------------------------------- */
+  /* Bloque de Galería */
   .dish-gallery-block {
     width: 100%;
     display: flex;
     flex-direction: column;
     gap: 0.5rem;
-    padding-left: 4rem;
+    padding-left: 0;
   }
 
   /* Tira fotográfica horizontal limpia con arrastre para PC y táctil en móviles */
@@ -494,25 +562,10 @@ const itemDelay = ((index % 6) * 0.05).toFixed(2);
     pointer-events: none;
   }
 
-  .dish-gallery-item__index {
-    position: absolute;
-    bottom: 0.35rem;
-    right: 0.4rem;
-    font-family: var(--font-mono, monospace);
-    font-size: 0.65rem;
-    font-weight: 700;
-    background: rgba(7, 31, 56, 0.85);
-    color: #ffffff;
-    padding: 0.1rem 0.35rem;
-    border-radius: 4px;
-    border: 1px solid rgba(255, 255, 255, 0.15);
-  }
-
   /* Foto individual previa (fallback) */
   .accordion-photo-wrap {
     width: 100%;
     max-width: 260px;
-    margin-left: 4rem;
     border-radius: 11px;
     overflow: hidden;
     border: 1px solid var(--line, #e2e8f0);
@@ -526,42 +579,6 @@ const itemDelay = ((index % 6) * 0.05).toFixed(2);
     object-fit: cover;
   }
 
-  .accordion-placeholder-wrap {
-    background: var(--sand, #f8f6f0);
-    border: 1px dashed var(--line, #e2e8f0);
-    border-radius: 10px;
-    padding: 0.75rem 1rem;
-    margin-left: 4rem;
-    display: inline-flex;
-    align-items: center;
-    gap: 0.65rem;
-    color: var(--muted, #64748b);
-    font-size: 0.82rem;
-    width: fit-content;
-  }
-
-  .accordion-info-wrap {
-    display: flex;
-    flex-direction: column;
-    gap: 0.4rem;
-    padding-left: 0;
-    width: 100%;
-  }
-
-  .accordion-desc {
-    font-size: 0.9rem;
-    color: var(--ink-soft, #334155);
-    line-height: 1.5;
-    margin: 0;
-  }
-
-  .accordion-price-note {
-    font-size: 0.78rem;
-    color: var(--muted, #64748b);
-    font-style: italic;
-    margin: 0;
-  }
-
   @media (max-width: 640px) {
     .menu-dish-thumb {
       width: 46px;
@@ -573,29 +590,17 @@ const itemDelay = ((index % 6) * 0.05).toFixed(2);
       font-size: 0.92rem;
     }
 
+    .menu-dish-desc {
+      font-size: 0.785rem;
+      line-height: 1.38;
+    }
+
     .menu-dish-price {
       min-width: 64px;
     }
 
     .price-main {
       font-size: 0.92rem;
-    }
-
-    .menu-dish-accordion__body {
-      padding: 0 0.2rem;
-    }
-    
-    .menu-dish-card.is-expanded .menu-dish-accordion__body {
-      padding: 0.85rem 0.25rem 0.6rem 0.25rem;
-    }
-
-    .dish-gallery-block {
-      padding-left: 0;
-    }
-
-    .accordion-photo-wrap,
-    .accordion-placeholder-wrap {
-      margin-left: 0;
     }
 
     .dish-gallery-item {
@@ -729,8 +734,8 @@ const itemDelay = ((index % 6) * 0.05).toFixed(2);
         return;
       }
 
-      // Despliegue de acordeón
-      const summary = target.closest('.menu-dish-summary') as HTMLElement | null;
+      // Despliegue de acordeón (solo para elementos interactivos con fotos)
+      const summary = target.closest('.menu-dish-summary.is-interactive') as HTMLElement | null;
       if (summary) {
         const card = summary.closest('.menu-dish-card');
         if (card) {
@@ -744,7 +749,7 @@ const itemDelay = ((index % 6) * 0.05).toFixed(2);
     document.addEventListener('keydown', (e) => {
       if (e.key === 'Enter' || e.key === ' ') {
         const target = e.target as HTMLElement | null;
-        if (target && target.classList.contains('menu-dish-summary')) {
+        if (target && target.classList.contains('menu-dish-summary') && target.classList.contains('is-interactive')) {
           e.preventDefault();
           const card = target.closest('.menu-dish-card');
           if (card) {
@@ -754,6 +759,45 @@ const itemDelay = ((index % 6) * 0.05).toFixed(2);
         }
       }
     });
+
+    // Controlador de tooltips de favoritos (aparece 3 segundos y luego se oculta automáticamente)
+    function initFavoriteBadges() {
+      const badges = document.querySelectorAll<HTMLElement>('[data-favorite-badge]');
+      if (!badges.length) return;
+
+      const observer = new IntersectionObserver(
+        (entries) => {
+          entries.forEach((entry) => {
+            if (entry.isIntersecting) {
+              const badge = entry.target as HTMLElement;
+              if (!badge.dataset.tooltipShown) {
+                badge.dataset.tooltipShown = 'true';
+                badge.classList.add('is-tooltip-visible');
+                setTimeout(() => {
+                  badge.classList.remove('is-tooltip-visible');
+                }, 3000);
+              }
+            }
+          });
+        },
+        { threshold: 0.3 }
+      );
+
+      badges.forEach((badge) => {
+        observer.observe(badge);
+
+        badge.addEventListener('click', (e) => {
+          e.stopPropagation();
+          badge.classList.add('is-tooltip-visible');
+          if ((badge as any)._timeout) clearTimeout((badge as any)._timeout);
+          (badge as any)._timeout = setTimeout(() => {
+            badge.classList.remove('is-tooltip-visible');
+          }, 3000);
+        });
+      });
+    }
+
+    initFavoriteBadges();
   }
 
   setupDishAccordions();

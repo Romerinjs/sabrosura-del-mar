@@ -20,10 +20,21 @@ interface Props {
 
 const { eyebrow, title, lead, logo: _logo, timeline, conclusion } = Astro.props;
 
-// Lista de las 28 fotografías del equipo en orden
+// Lista de fotografías seleccionadas y únicas del equipo
 const equipoPhotos = [
+  '/equipo/equipo-4.webp',
+  '/equipo/equipo-2.webp',
+  '/equipo/equipo-5.webp',
+  '/equipo/equipo-6.webp',
+  '/equipo/equipo-7.webp',
+  '/equipo/equipo-9.webp',
+  '/equipo/equipo-13.webp',
+  '/equipo/equipo-16.webp',
+  '/equipo/equipo-19.webp',
+  '/equipo/equipo-21.webp',
+  '/equipo/equipo-22.webp',
+  '/equipo/equipo-27.webp',
   '/equipo/equipo.webp',
-  ...Array.from({ length: 27 }, (_, i) => `/equipo/equipo-${i + 2}.webp`),
 ];
 ---
 
@@ -38,7 +49,7 @@ const equipoPhotos = [
           <img
             class="story-main-img is-current"
             id="storyImgA"
-            src="/equipo/equipo.webp"
+            src={equipoPhotos[0]}
             alt="Equipo de La Sabrosura del Mar"
             width="640"
             height="427"

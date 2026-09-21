@@ -22,14 +22,15 @@ const {
   ctas,
 } = Astro.props;
 
-// 6 imágenes distribuidas: 2 de /carta/, 2 de /espacios/, 2 de /equipo/
+// Imágenes del slider principal: espacios, equipo y platos destacados
 const heroSlides = [
+  { src: "/espacios/espacios-13.webp", alt: "Instalaciones de La Sabrosura del Mar" },
+  { src: "/equipo/equipo-9.webp", alt: "Equipo de trabajo de La Sabrosura del Mar" },
   { src: "/carta/cazuela-de-mariscos/plato-90.webp", alt: "Cazuela de mariscos tradicional" },
-  { src: "/espacios/espacios-18.webp", alt: "Instalaciones de La Sabrosura del Mar" },
-  { src: "/equipo/equipo.webp", alt: "Equipo de trabajo de La Sabrosura del Mar" },
+  { src: "/espacios/espacios-10.webp", alt: "Ambiente acogedor de nuestro restaurante" },
   { src: "/carta/mojarra-frita/plato-85.webp", alt: "Pescado frito crujiente de la casa" },
+  { src: "/equipo/equipo.webp", alt: "Tradición y calidez en el servicio" },
   { src: "/espacios/espacios-23.webp", alt: "Ambiente cálido e iluminado del restaurante" },
-  { src: "/equipo/equipo-10.webp", alt: "Preparación fresca y sazón costeña" },
 ];
 ---
 

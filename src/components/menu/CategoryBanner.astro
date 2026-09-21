@@ -1,0 +1,147 @@
+---
+interface Props {
+  title: string;
+  as?: 'h1' | 'h2' | 'h3' | 'h4' | 'div';
+  class?: string;
+  id?: string;
+}
+
+const {
+  title,
+  as: Tag = 'h2',
+  class: className = '',
+  id
+} = Astro.props;
+
+// Detectar si el título es largo para calibrar dinámicamente el tamaño de la tipografía y padding
+const isLongTitle = title.length > 14;
+---
+
+<div class:list={['category-banner-wrap', className]} id={id}>
+  <div class:list={['category-banner', { 'category-banner--long': isLongTitle }]}>
+    <!-- Silueta geométrica SVG con forma de cinta y ribete dorado interior -->
+    <svg
+      class="category-banner__svg"
+      viewBox="0 0 400 80"
+      preserveAspectRatio="none"
+      aria-hidden="true"
+    >
+      <!-- 1. Fondo exterior / cuerpo principal azul petróleo -->
+      <polygon
+        class="category-banner__bg"
+        points="0,0 400,0 372,40 400,80 0,80 28,40"
+        fill="#0B6172"
+      />
+
+      <!-- 2. Ribete / línea dorada interior que sigue exactamente la geometría -->
+      <polygon
+        class="category-banner__gold-line"
+        points="12,7 388,7 364,40 388,73 12,73 36,40"
+        fill="none"
+        stroke="#E5A900"
+        stroke-width="2.2"
+        stroke-linejoin="miter"
+      />
+    </svg>
+
+    <!-- Texto centrado con etiqueta semántica dinámica -->
+    <Tag class="category-banner__title">
+      {title}
+    </Tag>
+  </div>
+</div>
+
+<style>
+  .category-banner-wrap {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+    margin: 0 auto;
+    padding: 0.35rem 0;
+  }
+
+  .category-banner {
+    position: relative;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: fit-content;
+    min-width: clamp(240px, 60vw, 320px);
+    max-width: min(94vw, 560px);
+    height: clamp(54px, 8.5vw, 70px);
+    padding: 0 clamp(2.6rem, 6.5vw, 4rem);
+    box-sizing: border-box;
+    filter: drop-shadow(0 4px 14px rgba(10, 37, 64, 0.16));
+    transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1), filter 0.3s ease;
+  }
+
+  .category-banner:hover {
+    transform: translateY(-2px);
+    filter: drop-shadow(0 6px 18px rgba(10, 37, 64, 0.22));
+  }
+
+  .category-banner__svg {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 1;
+    pointer-events: none;
+    overflow: visible;
+    display: block;
+  }
+
+  .category-banner__bg {
+    fill: #0B6172;
+    transition: fill 0.3s ease;
+  }
+
+  .category-banner__gold-line {
+    stroke: #E5A900;
+    stroke-width: 2.2;
+    vector-effect: non-scaling-stroke;
+  }
+
+  .category-banner__title {
+    position: relative;
+    z-index: 2;
+    margin: 0;
+    padding: 0;
+    color: #ffffff;
+    font-family: var(--font-body, "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif);
+    font-size: clamp(0.98rem, 2.8vw, 1.36rem);
+    font-weight: 800;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    text-align: center;
+    white-space: nowrap;
+    line-height: 1;
+    user-select: none;
+    text-shadow: 0 1px 3px rgba(5, 20, 35, 0.35);
+  }
+
+  /* Ajuste tipográfico equilibrado para títulos largos como 'Camarones y langostinos' o 'Almuerzos ejecutivos' */
+  .category-banner--long .category-banner__title {
+    font-size: clamp(0.78rem, 2.1vw, 1.08rem);
+    letter-spacing: 0.05em;
+  }
+
+  @media (max-width: 480px) {
+    .category-banner {
+      min-width: 220px;
+      height: 52px;
+      padding: 0 2rem;
+    }
+
+    .category-banner__title {
+      font-size: 0.95rem;
+      letter-spacing: 0.05em;
+    }
+
+    .category-banner--long .category-banner__title {
+      font-size: 0.76rem;
+      letter-spacing: 0.03em;
+    }
+  }
+</style>
