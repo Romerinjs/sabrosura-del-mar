@@ -43,6 +43,17 @@ const mapAddress = isNorte
   : 'Cra. 13 #21-32, Centro, Armenia, Quindío';
 const mapEmbedUrl = `https://maps.google.com/maps?q=${encodeURIComponent(mapAddress)}&t=&z=16&ie=UTF8&iwloc=&output=embed`;
 
+// Fotos del espacio exclusivamente para Sede Norte
+const norteEspacios = [
+  '/espacios/espacios-23.webp',
+  '/espacios/espacios-22.webp',
+  '/espacios/espacios.webp',
+  '/espacios/espacios-2.webp',
+  '/espacios/espacios-7.webp',
+  '/espacios/espacios-9.webp',
+  '/espacios/espacios-16.webp',
+];
+
 const schemaRestaurant = {
   '@context': 'https://schema.org',
   '@type': 'Restaurant',
@@ -87,64 +98,75 @@ const schemaRestaurant = {
   jsonLd={schemaRestaurant}
   activePage="sedes"
 >
-  <section class="page-hero">
-    <div class="page-hero__bg" aria-hidden="true">
-      <img src={isNorte ? '/espacios/espacios-23.webp' : '/espacios/espacios-18.webp'} alt="" class="page-hero__bg-img" loading="eager" width="1400" height="600" />
-      <div class="page-hero__bg-overlay"></div>
-    </div>
-    <div class="container">
-      <div style="display:flex;gap:0.6rem;align-items:center;margin-bottom:0.8rem" data-sr data-sr-instant data-sr-delay="0.04">
-        <a href="/" style="color:var(--gold-300);text-decoration:none;font-size:0.85rem">Inicio</a>
-        <span style="color:rgba(255,255,255,0.4)">/</span>
-        <a href="/sedes" style="color:var(--gold-300);text-decoration:none;font-size:0.85rem">Sedes</a>
-        <span style="color:rgba(255,255,255,0.4)">/</span>
-        <span style="color:#fff;font-size:0.85rem">{sede.nombre}</span>
+  <main class={`venue-page ${isNorte ? 'venue-page--norte' : 'venue-page--centro'}`}>
+    <!-- Fondo Cover en Pantalla Completa con Transición Automática cada 5s (Únicamente Sede Norte) -->
+    {isNorte ? (
+      <div class="venue-bg-slider" aria-hidden="true">
+        {norteEspacios.map((imgSrc, idx) => (
+          <img
+            src={imgSrc}
+            alt=""
+            class={`venue-bg-slide ${idx === 0 ? 'is-active' : ''}`}
+            loading={idx === 0 ? 'eager' : 'lazy'}
+          />
+        ))}
+        <div class="venue-bg-overlay"></div>
       </div>
-      <span class={`venue__badge venue__badge--${sede.badge.tipo}`} data-sr data-sr-instant data-sr-delay="0.08">{sede.badge.texto}</span>
-      <h1 data-sr data-sr-instant data-sr-delay="0.16">{sede.nombre}</h1>
-      <p data-sr data-sr-instant data-sr-delay="0.24">{sede.descripcion}</p>
-    </div>
-  </section>
+    ) : (
+      <div class="venue-bg-slider venue-bg-slider--centro" aria-hidden="true">
+        <div class="venue-bg-overlay venue-bg-overlay--centro"></div>
+      </div>
+    )}
 
-  <section class="section">
-    <div class="container" style="max-width:1100px">
-      <div class="venue-detail-card">
-        <!-- Columna Izquierda: Información detallada de la sede -->
-        <div class="venue-detail-info" data-sr data-sr-direction="left" data-sr-delay="0.08">
-          <div>
-            <h2 style="font-size:var(--step-2);margin-bottom:1.2rem">Información de la sede</h2>
-            <ul class="info-list" style="font-size:1.02rem;gap:1.15rem">
+    <!-- Contenido y Card de Ubicación al lado izquierdo con aire visual -->
+    <div class="container venue-container">
+      <!-- Encabezado de la sede -->
+      <div class="venue-header-block" data-sr data-sr-instant data-sr-delay="0.04">
+        <div class="venue-breadcrumbs">
+          <a href="/">Inicio</a>
+          <span>/</span>
+          <a href="/sedes">Sedes</a>
+          <span>/</span>
+          <span class="is-current">{sede.nombre}</span>
+        </div>
+        <h1 class="venue-main-title">{sede.nombre}</h1>
+        <p class="venue-main-desc">{sede.descripcion}</p>
+      </div>
+
+      <!-- Contenedor Interactivo con Card Blanca y Mapa Desplegable a la Derecha -->
+      <div class="venue-interactive-wrapper" data-venue-map-wrapper>
+        <!-- Card de Información (Blanco clásico, bordes redondeados y aire visual) -->
+        <article class="venue-card" data-sr data-sr-direction="left" data-sr-delay="0.1">
+          <div class="venue-card__header">
+            <span class="venue-card__eyebrow">{isNorte ? 'Sector Proviteq · Armenia' : 'Centro · Armenia'}</span>
+            <h2 class="venue-card__title">Información de la sede</h2>
+          </div>
+
+          <div class="venue-card__body">
+            <ul class="venue-info-list">
               <li>
-                <Icon name="map-pin" size={22} />
+                <div class="venue-info-icon">
+                  <Icon name="map-pin" size={19} />
+                </div>
                 <div>
                   <strong>Dirección física</strong>
                   <span>{sede.direccion} {sede.sector && `(${sede.sector})`} · {sede.ciudad}</span>
                 </div>
               </li>
               <li>
-                <Icon name="clock" size={22} />
+                <div class="venue-info-icon">
+                  <Icon name="clock" size={19} />
+                </div>
                 <div>
                   <strong>Horario de atención</strong>
                   <span>{sede.horario.texto} ({sede.horario.detalle})</span>
                 </div>
               </li>
-              <li>
-                <Icon name="phone" size={22} />
-                <div>
-                  <strong>Líneas telefónicas y WhatsApp</strong>
-                  <span>
-                    {sede.telefonos.map((t, idx) => (
-                      <>
-                        <a href={t.href} style="color:var(--teal-700);font-weight:700">{t.numero}</a> ({t.tipo})
-                        {idx < sede.telefonos.length - 1 && ' · '}
-                      </>
-                    ))}
-                  </span>
-                </div>
-              </li>
               {sede.parqueadero && (
                 <li>
-                  <Icon name="car" size={22} />
+                  <div class="venue-info-icon">
+                    <Icon name="car" size={19} />
+                  </div>
                   <div>
                     <strong>Parqueadero propio vigilado</strong>
                     <span>{sede.detalleParqueadero || 'Disponible para clientes, grupos y familias.'}</span>
@@ -153,148 +175,652 @@ const schemaRestaurant = {
               )}
             </ul>
 
-            <div style="margin-top:1.6rem">
-              {isNorte ? (
-                <div><span class="pill-note pill-note--muted">Atención en mesa · Parqueadero propio vigilado</span></div>
-              ) : (
-                <div><span class="pill-note">Atención en mesa y pedidos directos en Armenia</span></div>
-              )}
+            <!-- Botones de Acción Directa -->
+            <div class="venue-actions">
+              <a class="btn btn--navy" href={`https://wa.me/${sede.whatsapp.phone}?text=${encodeURIComponent(sede.whatsapp.mensaje)}`} target="_blank" rel="noopener" data-track-event="whatsapp_click" data-track-location={sede.id}>
+                <Icon name="whatsapp" size={18} />
+                {isNorte ? 'Contactar por WhatsApp' : 'Pedir al restaurante'}
+              </a>
+              <a class="btn btn--outline" href="/carta">
+                <Icon name="book-open" size={18} />
+                Ver la carta digital
+              </a>
             </div>
           </div>
 
-          <!-- Botones de acción directa (sin botón redundante de Google Maps) -->
-          <div class="btn-row" style="margin-top:2rem">
-            <a class="btn btn--navy" href={`https://wa.me/${sede.whatsapp.phone}?text=${encodeURIComponent(sede.whatsapp.mensaje)}`} target="_blank" rel="noopener" data-track-event="whatsapp_click" data-track-location={sede.id}>
-              <Icon name="whatsapp" size={18} />
-              {isNorte ? 'Contactar por WhatsApp' : 'Pedir al restaurante'}
-            </a>
-            <a class="btn btn--outline" href="/carta">
-              <Icon name="book-open" size={18} />
-              Ver la carta digital
-            </a>
-          </div>
-        </div>
+          <!-- Botón Vertical Tipo Etiqueta Pegado al Borde Derecho de la Card -->
+          <button
+            type="button"
+            class="venue-map-tag-btn"
+            id="venueMapToggleBtn"
+            aria-expanded="false"
+            aria-controls="venueMapDrawer"
+            title="Ver mapa de ubicación"
+          >
+            <span class="venue-map-tag-btn__icon">
+              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polygon points="1 6 1 22 8 18 16 22 23 18 23 2 16 6 8 2 1 6"></polygon><line x1="8" y1="2" x2="8" y2="18"></line><line x1="16" y1="6" x2="16" y2="22"></line></svg>
+            </span>
+            <span class="venue-map-tag-btn__text" data-map-btn-text>VER MAPA</span>
+            <span class="venue-map-tag-btn__arrow">
+              <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="9 18 15 12 9 6"></polyline></svg>
+            </span>
+          </button>
+        </article>
 
-        <!-- Columna Derecha: Mapa embebido interactivo -->
-        <div class="venue-detail-map" data-sr data-sr-direction="right" data-sr-delay="0.15">
-          <div class="venue-detail-map__header">
-            <div class="venue-detail-map__title">
-              <Icon name="map-pin" size={16} />
-              <span>{sede.nombre} · {sede.direccion}</span>
+        <!-- Panel del Mapa Desplegable hacia la Derecha -->
+        <div class="venue-map-drawer" id="venueMapDrawer" aria-hidden="true">
+          <div class="venue-map-drawer__inner">
+            <div class="venue-map-card">
+              <div class="venue-map-card__header">
+                <div class="venue-map-card__title">
+                  <Icon name="map-pin" size={15} />
+                  <span>{sede.nombre} · {sede.direccion}</span>
+                </div>
+                <div style="display:flex;align-items:center;gap:0.7rem">
+                  <a
+                    class="venue-map-card__link"
+                    href={sede.mapsUrl}
+                    target="_blank"
+                    rel="noopener"
+                    data-track-event="maps_click"
+                    data-track-location={sede.id}
+                    title="Abrir en Google Maps o Waze"
+                  >
+                    <span>Cómo llegar</span>
+                    <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"></path><polyline points="15 3 21 3 21 9"></polyline><line x1="10" y1="14" x2="21" y2="3"></line></svg>
+                  </a>
+                  <button type="button" class="venue-map-close-btn" id="venueMapCloseBtn" title="Cerrar mapa" aria-label="Cerrar mapa">
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
+                  </button>
+                </div>
+              </div>
+              <iframe
+                src={mapEmbedUrl}
+                title={`Mapa interactivo de ubicación de ${sede.nombre}`}
+                class="venue-map-card__iframe"
+                allowfullscreen=""
+                loading="lazy"
+                referrerpolicy="no-referrer-when-downgrade"
+              ></iframe>
             </div>
-            <a
-              class="venue-detail-map__link"
-              href={sede.mapsUrl}
-              target="_blank"
-              rel="noopener"
-              data-track-event="maps_click"
-              data-track-location={sede.id}
-              title="Abrir en Google Maps o Waze"
-            >
-              <span>Cómo llegar</span>
-              <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"></path><polyline points="15 3 21 3 21 9"></polyline><line x1="10" y1="14" x2="21" y2="3"></line></svg>
-            </a>
           </div>
-          <iframe
-            src={mapEmbedUrl}
-            title={`Mapa interactivo de ubicación de ${sede.nombre}`}
-            class="venue-detail-map__iframe"
-            allowfullscreen=""
-            loading="lazy"
-            referrerpolicy="no-referrer-when-downgrade"
-          ></iframe>
         </div>
       </div>
 
-      <div style="margin-top:2.5rem;text-align:center" data-sr data-sr-delay="0.2">
-        <a href="/sedes" style="color:var(--teal-700);font-weight:600;text-decoration:none;display:inline-flex;align-items:center;gap:0.4rem">
+      <!-- Enlace para volver -->
+      <div class="venue-back-link" data-sr data-sr-delay="0.15">
+        <a href="/sedes" class="venue-back-btn">
           &larr; Volver al directorio de sedes
         </a>
       </div>
     </div>
-  </section>
+  </main>
 </BaseLayout>
 
 <style>
-  .venue-detail-card {
-    background: #ffffff;
-    border: 1px solid var(--line);
-    border-radius: var(--radius-lg);
-    padding: clamp(1.4rem, 3.5vw, 2.4rem);
-    box-shadow: 0 12px 34px rgba(10, 37, 64, 0.07);
-    display: grid;
-    grid-template-columns: 1.15fr 1fr;
-    gap: clamp(1.5rem, 3vw, 2.5rem);
-    align-items: stretch;
-  }
-
-  .venue-detail-info {
+  /* Contenedor Principal de la Página */
+  .venue-page {
+    position: relative;
+    min-height: 90vh;
     display: flex;
     flex-direction: column;
-    justify-content: space-between;
-  }
-
-  .venue-detail-map {
-    display: flex;
-    flex-direction: column;
-    border-radius: var(--radius-md);
+    justify-content: center;
+    padding: clamp(3rem, 6vw, 5rem) 0 clamp(2.5rem, 5vw, 4rem);
     overflow: hidden;
-    border: 1.5px solid var(--line);
-    background: #f8fafc;
-    box-shadow: 0 4px 16px rgba(10, 37, 64, 0.05);
+    box-sizing: border-box;
+    background: #051423;
+  }
+
+  .venue-page--centro {
+    background: #0a2540;
+  }
+
+  /* Fondo Slider Full Cover */
+  .venue-bg-slider {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 0;
+    overflow: hidden;
+    pointer-events: none;
+  }
+
+  .venue-bg-slide {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: center;
+    opacity: 0;
+    transform: scale(1.04);
+    transition: opacity 1.4s ease-in-out, transform 6s ease-out;
+    will-change: opacity, transform;
+  }
+
+  .venue-bg-slide.is-active {
+    opacity: 1;
+    transform: scale(1);
+  }
+
+  /* Degradado de Alto Contraste */
+  .venue-bg-overlay {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(
+      90deg,
+      rgba(5, 20, 35, 0.94) 0%,
+      rgba(5, 20, 35, 0.78) 42%,
+      rgba(5, 20, 35, 0.42) 75%,
+      rgba(5, 20, 35, 0.25) 100%
+    );
+    z-index: 1;
+  }
+
+  .venue-bg-slider--centro .venue-bg-overlay--centro {
+    background: radial-gradient(circle at 20% 30%, rgba(14, 116, 144, 0.25) 0%, transparent 60%),
+                linear-gradient(135deg, #0a2540 0%, #051423 100%);
+  }
+
+  /* Contenedor de Contenido */
+  .venue-container {
+    position: relative;
+    z-index: 2;
+    width: 100%;
+    box-sizing: border-box;
+  }
+
+  /* Encabezado Superior */
+  .venue-header-block {
+    max-width: 680px;
+    margin-bottom: 1.8rem;
+    color: #ffffff;
+  }
+
+  .venue-breadcrumbs {
+    display: flex;
+    gap: 0.6rem;
+    align-items: center;
+    margin-bottom: 0.6rem;
+    font-size: 0.85rem;
+  }
+
+  .venue-breadcrumbs a {
+    color: var(--gold-300);
+    text-decoration: none;
+    transition: color 0.18s ease;
+  }
+
+  .venue-breadcrumbs a:hover {
+    color: #ffffff;
+    text-decoration: underline;
+  }
+
+  .venue-breadcrumbs span {
+    color: rgba(255, 255, 255, 0.4);
+  }
+
+  .venue-breadcrumbs .is-current {
+    color: #ffffff;
+  }
+
+  .venue-main-title {
+    font-family: var(--font-display, "Fraunces", Georgia, serif);
+    font-size: clamp(2rem, 3.8vw, 3rem);
+    color: #ffffff;
+    line-height: 1.15;
+    margin: 0.2rem 0 0.5rem;
+    text-shadow: 0 2px 12px rgba(0, 0, 0, 0.6);
+  }
+
+  .venue-main-desc {
+    font-size: clamp(0.95rem, 1.1vw, 1.05rem);
+    line-height: 1.55;
+    color: #e2e8f0;
+    margin: 0;
+    text-shadow: 0 1px 8px rgba(0, 0, 0, 0.5);
+  }
+
+  /* Contenedor Interactivo (Card + Mapa Desplegable) */
+  .venue-interactive-wrapper {
+    position: relative;
+    display: inline-flex;
+    align-items: stretch;
+    max-width: 100%;
+  }
+
+  /* Card de Ubicación (Blanco Clásico, Bordes Redondeados y Aire Visual) */
+  .venue-card {
+    position: relative;
+    background: #ffffff;
+    border-radius: clamp(20px, 2.5vw, 28px);
+    border: 1px solid rgba(255, 255, 255, 0.9);
+    padding: clamp(1.8rem, 3.2vw, 2.5rem);
+    box-shadow: 0 24px 60px rgba(0, 0, 0, 0.35), 0 4px 16px rgba(0, 0, 0, 0.08);
+    box-sizing: border-box;
+    width: 100%;
+    max-width: 520px;
+    z-index: 5;
+    color: var(--navy-900, #0a2540);
+  }
+
+  .venue-card__header {
+    margin-bottom: 1.2rem;
+  }
+
+  .venue-card__eyebrow {
+    font-size: 0.76rem;
+    font-weight: 700;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--teal-700);
+    display: block;
+    margin-bottom: 0.25rem;
+  }
+
+  .venue-card__title {
+    font-family: var(--font-display, "Fraunces", Georgia, serif);
+    font-size: clamp(1.4rem, 2.2vw, 1.85rem);
+    color: var(--navy-900, #0a2540);
+    margin: 0;
+  }
+
+  .venue-card__body {
+    display: flex;
+    flex-direction: column;
+    gap: 1.35rem;
+  }
+
+  .venue-info-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+    font-size: 0.94rem;
+  }
+
+  .venue-info-list li {
+    display: flex;
+    align-items: flex-start;
+    gap: 0.8rem;
+  }
+
+  .venue-info-icon {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 34px;
+    height: 34px;
+    border-radius: 50%;
+    background: rgba(14, 116, 144, 0.09);
+    color: var(--teal-700);
+    flex-shrink: 0;
+    margin-top: 1px;
+  }
+
+  .venue-info-list strong {
+    display: block;
+    color: var(--navy-900, #0a2540);
+    font-weight: 650;
+    margin-bottom: 0.1rem;
+  }
+
+  .venue-info-list span {
+    color: #475569;
+    line-height: 1.45;
+  }
+
+  .venue-actions {
+    display: flex;
+    gap: 0.75rem;
+    flex-wrap: wrap;
+    margin-top: 0.3rem;
+  }
+
+  .venue-actions .btn {
+    flex: 1;
+    min-width: 170px;
+    justify-content: center;
+    font-size: 0.82rem;
+    padding: 0.68rem 1.1rem;
+  }
+
+  /* Botón Vertical Tipo Etiqueta Pegado al Borde Derecho */
+  .venue-map-tag-btn {
+    position: absolute;
+    right: -42px;
+    top: 50%;
+    transform: translateY(-50%);
+    background: var(--navy-900, #0a2540);
+    color: #ffffff;
+    border: 1.5px solid rgba(255, 255, 255, 0.3);
+    border-left: 0;
+    border-radius: 0 16px 16px 0;
+    padding: 1.2rem 0.65rem;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 0.7rem;
+    cursor: pointer;
+    box-shadow: 6px 12px 28px rgba(0, 0, 0, 0.35);
+    transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+    z-index: 6;
+    outline: none;
+    -webkit-user-select: none;
+    user-select: none;
+  }
+
+  .venue-map-tag-btn:hover {
+    background: var(--gold-500, #d99a3f);
+    color: var(--navy-950, #051423);
+    border-color: var(--gold-400);
+    transform: translateY(-50%) translateX(2px);
+    box-shadow: 8px 16px 32px rgba(217, 154, 63, 0.35);
+  }
+
+  .venue-map-tag-btn__icon {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .venue-map-tag-btn__text {
+    writing-mode: vertical-rl;
+    text-orientation: mixed;
+    transform: rotate(180deg);
+    font-size: 0.74rem;
+    font-weight: 750;
+    letter-spacing: 0.16em;
+    white-space: nowrap;
+  }
+
+  .venue-map-tag-btn__arrow {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: transform 0.3s ease;
+  }
+
+  .venue-interactive-wrapper.is-map-open .venue-map-tag-btn__arrow {
+    transform: rotate(180deg);
+  }
+
+  .venue-interactive-wrapper.is-map-open .venue-map-tag-btn {
+    background: var(--gold-500, #d99a3f);
+    color: var(--navy-950, #051423);
+  }
+
+  /* Panel del Mapa Desplegable a la Derecha */
+  .venue-map-drawer {
+    width: 0;
+    max-width: 0;
+    opacity: 0;
+    overflow: hidden;
+    pointer-events: none;
+    transform: translateX(-15px);
+    transition: width 0.45s cubic-bezier(0.16, 1, 0.3, 1),
+                max-width 0.45s cubic-bezier(0.16, 1, 0.3, 1),
+                opacity 0.35s ease,
+                transform 0.45s cubic-bezier(0.16, 1, 0.3, 1),
+                margin-left 0.45s cubic-bezier(0.16, 1, 0.3, 1);
+    z-index: 4;
+    display: flex;
+    align-items: stretch;
+    margin-left: 0;
+  }
+
+  .venue-interactive-wrapper.is-map-open .venue-map-drawer {
+    width: 440px;
+    max-width: 440px;
+    opacity: 1;
+    pointer-events: auto;
+    transform: translateX(0);
+    margin-left: 48px;
+  }
+
+  .venue-map-drawer__inner {
+    width: 440px;
+    min-width: 440px;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+  }
+
+  .venue-map-card {
+    background: #ffffff;
+    border-radius: clamp(20px, 2.5vw, 28px);
+    border: 1px solid rgba(255, 255, 255, 0.9);
+    overflow: hidden;
+    box-shadow: 0 24px 60px rgba(0, 0, 0, 0.35);
+    display: flex;
+    flex-direction: column;
+    height: 100%;
     min-height: 380px;
   }
 
-  .venue-detail-map__header {
+  .venue-map-card__header {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    padding: 0.65rem 0.95rem;
+    padding: 0.75rem 1rem;
     background: #f1f5f9;
-    border-bottom: 1px solid var(--line);
-    font-size: 0.8rem;
+    border-bottom: 1px solid var(--line, #e2e8f0);
+    font-size: 0.78rem;
     font-weight: 600;
-  }
-
-  .venue-detail-map__title {
-    display: flex;
-    align-items: center;
-    gap: 0.4rem;
     color: var(--navy-800, #0a2540);
   }
 
-  .venue-detail-map__link {
+  .venue-map-card__title {
+    display: flex;
+    align-items: center;
+    gap: 0.35rem;
+    color: var(--navy-800, #0a2540);
+    font-weight: 650;
+  }
+
+  .venue-map-card__link {
     display: inline-flex;
     align-items: center;
-    gap: 0.3rem;
+    gap: 0.25rem;
     color: var(--teal-700);
     text-decoration: none;
-    font-size: 0.76rem;
+    font-size: 0.74rem;
     font-weight: 700;
     transition: color 0.18s ease;
   }
 
-  .venue-detail-map__link:hover {
+  .venue-map-card__link:hover {
     color: var(--gold-600);
     text-decoration: underline;
   }
 
-  .venue-detail-map__iframe {
+  .venue-map-close-btn {
+    background: transparent;
     border: 0;
-    flex-grow: 1;
-    min-height: 340px;
+    cursor: pointer;
+    color: #64748b;
+    padding: 3px;
+    border-radius: 4px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.18s ease;
+  }
+
+  .venue-map-close-btn:hover {
+    color: var(--navy-900);
+    background: #e2e8f0;
+  }
+
+  .venue-map-card__iframe {
+    border: 0;
     width: 100%;
-    height: 100%;
+    flex: 1;
+    min-height: 330px;
     display: block;
   }
 
-  @media (max-width: 860px) {
-    .venue-detail-card {
-      grid-template-columns: 1fr;
+  .venue-back-link {
+    margin-top: 2.5rem;
+  }
+
+  .venue-back-btn {
+    color: #cbd5e1;
+    font-weight: 600;
+    font-size: 0.9rem;
+    text-decoration: none;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
+    transition: transform 0.2s ease, color 0.2s ease;
+  }
+
+  .venue-back-btn:hover {
+    transform: translateX(-4px);
+    color: var(--gold-400);
+  }
+
+  /* Responsive para Tablets y Móviles */
+  @media (max-width: 990px) {
+    .venue-interactive-wrapper {
+      flex-direction: column;
+      width: 100%;
     }
-    .venue-detail-map {
-      min-height: 320px;
+
+    .venue-card {
+      max-width: 100%;
+    }
+
+    .venue-map-tag-btn {
+      position: static;
+      transform: none;
+      border-radius: 999px;
+      border: 1.5px solid rgba(255, 255, 255, 0.3);
+      padding: 0.6rem 1.4rem;
+      flex-direction: row;
       margin-top: 1rem;
+      width: 100%;
+    }
+
+    .venue-map-tag-btn:hover {
+      transform: none;
+    }
+
+    .venue-map-tag-btn__text {
+      writing-mode: horizontal-tb;
+      transform: none;
+    }
+
+    .venue-map-drawer {
+      height: 0;
+      max-height: 0;
+      width: 100% !important;
+      max-width: 100% !important;
+      margin-left: 0 !important;
+      transition: max-height 0.45s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.35s ease, margin-top 0.35s ease;
+    }
+
+    .venue-interactive-wrapper.is-map-open .venue-map-drawer {
+      height: auto;
+      max-height: 480px;
+      margin-top: 1rem;
+    }
+
+    .venue-map-drawer__inner {
+      width: 100%;
+      min-width: unset;
+    }
+
+    .venue-map-card {
+      min-height: 300px;
+    }
+
+    .venue-map-card__iframe {
+      min-height: 250px;
+    }
+  }
+
+  @media (max-width: 580px) {
+    .venue-card {
+      padding: 1.4rem;
+      border-radius: 20px;
+    }
+
+    .venue-actions {
+      flex-direction: column;
+    }
+
+    .venue-actions .btn {
+      width: 100%;
+      min-width: unset;
     }
   }
 </style>
+
+<script>
+  function setupVenueMapToggle() {
+    const wrapper = document.querySelector<HTMLElement>('[data-venue-map-wrapper]');
+    const toggleBtn = document.getElementById('venueMapToggleBtn');
+    const closeBtn = document.getElementById('venueMapCloseBtn');
+    const btnText = document.querySelector<HTMLElement>('[data-map-btn-text]');
+
+    if (!wrapper || !toggleBtn) return;
+
+    const toggleMap = () => {
+      const isOpen = wrapper.classList.toggle('is-map-open');
+      toggleBtn.setAttribute('aria-expanded', isOpen ? 'true' : 'false');
+      if (btnText) {
+        btnText.textContent = isOpen ? 'OCULTAR' : 'VER MAPA';
+      }
+    };
+
+    toggleBtn.addEventListener('click', toggleMap);
+    if (closeBtn) {
+      closeBtn.addEventListener('click', () => {
+        wrapper.classList.remove('is-map-open');
+        toggleBtn.setAttribute('aria-expanded', 'false');
+        if (btnText) btnText.textContent = 'VER MAPA';
+      });
+    }
+  }
+
+  function setupVenueBackgroundSlideshow() {
+    const slides = document.querySelectorAll<HTMLImageElement>('.venue-bg-slide');
+    if (slides.length <= 1) return;
+
+    let currentIndex = 0;
+
+    // Transición automática cada 5 segundos
+    const interval = setInterval(() => {
+      slides[currentIndex]?.classList.remove('is-active');
+      currentIndex = (currentIndex + 1) % slides.length;
+      slides[currentIndex]?.classList.add('is-active');
+    }, 5000);
+
+    // Limpieza segura en transiciones de página de Astro
+    document.addEventListener('astro:before-swap', () => {
+      clearInterval(interval);
+    }, { once: true });
+  }
+
+  function initVenuePage() {
+    setupVenueMapToggle();
+    setupVenueBackgroundSlideshow();
+  }
+
+  initVenuePage();
+  document.addEventListener('DOMContentLoaded', initVenuePage);
+  document.addEventListener('astro:page-load', initVenuePage);
+</script>
+
+
+
+
