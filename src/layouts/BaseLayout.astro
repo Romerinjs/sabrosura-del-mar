@@ -17,14 +17,30 @@ interface Props {
   jsonLd?: Record<string, any> | Array<Record<string, any>>;
 }
 
+const siteOrigin = Astro.site?.origin || 'https://lasabrosuradelmar.com';
+
 const {
   title = "La Sabrosura del Mar | Restaurante de comida de mar en Armenia, Quindío",
   description = "Auténtica comida de mar en Armenia: pescados, cazuelas, ceviches, arroces marineros, camarones y langostinos. Porciones generosas y sabor costeño. Dos sedes: Centro y Norte.",
-  ogImage = "/carta/mojarra-frita/plato-85.webp",
+  ogImage = "/assets/og-image.jpg",
   canonicalUrl = Astro.url.href,
   activePage = 'inicio',
   jsonLd,
 } = Astro.props;
+
+// Asegurar URLs absolutas completas para Open Graph (Requisito estricto de WhatsApp, Facebook y Twitter)
+const absoluteOgImage = ogImage.startsWith('http')
+  ? ogImage
+  : new URL(ogImage, siteOrigin).toString();
+
+const absoluteOgImageSquare = new URL('/assets/og-image-square.jpg', siteOrigin).toString();
+
+const absoluteCanonical = canonicalUrl.startsWith('http')
+  ? canonicalUrl
+  : new URL(canonicalUrl, siteOrigin).toString();
+
+const isPng = ogImage.toLowerCase().endsWith('.png');
+const imageMimeType = isPng ? 'image/png' : 'image/jpeg';
 ---
 
 <!DOCTYPE html>
@@ -34,18 +50,52 @@ const {
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>{title}</title>
     <meta name="description" content={description} />
+    <meta name="author" content="La Sabrosura del Mar" />
     <meta name="theme-color" content="#0a2540" />
-    <link rel="canonical" href={canonicalUrl} />
+    <meta name="format-detection" content="telephone=yes" />
+    <link rel="canonical" href={absoluteCanonical} />
 
-    <!-- Open Graph -->
+    <!-- Open Graph / Facebook / WhatsApp / Telegram -->
     <meta property="og:type" content="restaurant.restaurant" />
-    <meta property="og:locale" content="es_CO" />
     <meta property="og:site_name" content="La Sabrosura del Mar" />
+    <meta property="og:locale" content="es_CO" />
     <meta property="og:title" content={title} />
     <meta property="og:description" content={description} />
-    <meta property="og:image" content={ogImage} />
-    <meta property="og:url" content={canonicalUrl} />
+    <meta property="og:url" content={absoluteCanonical} />
+    
+    <!-- Imagen Principal de Alta Resolución (1200x630) -->
+    <meta property="og:image" content={absoluteOgImage} />
+    <meta property="og:image:secure_url" content={absoluteOgImage} />
+    <meta property="og:image:type" content={imageMimeType} />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:image:alt" content="La Sabrosura del Mar - Auténtico sabor costeño en Armenia, Quindío" />
+
+    <!-- Imagen Alternativa Cuadrada para WhatsApp y Miniaturas Móviles (800x800) -->
+    <meta property="og:image" content={absoluteOgImageSquare} />
+    <meta property="og:image:secure_url" content={absoluteOgImageSquare} />
+    <meta property="og:image:type" content="image/jpeg" />
+    <meta property="og:image:width" content="800" />
+    <meta property="og:image:height" content="800" />
+    <meta property="og:image:alt" content="La Sabrosura del Mar - Restaurante en Armenia" />
+
+    <!-- Twitter / X Cards -->
     <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content={title} />
+    <meta name="twitter:description" content={description} />
+    <meta name="twitter:image" content={absoluteOgImage} />
+    <meta name="twitter:image:alt" content="La Sabrosura del Mar - Restaurante de comida de mar en Armenia, Quindío" />
+
+    <!-- Metadatos de Negocio / Restaurante (Facebook Graph API) -->
+    <meta property="restaurant:contact_info:street_address" content="Cra. 13 #21-32" />
+    <meta property="restaurant:contact_info:locality" content="Armenia" />
+    <meta property="restaurant:contact_info:region" content="Quindío" />
+    <meta property="restaurant:contact_info:postal_code" content="630001" />
+    <meta property="restaurant:contact_info:country_name" content="Colombia" />
+    <meta property="restaurant:contact_info:phone_number" content="+573113093429" />
+    <meta property="restaurant:contact_info:website" content="https://lasabrosuradelmar.com" />
+    <meta property="place:location:latitude" content="4.5350" />
+    <meta property="place:location:longitude" content="-75.6757" />
 
     <!-- Favicons -->
     <link rel="icon" href="/favicon-32.png" sizes="32x32" />
