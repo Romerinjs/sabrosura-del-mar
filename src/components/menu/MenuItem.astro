@@ -110,21 +110,19 @@ const itemDelay = ((index % 6) * 0.05).toFixed(2);
       {descripcion && (
         <p class="menu-dish-desc">{descripcion}</p>
       )}
-
-      {notaPrecio && (
-        <span class="menu-dish-price-note">{notaPrecio}</span>
-      )}
     </div>
 
     <!-- 3. Columna fija y alineada para precio y chevron (solo si tiene fotos) -->
     <div class="menu-dish-side">
       <div class="menu-dish-price">
         {precioTexto ? (
-          <span class="price-main">{precioTexto}</span>
+          <span class="price-main price-main--quote">{precioTexto}</span>
         ) : precioAlt && precio ? (
           <div class="price-stack">
-            <span class="price-main">{money(precio)}</span>
-            <small class="price-sub">/ {money(precioAlt)}</small>
+            <span class="price-main">
+              {money(precio)} <span class="price-slash">/</span> {money(precioAlt)}
+            </span>
+            <small class="price-sub">{notaPrecio || 'Normal / Súper'}</small>
           </div>
         ) : media && precio ? (
           <div class="price-stack">
@@ -138,13 +136,13 @@ const itemDelay = ((index % 6) * 0.05).toFixed(2);
         )}
       </div>
 
-      {hasAnyPhoto && (
-        <span class="menu-dish-chevron" aria-hidden="true">
+      <span class:list={['menu-dish-chevron', { 'is-empty': !hasAnyPhoto }]} aria-hidden="true">
+        {hasAnyPhoto && (
           <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
             <polyline points="6 9 12 15 18 9"></polyline>
           </svg>
-        </span>
-      )}
+        )}
+      </span>
     </div>
   </div>
 
@@ -286,10 +284,11 @@ const itemDelay = ((index % 6) * 0.05).toFixed(2);
   }
 
   .menu-dish-title-wrap {
-    display: flex;
+    display: inline-flex;
     align-items: center;
-    gap: 0.45rem;
-    flex-wrap: wrap;
+    gap: 0.35rem;
+    flex-wrap: nowrap;
+    max-width: 100%;
   }
 
   /* Insignia de plato Favorito / Recomendado */
@@ -302,6 +301,7 @@ const itemDelay = ((index % 6) * 0.05).toFixed(2);
     cursor: pointer;
     vertical-align: middle;
     outline: none;
+    flex-shrink: 0;
     -webkit-tap-highlight-color: transparent;
   }
 
@@ -381,10 +381,11 @@ const itemDelay = ((index % 6) * 0.05).toFixed(2);
   .menu-dish-desc {
     font-family: var(--font-body, "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif);
     font-size: 0.835rem;
-    color: #4b5563;
-    line-height: 1.42;
+    color: var(--ink-soft, #475569);
+    line-height: 1.44;
     margin: 0.15rem 0 0;
     padding-right: 0.4rem;
+    letter-spacing: -0.005em;
   }
 
   /* 3. Columna derecha fija de precio y chevron */
@@ -412,10 +413,24 @@ const itemDelay = ((index % 6) * 0.05).toFixed(2);
     line-height: 1.1;
   }
 
-  .price-main--quote {
-    font-size: 0.82rem;
+  .price-slash {
+    font-size: 0.85em;
+    font-weight: 400;
     color: var(--muted, #64748b);
+    opacity: 0.65;
+    margin: 0 0.05rem;
+  }
+
+  .price-main--quote {
+    font-family: var(--font-body, "Inter", sans-serif);
+    font-size: 0.78rem;
+    color: var(--teal-700, #0e5a72);
     font-weight: 600;
+    white-space: normal;
+    text-align: right;
+    max-width: 125px;
+    line-height: 1.25;
+    display: inline-block;
   }
 
   .price-stack {
@@ -426,13 +441,14 @@ const itemDelay = ((index % 6) * 0.05).toFixed(2);
 
   .price-sub {
     display: block;
-    font-family: var(--font-body, sans-serif);
+    font-family: var(--font-body, "Inter", sans-serif);
     font-size: 0.68rem;
-    font-weight: 500;
+    font-weight: 600;
     color: var(--muted, #64748b);
+    letter-spacing: 0.02em;
     white-space: nowrap;
     line-height: 1.1;
-    margin-top: 0.15rem;
+    margin-top: 0.2rem;
   }
 
   /* Indicador chevron */
@@ -443,6 +459,12 @@ const itemDelay = ((index % 6) * 0.05).toFixed(2);
     place-items: center;
     width: 16px;
     height: 16px;
+    flex-shrink: 0;
+  }
+
+  .menu-dish-chevron.is-empty {
+    visibility: hidden;
+    pointer-events: none;
   }
 
   .menu-dish-card.is-expanded .menu-dish-chevron {
