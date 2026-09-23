@@ -25,7 +25,8 @@ const {
 // Imágenes del slider principal: espacios, equipo y platos destacados
 const heroSlides = [
   { src: "/espacios/espacios-13.webp", alt: "Instalaciones de La Sabrosura del Mar" },
-  { src: "/equipo/equipo-9.webp", alt: "Equipo de trabajo de La Sabrosura del Mar" },
+  { src: "/espacios/espacios-18.webp", alt: "Ambiente y espacios de La Sabrosura del Mar" },
+  { src: "/equipo/equipo-9.webp", alt: "Ambiente y espacios de La Sabrosura del Mar" },
   { src: "/carta/cazuela-de-mariscos/plato-90.webp", alt: "Cazuela de mariscos tradicional" },
   { src: "/espacios/espacios-10.webp", alt: "Ambiente acogedor de nuestro restaurante" },
   { src: "/carta/mojarra-frita/plato-85.webp", alt: "Pescado frito crujiente de la casa" },
@@ -86,7 +87,7 @@ const heroSlides = [
     padding-top: calc(var(--header-main-h, 74px) + 2.5rem);
     padding-bottom: clamp(3.5rem, 7vw, 6rem);
     overflow: hidden;
-    background: #051423;
+    background: #0c0d17;
     isolation: isolate;
   }
 
@@ -208,30 +209,31 @@ const heroSlides = [
     display: inline-flex;
     align-items: center;
     justify-content: center;
-    background: #ffffff;
-    color: #0a2540 !important;
+    background: #1b5d76;
+    color: #ffffff !important;
     font-family: var(--font-body, "Inter", sans-serif);
     font-size: 1rem;
     font-weight: 700;
     padding: 0.74rem 2.25rem;
     border-radius: 999px;
+    border: none;
     text-decoration: none;
-    box-shadow: 0 4px 18px rgba(0, 0, 0, 0.35);
+    box-shadow: 0 4px 18px rgba(27, 93, 118, 0.45);
     transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
   }
 
   .btn-hero-primary:hover {
     transform: translateY(-2px);
-    background: #fbfbfb;
-    box-shadow: 0 8px 24px rgba(255, 255, 255, 0.3);
+    background: #134659;
+    box-shadow: 0 8px 24px rgba(238, 152, 14, 0.4);
   }
 
   .btn-hero-secondary {
     display: inline-flex;
     align-items: center;
     justify-content: center;
-    background: rgba(118, 30, 24, 0.45);
-    border: 1.5px solid rgba(255, 255, 255, 0.75);
+    background: #ee980e;
+    border: 1.5px solid #ee980e;
     color: #ffffff !important;
     font-family: var(--font-body, "Inter", sans-serif);
     font-size: 1rem;
@@ -239,14 +241,16 @@ const heroSlides = [
     padding: 0.74rem 2.25rem;
     border-radius: 999px;
     text-decoration: none;
-    backdrop-filter: blur(8px);
+    box-shadow: 0 4px 14px rgba(238, 152, 14, 0.35);
     transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
   }
 
   .btn-hero-secondary:hover {
-    background: rgba(148, 40, 30, 0.75);
-    border-color: #ffffff;
+    background: #cb8008;
+    border-color: #cb8008;
+    color: #ffffff !important;
     transform: translateY(-2px);
+    box-shadow: 0 6px 18px rgba(203, 128, 8, 0.45);
   }
 
   @media (max-width: 600px) {

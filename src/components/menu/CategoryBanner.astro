@@ -30,7 +30,7 @@ const isLongTitle = title.length > 14;
       <polygon
         class="category-banner__bg"
         points="0,0 400,0 372,40 400,80 0,80 28,40"
-        fill="#0B6172"
+        fill="#1b5d76"
       />
 
       <!-- 2. Ribete / línea dorada interior que sigue exactamente la geometría -->
@@ -38,7 +38,7 @@ const isLongTitle = title.length > 14;
         class="category-banner__gold-line"
         points="12,7 388,7 364,40 388,73 12,73 36,40"
         fill="none"
-        stroke="#E5A900"
+        stroke="#ee980e"
         stroke-width="2.2"
         stroke-linejoin="miter"
       />
@@ -72,13 +72,13 @@ const isLongTitle = title.length > 14;
     height: clamp(54px, 8.5vw, 70px);
     padding: 0 clamp(2.6rem, 6.5vw, 4rem);
     box-sizing: border-box;
-    filter: drop-shadow(0 4px 14px rgba(10, 37, 64, 0.16));
+    filter: drop-shadow(0 4px 14px rgba(27, 93, 118, 0.25));
     transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1), filter 0.3s ease;
   }
 
   .category-banner:hover {
     transform: translateY(-2px);
-    filter: drop-shadow(0 6px 18px rgba(10, 37, 64, 0.22));
+    filter: drop-shadow(0 6px 18px rgba(27, 93, 118, 0.35));
   }
 
   .category-banner__svg {
@@ -93,12 +93,12 @@ const isLongTitle = title.length > 14;
   }
 
   .category-banner__bg {
-    fill: #0B6172;
+    fill: #1b5d76;
     transition: fill 0.3s ease;
   }
 
   .category-banner__gold-line {
-    stroke: #E5A900;
+    stroke: #ee980e;
     stroke-width: 2.2;
     vector-effect: non-scaling-stroke;
   }

@@ -11,7 +11,22 @@ const isHome = activePage === 'inicio';
   <div class="site-header__main">
     <div class="container site-header__container">
       <a class="brand" href="/" aria-label="La Sabrosura del Mar — inicio">
-        <img src="/assets/logo-sm.png" alt="La Sabrosura del Mar" width="160" height="166" />
+        <div class="brand__logo-wrapper">
+          <img
+            src="/assets/logo.png"
+            alt="La Sabrosura del Mar"
+            width="160"
+            height="166"
+            class="brand__logo brand__logo--color"
+          />
+          <img
+            src="/assets/logo-blanco.png"
+            alt="La Sabrosura del Mar"
+            width="160"
+            height="166"
+            class="brand__logo brand__logo--white"
+          />
+        </div>
         <span class="brand__text">La Sabrosura del Mar<span>Armenia, Quindío</span></span>
       </a>
 
@@ -49,56 +64,109 @@ const isHome = activePage === 'inicio';
     z-index: 100;
     display: flex;
     flex-direction: column;
-    background: rgba(7, 24, 42, 0.96);
+    background: rgba(27, 93, 118, 0.96);
     backdrop-filter: blur(16px) saturate(1.6);
     -webkit-backdrop-filter: blur(16px) saturate(1.6);
-    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
-    transition: background-color 0.4s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.4s ease, border-color 0.4s ease;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.15);
+    transition: background-color 0.8s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.8s ease, border-color 0.8s ease, color 0.8s ease;
   }
 
-  /* Estilo de tono claro semi-transparente sobre el Hero (estilo exacto a Imagen 2) */
-  .site-header--home {
-    background: rgba(168, 155, 138, 0.68);
-    backdrop-filter: blur(14px) saturate(1.3);
-    -webkit-backdrop-filter: blur(14px) saturate(1.3);
-    border-bottom: 1px solid rgba(255, 255, 255, 0.25);
-    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
+  /* Estilo inicial del header en el Hero de la Home (fondo claro de baja opacidad) */
+  .site-header--home:not(.is-scrolled) {
+    background: rgba(254, 254, 254, 0.85) !important;
+    backdrop-filter: blur(16px) saturate(1.4);
+    -webkit-backdrop-filter: blur(16px) saturate(1.4);
+    border-bottom: 1px solid rgba(12, 13, 23, 0.12);
+    box-shadow: 0 4px 20px rgba(12, 13, 23, 0.08);
   }
 
-  .site-header--home .nav a {
-    color: #ffffff;
+  .site-header--home:not(.is-scrolled) .brand__text {
+    color: #0c0d17;
+  }
+
+  .site-header--home:not(.is-scrolled) .brand__text span {
+    color: #cb8008;
+  }
+
+  .site-header--home:not(.is-scrolled) .nav a {
+    color: #0c0d17;
     font-weight: 600;
-    text-shadow: 0 1px 4px rgba(0, 0, 0, 0.35);
-  }
-
-  .site-header--home .btn-pide-ya {
-    background: #68230b;
-    box-shadow: 0 4px 14px rgba(104, 35, 11, 0.4);
-  }
-
-  .site-header--home .btn-pide-ya:hover {
-    background: #7d2c0f;
-  }
-
-  /* Al hacer scroll pasando el Hero -> Se convierte en el azul oscuro actual */
-  .site-header.is-scrolled {
-    background: rgba(7, 24, 42, 0.96) !important;
-    border-bottom-color: rgba(255, 255, 255, 0.12);
-    box-shadow: 0 4px 24px rgba(0, 0, 0, 0.32);
-  }
-
-  .site-header.is-scrolled .nav a {
-    color: rgba(255, 255, 255, 0.92);
     text-shadow: none;
   }
 
-  .site-header.is-scrolled .btn-pide-ya {
-    background: #944d1e;
-    box-shadow: 0 4px 14px rgba(148, 77, 30, 0.35);
+  .site-header--home:not(.is-scrolled) .nav a:hover,
+  .site-header--home:not(.is-scrolled) .nav a[aria-current="page"] {
+    color: #ee980e;
   }
 
-  .site-header.is-scrolled .btn-pide-ya:hover {
-    background: #aa5b25;
+  .site-header--home:not(.is-scrolled) .btn-pide-ya {
+    background: #ee980e;
+    color: #ffffff !important;
+    box-shadow: 0 4px 14px rgba(238, 152, 14, 0.35);
+  }
+
+  .site-header--home:not(.is-scrolled) .btn-pide-ya:hover {
+    background: #cb8008;
+    color: #ffffff !important;
+  }
+
+  .site-header--home:not(.is-scrolled) .nav-toggle span,
+  .site-header--home:not(.is-scrolled) .nav-toggle span::before,
+  .site-header--home:not(.is-scrolled) .nav-toggle span::after {
+    background: #0c0d17;
+  }
+
+  /* Al pasar del hero o en otras páginas -> se vuelve del color azul petróleo */
+  .site-header.is-scrolled,
+  .site-header:not(.site-header--home) {
+    background: rgba(27, 93, 118, 0.98) !important;
+    border-bottom-color: rgba(255, 255, 255, 0.2);
+    box-shadow: 0 4px 24px rgba(12, 13, 23, 0.3);
+  }
+
+  .site-header.is-scrolled .brand__text,
+  .site-header:not(.site-header--home) .brand__text {
+    color: #ffffff;
+  }
+
+  .site-header.is-scrolled .brand__text span,
+  .site-header:not(.site-header--home) .brand__text span {
+    color: var(--gold-300, #ee980e);
+  }
+
+  .site-header.is-scrolled .nav a,
+  .site-header:not(.site-header--home) .nav a {
+    color: rgba(255, 255, 255, 0.95);
+    text-shadow: none;
+  }
+
+  .site-header.is-scrolled .nav a:hover,
+  .site-header:not(.site-header--home) .nav a:hover,
+  .site-header.is-scrolled .nav a[aria-current="page"],
+  .site-header:not(.site-header--home) .nav a[aria-current="page"] {
+    color: #ffffff;
+  }
+
+  .site-header.is-scrolled .btn-pide-ya,
+  .site-header:not(.site-header--home) .btn-pide-ya {
+    background: #ee980e;
+    color: #ffffff !important;
+    box-shadow: 0 4px 14px rgba(238, 152, 14, 0.4);
+  }
+
+  .site-header.is-scrolled .btn-pide-ya:hover,
+  .site-header:not(.site-header--home) .btn-pide-ya:hover {
+    background: #cb8008;
+    color: #ffffff !important;
+  }
+
+  .site-header.is-scrolled .nav-toggle span,
+  .site-header.is-scrolled .nav-toggle span::before,
+  .site-header.is-scrolled .nav-toggle span::after,
+  .site-header:not(.site-header--home) .nav-toggle span,
+  .site-header:not(.site-header--home) .nav-toggle span::before,
+  .site-header:not(.site-header--home) .nav-toggle span::after {
+    background: #ffffff;
   }
 
   .site-header__main {
@@ -125,11 +193,44 @@ const isHome = activePage === 'inicio';
     flex-shrink: 0;
   }
 
-  .brand img {
+  /* Wrapper del Logo con transición de opacidad de 0.8 seg */
+  .brand__logo-wrapper {
+    position: relative;
     width: 44px;
     height: 44px;
+    flex-shrink: 0;
+  }
+
+  .brand__logo {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
     object-fit: contain;
     border-radius: 50%;
+    transition: opacity 0.8s ease-in-out;
+  }
+
+  /* En estado transparente claro (Hero Home no scrolleado): Logo a color activo */
+  .site-header--home:not(.is-scrolled) .brand__logo--color {
+    opacity: 1 !important;
+    visibility: visible !important;
+  }
+
+  .site-header--home:not(.is-scrolled) .brand__logo--white {
+    opacity: 0 !important;
+  }
+
+  /* En estado azul (Scrolleado en Home o páginas secundarias): Logo blanco activo */
+  .site-header.is-scrolled .brand__logo--color,
+  .site-header:not(.site-header--home) .brand__logo--color {
+    opacity: 0 !important;
+  }
+
+  .site-header.is-scrolled .brand__logo--white,
+  .site-header:not(.site-header--home) .brand__logo--white {
+    opacity: 1 !important;
+    visibility: visible !important;
   }
 
   .brand__text {
@@ -139,15 +240,15 @@ const isHome = activePage === 'inicio';
     font-size: 1.05rem;
     font-weight: 700;
     line-height: 1.15;
-    color: #ffffff;
+    transition: color 0.8s ease;
   }
 
   .brand__text span {
     font-family: var(--font-body, "Inter", sans-serif);
     font-size: 0.72rem;
     font-weight: 500;
-    color: var(--gold-300, #f2b866);
     letter-spacing: 0.04em;
+    transition: color 0.8s ease;
   }
 
   .nav {
@@ -159,19 +260,13 @@ const isHome = activePage === 'inicio';
   }
 
   .nav a {
-    color: rgba(255, 255, 255, 0.92);
     font-family: var(--font-body, "Inter", sans-serif);
     font-size: 0.95rem;
     font-weight: 500;
     text-decoration: none;
-    transition: color 0.2s ease;
+    transition: color 0.4s ease;
     position: relative;
     padding: 0.25rem 0;
-  }
-
-  .nav a:hover,
-  .nav a[aria-current="page"] {
-    color: #ffffff;
   }
 
   .nav a[aria-current="page"]::after {
@@ -192,27 +287,22 @@ const isHome = activePage === 'inicio';
     flex-shrink: 0;
   }
 
-  /* Botón Pide ya! estilo referencia */
+  /* Botón Pide ya! */
   .btn-pide-ya {
     display: inline-flex;
     align-items: center;
     justify-content: center;
-    background: #944d1e;
-    color: #ffffff !important;
     font-family: var(--font-body, "Inter", sans-serif);
     font-size: 0.92rem;
     font-weight: 700;
     padding: 0.52rem 1.45rem;
     border-radius: 999px;
     text-decoration: none;
-    box-shadow: 0 4px 14px rgba(148, 77, 30, 0.35);
     transition: all 0.25s ease;
   }
 
   .btn-pide-ya:hover {
-    background: #aa5b25;
     transform: translateY(-1px);
-    box-shadow: 0 6px 18px rgba(148, 77, 30, 0.45);
   }
 
   .nav-toggle {
@@ -229,7 +319,6 @@ const isHome = activePage === 'inicio';
     display: block;
     width: 24px;
     height: 2px;
-    background: #ffffff;
     border-radius: 2px;
     transition: all 0.25s ease;
   }

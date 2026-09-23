@@ -10,27 +10,29 @@
    ------------------------------------------------------------- */
 :root {
   /* Marca — extraídos del logo */
-  --navy-950: #051423;
-  --navy-900: #0a2540;
-  --navy-800: #123458;
-  --navy-700: #1b476f;
-  --teal-700: #0e5a72;
-  --teal-600: #14738f;
-  --teal-500: #2b90ad;
-  --teal-100: #d9edf3;
-  --gold-600: #c0862f;
-  --gold-500: #d99a3f;
-  --gold-400: #e5a952;
-  --gold-300: #eec894;
+  --navy-950: #0c0d17;
+  --navy-900: #101c2b;
+  --navy-800: #182e46;
+  --navy-700: #1f3e5c;
+  --teal-700: #134659;
+  --teal-600: #1b5d76;
+  --teal-500: #267c9d;
+  --teal-100: #e2f0f5;
+  --gold-600: #cb8008;
+  --gold-500: #ee980e;
+  --gold-400: #ee980e;
+  --gold-300: #ee980e;
 
   /* Neutros */
-  --paper: #ffffff;
-  --sand: #f8f4ed;
-  --sand-deep: #efe7da;
-  --ink: #14202c;
-  --ink-soft: #3d4c5a;
-  --muted: #6c7c8a;
-  --line: rgba(10, 37, 64, 0.12);
+  --paper: #fefefe;
+  --surface-light: #f6f8f8;
+  --sand: #fbebce;
+  --sand-deep: #f2dec0;
+  --sand-soft: #fdf6ec;
+  --ink: #0c0d17;
+  --ink-soft: #303d4a;
+  --muted: #647484;
+  --line: rgba(12, 13, 23, 0.12);
 
   /* Tipografía */
   --font-display: "Fraunces", "Georgia", "Times New Roman", serif;
@@ -197,11 +199,29 @@ ul {
 
 .section--white,
 .section--paper {
-  background-color: var(--paper, #ffffff);
+  position: relative;
+  background-color: var(--paper, #fefefe);
+  isolation: isolate;
+}
+
+.section--white::before,
+.section--paper::before {
+  content: "";
+  position: absolute;
+  inset: 0;
   background-image: url('/bgs/fondo-blanco.webp');
   background-repeat: repeat;
   background-position: center top;
   background-size: 1400px auto;
+  opacity: 0.5;
+  pointer-events: none;
+  z-index: 0;
+}
+
+.section--white > *,
+.section--paper > * {
+  position: relative;
+  z-index: 1;
 }
 
 .section--navy {
@@ -311,34 +331,39 @@ ul {
 }
 
 .btn--primary {
-  background: var(--gold-500);
-  color: var(--navy-950);
-  box-shadow: 0 6px 18px rgba(217, 154, 63, 0.35);
+  background: var(--teal-600, #1b5d76);
+  color: #ffffff;
+  border: none;
+  box-shadow: 0 6px 18px rgba(27, 93, 118, 0.35);
 }
 
 .btn--primary:hover {
-  background: var(--gold-300);
-  box-shadow: 0 10px 26px rgba(217, 154, 63, 0.45);
+  background: var(--teal-700, #134659);
+  color: #ffffff;
+  box-shadow: 0 10px 26px rgba(27, 93, 118, 0.45);
 }
 
 .btn--navy {
-  background: var(--navy-900);
+  background: var(--teal-600, #1b5d76);
   color: #fff;
 }
 
 .btn--navy:hover {
-  background: var(--navy-800);
+  background: var(--teal-700, #134659);
 }
 
 .btn--outline {
-  border-color: var(--navy-900);
-  color: var(--navy-900);
-  background: transparent;
+  border-color: var(--gold-500, #ee980e);
+  color: #ffffff !important;
+  background: var(--gold-500, #ee980e);
+  box-shadow: 0 4px 14px rgba(238, 152, 14, 0.35);
 }
 
 .btn--outline:hover {
-  background: var(--navy-900);
-  color: #fff;
+  background: var(--gold-600, #cb8008);
+  border-color: var(--gold-600, #cb8008);
+  color: #ffffff !important;
+  box-shadow: 0 6px 18px rgba(203, 128, 8, 0.45);
 }
 
 .btn--ghost-light {
@@ -1670,7 +1695,7 @@ ul {
    ============================================================= */
 .page-hero {
   position: relative;
-  background: var(--navy-950, #051423);
+  background: var(--navy-950, #0c0d17);
   color: #fff;
   padding-top: calc(var(--header-main-h, 70px) + clamp(2.2rem, 5vw, 3.8rem));
   padding-bottom: clamp(2.2rem, 5vw, 3.5rem);
@@ -1705,9 +1730,9 @@ ul {
   pointer-events: none;
   background:
     /* Fade sutil azul oscuro de abajo hacia arriba (Efecto midfade inferior) */
-    linear-gradient(to top, #051423 0%, rgba(5, 20, 35, 0.75) 22%, rgba(5, 20, 35, 0.25) 50%, transparent 75%),
+    linear-gradient(to top, #0c0d17 0%, rgba(12, 13, 23, 0.75) 22%, rgba(12, 13, 23, 0.25) 50%, transparent 75%),
     /* Sombra sutil de izquierda a derecha para contraste suave del texto */
-    linear-gradient(to right, rgba(5, 20, 35, 0.72) 0%, rgba(5, 20, 35, 0.4) 38%, transparent 75%);
+    linear-gradient(to right, rgba(12, 13, 23, 0.72) 0%, rgba(12, 13, 23, 0.4) 38%, transparent 75%);
 }
 
 .page-hero .container {
@@ -1864,7 +1889,7 @@ ul {
   background-repeat: repeat;
   background-position: center top;
   background-size: 1400px auto;
-  opacity: 0.47;
+  opacity: 0.5;
   pointer-events: none;
   z-index: 0;
 }

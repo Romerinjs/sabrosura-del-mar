@@ -40,8 +40,10 @@ const canonicalUrl = `https://lasabrosuradelmar.com/sedes/${sede.id.replace('sed
 // Dirección para mapa embebido interactivo
 const mapAddress = isNorte
   ? 'Cra. 19 #15 Norte-40, Proviteq, Armenia, Quindío'
-  : 'Cra. 13 #21-32, Centro, Armenia, Quindío';
-const mapEmbedUrl = `https://maps.google.com/maps?q=${encodeURIComponent(mapAddress)}&t=&z=16&ie=UTF8&iwloc=&output=embed`;
+  : 'Cra. 13 #21-32, Armenia, Quindío, Colombia';
+const mapEmbedUrl = isNorte
+  ? 'https://www.google.com/maps/embed?pb=!1m28!1m12!1m3!1d252.921445387395!2d-75.66493672864802!3d4.55394165064758!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!4m13!3e0!4m5!1s0x8e38f500527a79e3%3A0xd4638f6d6ffcfbac!2sLA%20SABROSURA%20DEL%20MAR%2C%20Armenia%2C%20Quind%C3%ADo!3m2!1d4.5539192!2d-75.6647172!4m5!1s0x8e38f500527a79e3%3A0xd4638f6d6ffcfbac!2sLA%20SABROSURA%20DEL%20MAR%2C%20Armenia%2C%20Quind%C3%ADo!3m2!1d4.5539192!2d-75.6647172!5e0!3m2!1ses-419!2sco!4v1790195687666!5m2!1ses-419!2sco'
+  : `https://maps.google.com/maps?q=${encodeURIComponent(mapAddress)}&t=&z=17&ie=UTF8&iwloc=&output=embed`;
 
 // Fotos del espacio exclusivamente para Sede Norte
 const norteEspacios = [
@@ -177,13 +179,13 @@ const schemaRestaurant = {
 
             <!-- Botones de Acción Directa -->
             <div class="venue-actions">
-              <a class="btn btn--navy" href={`https://wa.me/${sede.whatsapp.phone}?text=${encodeURIComponent(sede.whatsapp.mensaje)}`} target="_blank" rel="noopener" data-track-event="whatsapp_click" data-track-location={sede.id}>
+              <a class="btn btn--primary" href={`https://wa.me/${sede.whatsapp.phone}?text=${encodeURIComponent(sede.whatsapp.mensaje)}`} target="_blank" rel="noopener" data-track-event="whatsapp_click" data-track-location={sede.id}>
                 <Icon name="whatsapp" size={18} />
-                {isNorte ? 'Contactar por WhatsApp' : 'Pedir al restaurante'}
+                CONTACTAR
               </a>
               <a class="btn btn--outline" href="/carta">
                 <Icon name="book-open" size={18} />
-                Ver la carta digital
+                EXPLORAR
               </a>
             </div>
           </div>
@@ -268,7 +270,7 @@ const schemaRestaurant = {
     padding: clamp(3rem, 6vw, 5rem) 0 clamp(2.5rem, 5vw, 4rem);
     overflow: hidden;
     box-sizing: border-box;
-    background: #051423;
+    background: #0c0d17;
   }
 
   .venue-page--centro {
@@ -324,7 +326,7 @@ const schemaRestaurant = {
 
   .venue-bg-slider--centro .venue-bg-overlay--centro {
     background: radial-gradient(circle at 20% 30%, rgba(14, 116, 144, 0.25) 0%, transparent 60%),
-                linear-gradient(135deg, #0a2540 0%, #051423 100%);
+                linear-gradient(135deg, #0a2540 0%, #0c0d17 100%);
   }
 
   /* Contenedor de Contenido */
@@ -519,8 +521,8 @@ const schemaRestaurant = {
   }
 
   .venue-map-tag-btn:hover {
-    background: var(--gold-500, #d99a3f);
-    color: var(--navy-950, #051423);
+    background: var(--gold-500, #ee980e);
+    color: var(--navy-950, #0c0d17);
     border-color: var(--gold-400);
     transform: translateY(-50%) translateX(2px);
     box-shadow: 8px 16px 32px rgba(217, 154, 63, 0.35);
@@ -554,8 +556,8 @@ const schemaRestaurant = {
   }
 
   .venue-interactive-wrapper.is-map-open .venue-map-tag-btn {
-    background: var(--gold-500, #d99a3f);
-    color: var(--navy-950, #051423);
+    background: var(--gold-500, #ee980e);
+    color: var(--navy-950, #0c0d17);
   }
 
   /* Panel del Mapa Desplegable a la Derecha */
