@@ -2,6 +2,7 @@
 .astro/
 node_modules/
 dist/
+.vercel/
 .agents/
 .env
 .env.local
