@@ -19,10 +19,11 @@ const sortedSedes = [...sedes].sort((a, b) => {
 // Helper para construir la URL del mapa embebido
 function getMapEmbedUrl(sedeId: string) {
   const isNorte = sedeId.includes('norte');
-  const address = isNorte
-    ? 'Cra. 19 #15 Norte-40, Proviteq, Armenia, Quindío'
-    : 'Cra. 13 #21-32, Centro, Armenia, Quindío';
-  return `https://maps.google.com/maps?q=${encodeURIComponent(address)}&t=&z=16&ie=UTF8&iwloc=&output=embed`;
+  if (isNorte) {
+    return 'https://www.google.com/maps/embed?pb=!1m28!1m12!1m3!1d252.921445387395!2d-75.66493672864802!3d4.55394165064758!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!4m13!3e0!4m5!1s0x8e38f500527a79e3%3A0xd4638f6d6ffcfbac!2sLA%20SABROSURA%20DEL%20MAR%2C%20Armenia%2C%20Quind%C3%ADo!3m2!1d4.5539192!2d-75.6647172!4m5!1s0x8e38f500527a79e3%3A0xd4638f6d6ffcfbac!2sLA%20SABROSURA%20DEL%20MAR%2C%20Armenia%2C%20Quind%C3%ADo!3m2!1d4.5539192!2d-75.6647172!5e0!3m2!1ses-419!2sco!4v1790195687666!5m2!1ses-419!2sco';
+  }
+  const address = 'Cra. 13 #21-32, Armenia, Quindío, Colombia';
+  return `https://maps.google.com/maps?q=${encodeURIComponent(address)}&t=&z=17&ie=UTF8&iwloc=&output=embed`;
 }
 ---
 
@@ -125,7 +126,7 @@ function getMapEmbedUrl(sedeId: string) {
                   data-track-event="venues_showcase_whatsapp"
                   data-track-location={slug}
                 >
-                  {primaryBtnText}
+                  CONTACTAR
                 </a>
                 <a
                   class="venues-btn-secondary"
@@ -133,7 +134,7 @@ function getMapEmbedUrl(sedeId: string) {
                   data-track-event="venues_showcase_detail"
                   data-track-location={slug}
                 >
-                  CONOCER MÁS
+                  EXPLORAR
                 </a>
               </div>
             </div>
@@ -231,8 +232,8 @@ function getMapEmbedUrl(sedeId: string) {
     max-width: 100%;
     border-radius: clamp(24px, 3.2vw, 36px);
     overflow: hidden;
-    background: #051423;
-    box-shadow: 0 24px 60px rgba(5, 20, 35, 0.22), 0 8px 24px rgba(5, 20, 35, 0.12);
+    background: #0c0d17;
+    box-shadow: 0 24px 60px rgba(12, 13, 23, 0.22), 0 8px 24px rgba(12, 13, 23, 0.12);
     min-height: auto;
   }
 
@@ -399,8 +400,9 @@ function getMapEmbedUrl(sedeId: string) {
     justify-content: center;
     padding: 0.75rem 1.85rem;
     border-radius: 999px;
-    background: var(--gold-500, #d99a3f);
-    color: var(--navy-950, #051423);
+    background: #1b5d76;
+    border: none;
+    color: #ffffff !important;
     font-family: var(--font-body);
     font-size: 0.82rem;
     font-weight: 750;
@@ -408,16 +410,16 @@ function getMapEmbedUrl(sedeId: string) {
     text-transform: uppercase;
     text-decoration: none;
     transition: all 0.22s ease;
-    box-shadow: 0 4px 14px rgba(217, 154, 63, 0.35);
+    box-shadow: 0 4px 14px rgba(27, 93, 118, 0.4);
     white-space: nowrap;
     box-sizing: border-box;
   }
 
   .venues-btn-primary:hover {
-    background: var(--gold-400, #fbb034);
-    color: var(--navy-950, #051423);
+    background: #134659;
+    color: #ffffff !important;
     transform: translateY(-2px);
-    box-shadow: 0 8px 24px rgba(217, 154, 63, 0.5);
+    box-shadow: 0 8px 24px rgba(27, 93, 118, 0.5);
   }
 
   .venues-btn-secondary {
@@ -426,11 +428,9 @@ function getMapEmbedUrl(sedeId: string) {
     justify-content: center;
     padding: 0.75rem 1.85rem;
     border-radius: 999px;
-    background: rgba(30, 41, 59, 0.55);
-    backdrop-filter: blur(8px);
-    -webkit-backdrop-filter: blur(8px);
-    border: 1.5px solid rgba(255, 255, 255, 0.32);
-    color: #ffffff;
+    background: #ee980e;
+    border: 1.5px solid #ee980e;
+    color: #ffffff !important;
     font-family: var(--font-body);
     font-size: 0.82rem;
     font-weight: 700;
@@ -440,12 +440,15 @@ function getMapEmbedUrl(sedeId: string) {
     transition: all 0.22s ease;
     white-space: nowrap;
     box-sizing: border-box;
+    box-shadow: 0 4px 14px rgba(238, 152, 14, 0.35);
   }
 
   .venues-btn-secondary:hover {
-    background: rgba(255, 255, 255, 0.2);
-    border-color: #ffffff;
+    background: #cb8008;
+    border-color: #cb8008;
+    color: #ffffff !important;
     transform: translateY(-2px);
+    box-shadow: 0 6px 18px rgba(203, 128, 8, 0.45);
   }
 
   /* Columna Derecha (Tarjeta Flotante de Mapa) */

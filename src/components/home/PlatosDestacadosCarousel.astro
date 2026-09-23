@@ -132,11 +132,30 @@ const formatMoney = (n: number) => '$' + n.toLocaleString('es-CO');
 
 <style>
   .section--destacados {
-    background: #ffffff;
+    background: var(--paper, #fefefe);
     padding-top: clamp(3.5rem, 6vw, 5.5rem);
     padding-bottom: clamp(3.5rem, 6vw, 5rem);
     position: relative;
     overflow: hidden;
+    isolation: isolate;
+  }
+
+  .section--destacados::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background-image: url('/bgs/fondo-blanco.webp');
+    background-repeat: repeat;
+    background-position: center top;
+    background-size: 1400px auto;
+    opacity: 0.5;
+    pointer-events: none;
+    z-index: 0;
+  }
+
+  .section--destacados > * {
+    position: relative;
+    z-index: 1;
   }
 
   .destacados-header {
