@@ -45,10 +45,6 @@ const STRICT_DISH_MAP: Record<string, string> = {
   // 4. Pasta a la Marinera (Fotos 15 a 20) - ÚNICAMENTE Pasta a la Marinera
   'pasta a la marinera': 'pasta-a-la-marinera',
 
-  // 5. Arroz de Camarón con Ostras (Fotos 21 a 25)
-  'arroz de camaron con ostras': 'arroz-de-camaron-con-ostras',
-  'arroz con camarones y ostras': 'arroz-de-camaron-con-ostras',
-
   // 6. Arroz de Camarón (Fotos 26 a 30)
   'arroz de camaron': 'arroz-de-camaron',
   'arroz con camarones': 'arroz-de-camaron',
@@ -109,8 +105,7 @@ const STRICT_DISH_MAP: Record<string, string> = {
   // 23. Langosta Rellena (Fotos 113 a 118)
   'langosta rellena': 'langosta-rellena',
 
-  // 24. Entrada de Camarones al Ajillo (Fotos 119 a 122)
-  'entrada de camarones al ajillo': 'entrada-de-camarones-al-ajillo',
+  // 24. Camarones al Ajillo (Fotos 119 a 122)
   'camarones al ajillo': 'entrada-de-camarones-al-ajillo',
 
   // 25. Sierra a la Carta (Fotos 123 a 129)
