@@ -41,11 +41,6 @@
           "nombre": "Arroz con Langostinos",
           "descripcion": "Contiene 8 langostinos. Acompañado con caldo, patacón y ensalada.",
           "precio": 58000
-        },
-        {
-          "nombre": "Arroz de camarón con ostras",
-          "descripcion": "Exquisita combinación de arroz marinero con camarones jugosos y selectas ostras que concentran todo el sabor profundo del mar.",
-          "precio": 46000
         }
       ]
     },
@@ -324,11 +319,6 @@
           "nombre": "Cóctel de Langostinos",
           "descripcion": "Contiene 8 langostinos.",
           "precio": 55000
-        },
-        {
-          "nombre": "Entrada de camarones al ajillo",
-          "descripcion": "Camarones salteados al fuego en mantequilla clarificada, ajo aromatizado y vino blanco con perejil fresco. Ideal para empezar.",
-          "precio": 32000
         }
       ]
     },
