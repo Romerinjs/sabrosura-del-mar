@@ -108,8 +108,9 @@ const STRICT_DISH_MAP: Record<string, string> = {
   // 24. Camarones al Ajillo (Fotos 119 a 122)
   'camarones al ajillo': 'entrada-de-camarones-al-ajillo',
 
-  // 25. Sierra a la Carta (Fotos 123 a 129)
+  // 25. Sierra a la Carta / Sierra Frita (Fotos 123 a 129)
   'sierra a la carta': 'sierra-a-la-carta',
+  'sierra frita': 'sierra-a-la-carta',
 
   // 26. Langostinos en Salsa Marinera (Fotos 130 a 134)
   'langostinos en salsa marinera': 'langostinos-en-salsa-marinera',

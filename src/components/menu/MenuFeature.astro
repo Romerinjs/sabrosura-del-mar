@@ -7,6 +7,8 @@ interface Props {
     nombre: string;
     descripcion: string;
     precio: number;
+    precioAlt?: number;
+    notaPrecio?: string;
     precioNota?: string;
     imagen?: string | null;
     alt?: string;
@@ -72,11 +74,24 @@ const money = (n: number) => '$' + n.toLocaleString('es-CO');
 
     <div class="menu-feature__bottom-row">
       <div class="menu-feature__price">
-        <span class="menu-feature__price-amount">{money(f.precio)}</span>
-        {f.precioNota && (
-          <span class="menu-feature__price-note">
-            · {f.precioNota}
-          </span>
+        {f.precioAlt ? (
+          <div class="menu-feature__price-stack">
+            <span class="menu-feature__price-amount">
+              {money(f.precio)} <span class="price-slash">/</span> {money(f.precioAlt)}
+            </span>
+            <span class="menu-feature__price-note">
+              {f.notaPrecio || f.precioNota || 'Normal / Súper'}
+            </span>
+          </div>
+        ) : (
+          <>
+            <span class="menu-feature__price-amount">{money(f.precio)}</span>
+            {f.precioNota && (
+              <span class="menu-feature__price-note">
+                · {f.precioNota}
+              </span>
+            )}
+          </>
         )}
       </div>
     </div>
@@ -107,8 +122,8 @@ const money = (n: number) => '$' + n.toLocaleString('es-CO');
   @media (min-width: 640px) {
     .menu-feature {
       grid-template-columns: 240px 1fr;
-      height: 180px;
-      max-height: 180px;
+      min-height: 205px;
+      height: auto;
       align-items: stretch;
     }
   }
@@ -128,8 +143,8 @@ const money = (n: number) => '$' + n.toLocaleString('es-CO');
       aspect-ratio: auto;
       width: 240px;
       height: 100%;
-      min-height: 180px;
-      max-height: 180px;
+      min-height: 205px;
+      max-height: none;
     }
   }
 
@@ -185,19 +200,19 @@ const money = (n: number) => '$' + n.toLocaleString('es-CO');
   }
 
   .menu-feature__body {
-    padding: 1.1rem 1.25rem 1.2rem;
+    padding: 1.15rem 1.35rem 1.15rem;
     display: flex;
     flex-direction: column;
-    justify-content: center;
+    justify-content: space-between;
     background: #ffffff;
+    gap: 0.45rem;
   }
 
   @media (min-width: 640px) {
     .menu-feature__body {
-      padding: 1.15rem 1.4rem;
+      padding: 1.2rem 1.45rem;
       height: 100%;
-      justify-content: space-between;
-      overflow: hidden;
+      box-sizing: border-box;
     }
 
     .menu-feature__body p {
@@ -210,7 +225,7 @@ const money = (n: number) => '$' + n.toLocaleString('es-CO');
   }
 
   .menu-feature__tag-wrap {
-    margin-bottom: 0.35rem;
+    margin-bottom: 0.15rem;
   }
 
   .menu-feature__chef-tag {
@@ -225,10 +240,10 @@ const money = (n: number) => '$' + n.toLocaleString('es-CO');
 
   .menu-feature__body h3 {
     font-family: var(--font-display, serif);
-    font-size: 1.22rem;
+    font-size: 1.25rem;
     font-weight: 700;
     color: var(--navy-900, #071f38);
-    margin: 0 0 0.35rem;
+    margin: 0 0 0.25rem;
     line-height: 1.25;
   }
 
@@ -237,7 +252,7 @@ const money = (n: number) => '$' + n.toLocaleString('es-CO');
     font-size: 0.88rem;
     color: var(--muted, #64748b);
     line-height: 1.45;
-    margin: 0 0 0.85rem;
+    margin: 0 0 0.5rem;
   }
 
   .menu-feature__bottom-row {
@@ -264,11 +279,27 @@ const money = (n: number) => '$' + n.toLocaleString('es-CO');
     letter-spacing: -0.01em;
   }
 
+  .price-slash {
+    font-size: 0.85em;
+    font-weight: 400;
+    color: var(--muted, #64748b);
+    opacity: 0.65;
+    margin: 0 0.15rem;
+  }
+
+  .menu-feature__price-stack {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0.15rem;
+  }
+
   .menu-feature__price-note {
     font-family: var(--font-body, sans-serif);
     font-size: 0.78rem;
-    font-weight: 500;
+    font-weight: 600;
     color: var(--muted, #64748b);
+    letter-spacing: 0.02em;
   }
 
   .menu-feature__placeholder {
