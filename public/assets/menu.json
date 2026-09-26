@@ -4,29 +4,251 @@
   "nota": "Los productos y precios pueden variar según disponibilidad o temporada.",
   "categorias": [
     {
-      "id": "entradas",
-      "nombre": "Entradas y ceviches",
-      "resumen": "Para empezar: ceviches frescos, cremas y patacón marinero.",
+      "id": "arroces",
+      "nombre": "Arroces",
+      "resumen": "Preparados al momento y acompañados con caldo, patacón y ensalada.",
       "items": [
-        { "nombre": "Ceviche de camarón", "precio": 30000, "precioAlt": 35000, "notaPrecio": "porción / especial" },
-        { "nombre": "Ceviche de camarón con langostino", "precio": 44000 },
-        { "nombre": "Ceviche bomba", "precio": 30000, "precioAlt": 35000, "notaPrecio": "porción / especial" },
-        { "nombre": "Ceviche bomba especial con langostino", "precio": 44000 },
-        { "nombre": "Cóctel de langostinos", "precio": 55000 },
-        { "nombre": "Crema de pescado", "precio": 31000 },
-        { "nombre": "Patacón a la marinera", "precio": 35000 }
+        {
+          "nombre": "Arroz a la Marinera",
+          "descripcion": "Contiene camarón, calamar, pulpo y caracol. Acompañado con caldo, patacón y ensalada.",
+          "precio": 41000,
+          "media": 29000,
+          "destacado": true
+        },
+        {
+          "nombre": "Arroz a la Marinera con Langostinos",
+          "descripcion": "Contiene camarón, calamar, pulpo, caracol y 2 langostinos. Acompañado con caldo, patacón y ensalada.",
+          "precio": 50000
+        },
+        {
+          "nombre": "Arroz a la Marinera con Coco",
+          "descripcion": "Contiene camarón, calamar, pulpo y caracol.",
+          "precio": 44000,
+          "media": 32000
+        },
+        {
+          "nombre": "Camarón con Coco",
+          "descripcion": "Contiene arroz con coco, camarón, pulpo y caracol. Acompañado con caldo, patacón y ensalada.",
+          "precio": 32000
+        },
+        {
+          "nombre": "Arroz con Camarones",
+          "descripcion": "Contiene camarón. Acompañado con caldo, patacón y ensalada.",
+          "precio": 41000,
+          "media": 29000
+        },
+        {
+          "nombre": "Arroz con Langostinos",
+          "descripcion": "Contiene 8 langostinos. Acompañado con caldo, patacón y ensalada.",
+          "precio": 58000
+        }
       ]
     },
     {
-      "id": "arroces",
-      "nombre": "Arroces marineros",
-      "resumen": "Nuestros arroces se preparan al momento. Disponibles en porción completa y media porción.",
+      "id": "pastas",
+      "nombre": "Pastas",
+      "resumen": "Preparaciones con la salsa especial de la casa.",
       "items": [
-        { "nombre": "Arroz a la marinera", "precio": 41000, "media": 29000 },
-        { "nombre": "Arroz a la marinera con langostinos", "precio": 50000 },
-        { "nombre": "Arroz a la marinera con coco", "precio": 44000, "media": 32000 },
-        { "nombre": "Arroz con camarones", "precio": 41000, "media": 29000 },
-        { "nombre": "Arroz con langostinos", "precio": 58000 }
+        {
+          "nombre": "Pasta a la Marinera",
+          "descripcion": "Todos los mariscos en salsa de la casa. Acompañado con patacón.",
+          "precio": 41000,
+          "media": 29000,
+          "destacado": true
+        },
+        {
+          "nombre": "Pasta con Camarones",
+          "descripcion": "Camarones en salsa de la casa. Acompañado con patacón.",
+          "precio": 41000,
+          "media": 29000
+        },
+        {
+          "nombre": "Patacón a la Marinera",
+          "descripcion": "Patacón con salsa de mariscos y caldo.",
+          "precio": 35000
+        },
+        {
+          "nombre": "Crema de Pescado",
+          "descripcion": "Sierra desmenuzada. Acompañada con arroz y patacón.",
+          "precio": 31000
+        }
+      ]
+    },
+    {
+      "id": "pescados",
+      "nombre": "Pescados",
+      "resumen": "Servidos con caldo, arroz, patacón y ensalada, salvo indicación contraria.",
+      "destacado": {
+        "nombre": "Pescado Frito",
+        "descripcion": "Acompañado con caldo, arroz, patacón y ensalada.",
+        "precio": 37000,
+        "precioAlt": 42000,
+        "notaPrecio": "Normal / Súper",
+        "imagen": "/carta/mojarra-frita/plato-85.webp",
+        "alt": "Pescado frito entero acompañado de patacones y limón"
+      },
+      "items": [
+        {
+          "nombre": "Filete Tilapia Apanado",
+          "precio": 43000
+        },
+        {
+          "nombre": "Pescado Frito",
+          "descripcion": "Acompañado con caldo, arroz, patacón y ensalada.",
+          "precio": 37000,
+          "precioAlt": 42000,
+          "notaPrecio": "Normal / Súper",
+          "destacado": true
+        },
+        {
+          "nombre": "Sancocho de Pescado",
+          "descripcion": "Acompañado con patacón y ensalada.",
+          "precio": 40000,
+          "precioAlt": 45000,
+          "notaPrecio": "Normal / Súper"
+        },
+        {
+          "nombre": "Viudo de Pescado",
+          "descripcion": "Pescado en salsa con plátano, yuca y papa. Acompañado con caldo, arroz, patacón y ensalada.",
+          "precio": 40000,
+          "precioAlt": 45000,
+          "notaPrecio": "Normal / Súper"
+        },
+        {
+          "nombre": "Chuleta de Pescado",
+          "descripcion": "Acompañado con caldo, arroz, patacón y ensalada.",
+          "precio": 40000
+        },
+        {
+          "nombre": "Pescado a la Sabrosura del Mar",
+          "descripcion": "Pescado frito y en salsa. Acompañado con arroz, patacón y ensalada.",
+          "precio": 43000,
+          "destacado": true
+        },
+        {
+          "nombre": "Trucha a la Plancha",
+          "descripcion": "Acompañado con arroz, patacón y ensalada.",
+          "precio": 40000
+        },
+        {
+          "nombre": "Pescado al Ajillo",
+          "descripcion": "Pescado en salsa de mariscos. Acompañado con arroz, patacón y ensalada.",
+          "precio": 43000
+        },
+        {
+          "nombre": "Pescado en Salsa Marinera",
+          "descripcion": "Pescado en salsa de mariscos. Acompañado con arroz, patacón y ensalada.",
+          "precio": 70000
+        },
+        {
+          "nombre": "Salmón Gratinado",
+          "precio": 53000
+        },
+        {
+          "nombre": "Salmón al Ajillo",
+          "precio": 53000
+        },
+        {
+          "nombre": "Salmón en Salsa Marinera",
+          "precio": 70000
+        },
+        {
+          "nombre": "Salmón a la Plancha",
+          "descripcion": "Pescado frito y en salsa. Acompañado con arroz, patacón y ensalada.",
+          "precio": 50000
+        },
+        {
+          "nombre": "Chuleta en Salsa Marinera",
+          "descripcion": "Chuleta en salsa de mariscos. Acompañada con caldo, arroz, patacón y ensalada.",
+          "precio": 65000
+        },
+        {
+          "nombre": "Pescado Gratinado",
+          "descripcion": "Trucha gratinada en queso. Acompañado con caldo, arroz, patacón y ensalada.",
+          "precio": 50000
+        },
+        {
+          "nombre": "Bocachico Sudado",
+          "descripcion": "Bocachico fresco preparado al vapor en hogao de tomates maduros, cebolla y especias locales. Servido con caldo y acompañamientos.",
+          "precio": 40000,
+          "precioAlt": 45000,
+          "notaPrecio": "Normal / Súper"
+        },
+        {
+          "nombre": "Sierra Frita",
+          "descripcion": "Posta de sierra frita dorada al punto con la sazón de la casa. Acompañada con arroz fresco, patacón y ensalada.",
+          "precio": 40000,
+          "precioAlt": 45000,
+          "notaPrecio": "Normal / Súper"
+        }
+      ],
+      "notaFinal": "Pargo: frito, en viudo, en sancocho o en salsa marinera. El precio depende de la temporada y tamaño."
+    },
+    {
+      "id": "especialidades",
+      "nombre": "Especialidades",
+      "resumen": "Nuestros platos más selectos de langosta, camarones y langostinos.",
+      "destacado": {
+        "nombre": "Camarones Apanados",
+        "descripcion": "Camarones crocantes por fuera y jugosos por dentro, acompañados con patacón, arroz y ensalada de la casa.",
+        "precio": 42000,
+        "imagen": "/carta/camarones-apanados/plato-64.webp",
+        "alt": "Camarones apanados con patacón, arroz de coco y ensalada"
+      },
+      "items": [
+        {
+          "nombre": "Langosta Rellena",
+          "descripcion": "Langosta en salsa de mariscos. Acompañada con caldo, patacón y ensalada.",
+          "precioTexto": "Según temporada y peso",
+          "destacado": true
+        },
+        {
+          "nombre": "Bandeja Caribeña",
+          "descripcion": "Mariscos en salsa, acompañados con arroz, caldo, patacón y ensalada y una porción de pescado.",
+          "precio": 60000,
+          "destacado": true
+        },
+        {
+          "nombre": "Bandeja Viña del Mar",
+          "descripcion": "Media langosta en salsa de mariscos. Acompañado con arroz, caldo, patacón y ensalada.",
+          "precio": 65000
+        },
+        {
+          "nombre": "Camarones al Ajillo",
+          "descripcion": "Camarones en ajo. Acompañados con arroz, caldo, patacón y ensalada.",
+          "precio": 42000
+        },
+        {
+          "nombre": "Camarones Apanados",
+          "descripcion": "Camarones apanados. Acompañados con arroz, caldo, patacón y ensalada.",
+          "precio": 42000,
+          "destacado": true
+        },
+        {
+          "nombre": "Camarones Calientes",
+          "descripcion": "Camarones en salsa especial de la casa. Acompañados con arroz, caldo, patacón y ensalada.",
+          "precio": 44000
+        },
+        {
+          "nombre": "Camarones en Leche de Coco",
+          "descripcion": "Camarones apanados en salsa de leche de coco. Acompañados con arroz, caldo, patacón y ensalada.",
+          "precio": 44000
+        },
+        {
+          "nombre": "Langostinos Apanados",
+          "descripcion": "8 langostinos. Acompañados con arroz, caldo, patacón y ensalada.",
+          "precio": 60000
+        },
+        {
+          "nombre": "Langostinos en Salsa Marinera",
+          "descripcion": "4 langostinos en salsa marinera. Acompañados con arroz, caldo, patacón y ensalada.",
+          "precio": 63000
+        },
+        {
+          "nombre": "Langostinos en Leche de Coco",
+          "descripcion": "8 langostinos apanados en salsa de leche de coco. Acompañados con arroz, caldo, patacón y ensalada.",
+          "precio": 60000
+        }
       ]
     },
     {
@@ -37,138 +259,255 @@
         "nombre": "Cazuela de mariscos",
         "descripcion": "Una preparación cremosa y abundante con una deliciosa combinación de mariscos. Acompañada con arroz y patacón.",
         "precio": 46000,
-        "imagen": null,
-        "pendienteFoto": true
+        "imagen": "/carta/cazuela-de-mariscos/plato-90.webp",
+        "alt": "Cazuela de mariscos cremosa con mariscos frescos de la casa"
       },
       "items": [
-        { "nombre": "Cazuela de camarones", "precio": 46000, "media": 32000 },
-        { "nombre": "Cazuela de mariscos", "precio": 46000, "media": 32000, "destacado": true },
-        { "nombre": "Cazuela de langostinos", "precio": 55000 },
-        { "nombre": "Cazuela de bagre", "precio": 38000 }
+        {
+          "nombre": "Cazuela de Camarones",
+          "descripcion": "Contiene camarones. Acompañada con arroz y patacón.",
+          "precio": 46000,
+          "media": 32000
+        },
+        {
+          "nombre": "Cazuela de Mariscos",
+          "descripcion": "Contiene mariscos. Acompañada con arroz y patacón.",
+          "precio": 46000,
+          "media": 32000,
+          "destacado": true
+        },
+        {
+          "nombre": "Cazuela de Langostinos",
+          "descripcion": "Contiene 7 langostinos.",
+          "precio": 55000
+        },
+        {
+          "nombre": "Cazuela de Bagre",
+          "descripcion": "Contiene trozos de bagre. Acompañado con arroz y patacón.",
+          "precio": 38000
+        }
       ]
     },
     {
-      "id": "pescados",
-      "nombre": "Pescados",
-      "resumen": "Servidos con caldo, arroz, patacón y ensalada, salvo indicación contraria.",
+      "id": "ceviches",
+      "nombre": "Ceviches",
+      "resumen": "Preparados frescos con limón, cebolla morada y salsa especial.",
+      "items": [
+        {
+          "nombre": "Ceviche de Camarón",
+          "descripcion": "Contiene sólo camarón.",
+          "precio": 30000,
+          "precioAlt": 35000,
+          "notaPrecio": "Porción / Especial",
+          "destacado": true
+        },
+        {
+          "nombre": "Ceviche de Camarón con Langostino",
+          "descripcion": "Contiene camarón y 2 langostinos.",
+          "precio": 50000
+        },
+        {
+          "nombre": "Ceviche Bomba",
+          "descripcion": "Contiene sólo camarón, calamar, pulpo y caracol.",
+          "precio": 30000,
+          "precioAlt": 35000,
+          "notaPrecio": "Porción / Especial"
+        },
+        {
+          "nombre": "Ceviche Bomba Especial con Langostino",
+          "descripcion": "Contiene camarón, calamar, pulpo, caracol y 2 langostinos.",
+          "precio": 44000
+        },
+        {
+          "nombre": "Cóctel de Langostinos",
+          "descripcion": "Contiene 8 langostinos.",
+          "precio": 55000
+        }
+      ]
+    },
+    {
+      "id": "ejecutivos",
+      "nombre": "Almuerzos ejecutivos",
+      "resumen": "Opciones diarias completas y frescas con el mejor sabor marinero. Incluyen caldo, arroz, patacón y ensalada.",
       "destacado": {
-        "nombre": "Pescado frito (mojarra)",
-        "descripcion": "Pescado fresco, frito hasta alcanzar el punto perfecto. Acompañado con caldo, arroz, patacón y ensalada.",
-        "precio": 37000,
-        "precioNota": "normal · súper $42.000",
-        "imagen": "assets/mojarra-frita-sm.jpg",
-        "alt": "Mojarra frita entera acompañada de patacones y limón"
+        "nombre": "Ejecutivo Mojarra",
+        "descripcion": "Almuerzo del día con mojarra fresca dorada al punto, acompañado con caldo de pescado, arroz, patacón y ensalada.",
+        "precio": 22000,
+        "imagen": "/carta/ejecutivo-mojarra/plato-58.webp",
+        "alt": "Almuerzo ejecutivo con mojarra, arroz, patacón y caldo"
       },
       "items": [
-        { "nombre": "Pescado frito", "precio": 37000, "precioAlt": 42000, "notaPrecio": "normal / súper", "destacado": true },
-        { "nombre": "Chuleta de pescado", "precio": 40000 },
-        { "nombre": "Filete de tilapia apanado", "precio": 43000 },
-        { "nombre": "Trucha a la plancha", "precio": 40000 },
-        { "nombre": "Viudo de pescado", "precio": 40000, "precioAlt": 45000, "notaPrecio": "normal / súper" },
-        { "nombre": "Sancocho de pescado", "precio": 40000, "precioAlt": 45000, "notaPrecio": "normal / súper" },
-        { "nombre": "Pescado a La Sabrosura del Mar", "precio": 43000, "destacado": true },
-        { "nombre": "Pescado al ajillo", "precio": 43000 },
-        { "nombre": "Pescado gratinado", "precio": 50000 },
-        { "nombre": "Pescado en salsa marinera", "precio": 70000 }
+        {
+          "nombre": "Ejecutivo Mojarra",
+          "precio": 22000,
+          "destacado": true,
+          "descripcion": "Almuerzo del día con mojarra frita fresca, acompañado de caldo de pescado, arroz, patacón y ensalada recién hecha."
+        },
+        {
+          "nombre": "Ejecutivo de Mojarra Sudada",
+          "precio": 28000,
+          "descripcion": "Mojarra fresca sudada en delicioso guiso criollo, servida con caldo de pescado, arroz, patacón y ensalada."
+        },
+        {
+          "nombre": "Ejecutivo de Bocachico Sudado",
+          "precio": 28000,
+          "descripcion": "Bocachico preparado al vapor en hogao criollo tradicional, servido con caldo de pescado, arroz, patacón y ensalada."
+        },
+        {
+          "nombre": "Ejecutivo de Bocachico Frito",
+          "precio": 28000,
+          "descripcion": "Bocachico fresco frito al punto crocante tradicional, servido con caldo de pescado, arroz, patacón y ensalada."
+        },
+        {
+          "nombre": "Ejecutivo de Sierra Frita",
+          "precio": 28000,
+          "descripcion": "Posta de sierra frita y dorada con la sazón de la casa, acompañada con caldo de pescado, arroz, patacón y ensalada."
+        },
+        {
+          "nombre": "Ejecutivo de Sierra Sudada",
+          "precio": 23000,
+          "descripcion": "Posta de sierra sudada en guiso criollo casero, acompañada de su caldo reconfortante, arroz, patacón y ensalada del día."
+        },
+        {
+          "nombre": "Ejecutivo de Trucha Frita",
+          "precio": 24000,
+          "descripcion": "Trucha fresca frita al punto crocante en opción ejecutiva, servida con caldo de pescado, arroz, patacón y ensalada."
+        },
+        {
+          "nombre": "Ejecutivo de Trucha Sudada",
+          "precio": 28000,
+          "descripcion": "Trucha fresca en guiso casero con hierbas y especias criollas, servida con caldo, arroz, patacón y ensalada."
+        },
+        {
+          "nombre": "Ejecutivo de Basa Frita",
+          "precio": 22000,
+          "descripcion": "Filete de basa fresco frito al momento, acompañado con caldo de pescado, arroz blanco, patacón y ensalada fresca."
+        },
+        {
+          "nombre": "Ejecutivo de Basa Sudada",
+          "precio": 26000,
+          "descripcion": "Filete de basa sudado en suave salsa criolla jugosa, servido con caldo, arroz, patacón y ensalada."
+        },
+        {
+          "nombre": "Ejecutivo de Filete de Basa Apanado",
+          "precio": 22000,
+          "descripcion": "Filete de basa empanizado y dorado, crujiente por fuera y tierno por dentro, servido con caldo, arroz, patacón y ensalada."
+        },
+        {
+          "nombre": "Ejecutivo de Filete de Tilapia Apanado",
+          "precio": 28000,
+          "descripcion": "Filete de tilapia apanado y crujiente, acompañado con caldo de pescado, arroz, patacón y ensalada."
+        }
       ],
-      "notaFinal": "El precio del pargo frito, en viudo, en sancocho o en salsa marinera depende de la temporada."
-    },
-    {
-      "id": "salmon",
-      "nombre": "Salmón",
-      "resumen": "Nuestra línea premium de salmón, en cuatro preparaciones.",
-      "items": [
-        { "nombre": "Salmón a la plancha", "precio": 50000 },
-        { "nombre": "Salmón gratinado", "precio": 53000 },
-        { "nombre": "Salmón al ajillo", "precio": 53000 },
-        { "nombre": "Salmón en salsa marinera", "precio": 70000 }
-      ]
-    },
-    {
-      "id": "camarones",
-      "nombre": "Camarones y langostinos",
-      "resumen": "Apanados, al ajillo, calientes o en leche de coco.",
-      "destacado": {
-        "nombre": "Camarones apanados",
-        "descripcion": "Camarones crocantes por fuera y jugosos por dentro, acompañados con patacón, arroz y ensalada de la casa.",
-        "precio": 42000,
-        "imagen": "assets/camarones-apanados-sm.jpg",
-        "alt": "Camarones apanados con patacón, arroz de coco y ensalada"
-      },
-      "items": [
-        { "nombre": "Camarones al ajillo", "precio": 42000 },
-        { "nombre": "Camarones apanados", "precio": 42000, "destacado": true },
-        { "nombre": "Camarones calientes", "precio": 44000 },
-        { "nombre": "Camarones en leche de coco", "precio": 44000 },
-        { "nombre": "Langostinos apanados", "precio": 60000 },
-        { "nombre": "Langostinos en salsa marinera", "precio": 63000 },
-        { "nombre": "Langostinos en leche de coco", "precio": 60000 }
-      ]
-    },
-    {
-      "id": "pastas",
-      "nombre": "Pastas",
-      "resumen": "Con la salsa especial de la casa y acompañadas con patacón.",
-      "items": [
-        { "nombre": "Pasta a la marinera", "precio": 41000, "media": 29000 },
-        { "nombre": "Pasta con camarones", "precio": 41000, "media": 29000 }
-      ]
-    },
-    {
-      "id": "especialidades",
-      "nombre": "Especialidades de la casa",
-      "resumen": "Nuestros platos más completos, ideales para compartir o para una ocasión especial.",
-      "items": [
-        { "nombre": "Langosta rellena", "precioTexto": "Según temporada y peso", "destacado": true },
-        { "nombre": "Bandeja Viña del Mar", "precio": 65000, "descripcion": "Bandeja para compartir con nuestra selección de mariscos." },
-        { "nombre": "Bandeja caribeña", "precio": 60000, "descripcion": "Mariscos en salsa acompañados con arroz, caldo, patacón, ensalada y una porción de pescado.", "destacado": true },
-        { "nombre": "Chuleta en salsa marinera", "precio": 65000 }
-      ]
+      "notaFinal": "Con arroz coco $2,000 adicional."
     },
     {
       "id": "adicionales",
       "nombre": "Adicionales",
-      "resumen": "Para completar tu plato.",
+      "resumen": "Fritos o en salsa, acompañado de 3 patacones",
       "items": [
-        { "nombre": "Porción de pescado", "precio": 17000 },
-        { "nombre": "Caldo peligroso", "precio": 14000 },
-        { "nombre": "Porción de arroz con coco", "precio": 5000 },
-        { "nombre": "Porción de arroz", "precio": 4000 },
-        { "nombre": "Porción de patacón", "precio": 4000 }
+        {
+          "nombre": "Porción de Arroz",
+          "precio": 4000
+        },
+        {
+          "nombre": "Porción de Arroz con Coco",
+          "precio": 5000
+        },
+        {
+          "nombre": "Porción de Patacón",
+          "precio": 4000
+        },
+        {
+          "nombre": "Caldo Peligroso",
+          "precio": 14000
+        },
+        {
+          "nombre": "Porción de Pescado",
+          "precio": 17000,
+          "descripcion": "Fritos o en salsa, acompañado de 3 patacones."
+        }
       ]
     },
     {
       "id": "bebidas",
       "nombre": "Bebidas",
-      "resumen": "Limonadas de la casa, sodas, gaseosas y cervezas.",
+      "resumen": "Limonadas de la casa, sodas, refrescos y cervezas nacionales e importadas.",
       "subgrupos": [
         {
           "nombre": "Limonadas y sodas",
           "items": [
-            { "nombre": "Limonada de coco", "precio": 12000, "destacado": true },
-            { "nombre": "Limonada de cereza", "precio": 12000 },
-            { "nombre": "Limonada de sandía, corozo o mango biche", "precio": 10000 },
-            { "nombre": "Limonada natural", "precio": 8000 },
-            { "nombre": "Soda italiana", "precio": 13000 }
+            {
+              "nombre": "Limonada de Coco",
+              "precio": 12000,
+              "destacado": true
+            },
+            {
+              "nombre": "Limonada Cereza",
+              "precio": 12000
+            },
+            {
+              "nombre": "Limonada Sandía",
+              "precio": 8000
+            },
+            {
+              "nombre": "Limonada Corozo",
+              "precio": 8000
+            },
+            {
+              "nombre": "Limonada Mango Biche",
+              "precio": 10000
+            },
+            {
+              "nombre": "Limonada Natural",
+              "precio": 8000
+            },
+            {
+              "nombre": "Soda Italiana",
+              "precio": 13000
+            }
           ]
         },
         {
           "nombre": "Gaseosas y agua",
           "items": [
-            { "nombre": "Gaseosa 350 ml", "precio": 5000 },
-            { "nombre": "Tamarindo michelado", "precio": 6000 },
-            { "nombre": "Agua en botella", "precio": 4500 }
+            {
+              "nombre": "Gaseosa 350 ml",
+              "precio": 5000
+            },
+            {
+              "nombre": "Tamarindo Michelada",
+              "precio": 6000
+            },
+            {
+              "nombre": "Agua en Botella",
+              "precio": 4500
+            }
           ]
         },
         {
           "nombre": "Cervezas",
           "items": [
-            { "nombre": "Cerveza Poker", "precio": 6000 },
-            { "nombre": "Cerveza Águila Light", "precio": 7000 },
-            { "nombre": "Cerveza Club Colombia", "precio": 7000 },
-            { "nombre": "Cerveza Corona", "precio": 10000 },
-            { "nombre": "Cerveza Heineken", "precio": 10000 },
-            { "nombre": "Recargo por cerveza michelada", "precio": 1000 }
+            {
+              "nombre": "Cerveza Poker",
+              "precio": 6000
+            },
+            {
+              "nombre": "Cerveza Aguila Light",
+              "precio": 7000
+            },
+            {
+              "nombre": "Cerveza Corona",
+              "precio": 10000
+            },
+            {
+              "nombre": "Cerveza Heineken",
+              "precio": 10000
+            },
+            {
+              "nombre": "Recargo por Cerveza Michelada",
+              "precio": 1000
+            }
           ]
         }
       ]

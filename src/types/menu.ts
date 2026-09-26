@@ -18,6 +18,8 @@ export interface DestacadoCategoria {
   nombre: string;
   descripcion: string;
   precio: number;
+  precioAlt?: number;
+  notaPrecio?: string;
   precioNota?: string;
   imagen?: string | null;
   pendienteFoto?: boolean;

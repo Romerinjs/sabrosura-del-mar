@@ -82,7 +82,8 @@
         "nombre": "Pescado Frito",
         "descripcion": "Acompañado con caldo, arroz, patacón y ensalada.",
         "precio": 37000,
-        "precioNota": "normal · súper $42.000",
+        "precioAlt": 42000,
+        "notaPrecio": "Normal / Súper",
         "imagen": "/carta/mojarra-frita/plato-85.webp",
         "alt": "Pescado frito entero acompañado de patacones y limón"
       },
@@ -116,9 +117,7 @@
         {
           "nombre": "Chuleta de Pescado",
           "descripcion": "Acompañado con caldo, arroz, patacón y ensalada.",
-          "precio": 40000,
-          "precioAlt": 45000,
-          "notaPrecio": "Normal / Súper"
+          "precio": 40000
         },
         {
           "nombre": "Pescado a la Sabrosura del Mar",
@@ -171,12 +170,16 @@
         {
           "nombre": "Bocachico Sudado",
           "descripcion": "Bocachico fresco preparado al vapor en hogao de tomates maduros, cebolla y especias locales. Servido con caldo y acompañamientos.",
-          "precio": 40000
+          "precio": 40000,
+          "precioAlt": 45000,
+          "notaPrecio": "Normal / Súper"
         },
         {
-          "nombre": "Sierra a la Carta",
-          "descripcion": "Posta de sierra dorada a la plancha con la sazón de la casa. Acompañada con arroz fresco, patacón y ensalada.",
-          "precio": 43000
+          "nombre": "Sierra Frita",
+          "descripcion": "Posta de sierra frita dorada al punto con la sazón de la casa. Acompañada con arroz fresco, patacón y ensalada.",
+          "precio": 40000,
+          "precioAlt": 45000,
+          "notaPrecio": "Normal / Súper"
         }
       ],
       "notaFinal": "Pargo: frito, en viudo, en sancocho o en salsa marinera. El precio depende de la temporada y tamaño."
@@ -341,9 +344,24 @@
           "descripcion": "Almuerzo del día con mojarra frita fresca, acompañado de caldo de pescado, arroz, patacón y ensalada recién hecha."
         },
         {
-          "nombre": "Ejecutivo de Trucha Frita",
-          "precio": 24000,
-          "descripcion": "Trucha fresca frita al punto crocante en opción ejecutiva, servida con caldo de pescado, arroz, patacón y ensalada."
+          "nombre": "Ejecutivo de Mojarra Sudada",
+          "precio": 28000,
+          "descripcion": "Mojarra fresca sudada en delicioso guiso criollo, servida con caldo de pescado, arroz, patacón y ensalada."
+        },
+        {
+          "nombre": "Ejecutivo de Bocachico Sudado",
+          "precio": 28000,
+          "descripcion": "Bocachico preparado al vapor en hogao criollo tradicional, servido con caldo de pescado, arroz, patacón y ensalada."
+        },
+        {
+          "nombre": "Ejecutivo de Bocachico Frito",
+          "precio": 28000,
+          "descripcion": "Bocachico fresco frito al punto crocante tradicional, servido con caldo de pescado, arroz, patacón y ensalada."
+        },
+        {
+          "nombre": "Ejecutivo de Sierra Frita",
+          "precio": 28000,
+          "descripcion": "Posta de sierra frita y dorada con la sazón de la casa, acompañada con caldo de pescado, arroz, patacón y ensalada."
         },
         {
           "nombre": "Ejecutivo de Sierra Sudada",
@@ -351,16 +369,37 @@
           "descripcion": "Posta de sierra sudada en guiso criollo casero, acompañada de su caldo reconfortante, arroz, patacón y ensalada del día."
         },
         {
-          "nombre": "Ejecutivo de Filete de Basa Apanado",
-          "precio": 22000,
-          "descripcion": "Filete de basa empanizado y dorado, crujiente por fuera y tierno por dentro, servido con caldo, arroz, patacón y ensalada."
+          "nombre": "Ejecutivo de Trucha Frita",
+          "precio": 24000,
+          "descripcion": "Trucha fresca frita al punto crocante en opción ejecutiva, servida con caldo de pescado, arroz, patacón y ensalada."
+        },
+        {
+          "nombre": "Ejecutivo de Trucha Sudada",
+          "precio": 28000,
+          "descripcion": "Trucha fresca en guiso casero con hierbas y especias criollas, servida con caldo, arroz, patacón y ensalada."
         },
         {
           "nombre": "Ejecutivo de Basa Frita",
           "precio": 22000,
           "descripcion": "Filete de basa fresco frito al momento, acompañado con caldo de pescado, arroz blanco, patacón y ensalada fresca."
+        },
+        {
+          "nombre": "Ejecutivo de Basa Sudada",
+          "precio": 26000,
+          "descripcion": "Filete de basa sudado en suave salsa criolla jugosa, servido con caldo, arroz, patacón y ensalada."
+        },
+        {
+          "nombre": "Ejecutivo de Filete de Basa Apanado",
+          "precio": 22000,
+          "descripcion": "Filete de basa empanizado y dorado, crujiente por fuera y tierno por dentro, servido con caldo, arroz, patacón y ensalada."
+        },
+        {
+          "nombre": "Ejecutivo de Filete de Tilapia Apanado",
+          "precio": 28000,
+          "descripcion": "Filete de tilapia apanado y crujiente, acompañado con caldo de pescado, arroz, patacón y ensalada."
         }
-      ]
+      ],
+      "notaFinal": "Con arroz coco $2,000 adicional."
     },
     {
       "id": "adicionales",
@@ -421,7 +460,7 @@
             },
             {
               "nombre": "Limonada Natural",
-              "precio": 12000
+              "precio": 8000
             },
             {
               "nombre": "Soda Italiana",
