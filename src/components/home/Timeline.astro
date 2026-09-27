@@ -8,14 +8,14 @@ interface Props {
   eyebrow: string;
   title: string;
   lead: string;
-  logo: {
+  logo?: {
     src: string;
     alt: string;
     width: number;
     height: number;
   };
   timeline: Milestone[];
-  conclusion: string;
+  conclusion?: string;
 }
 
 const { eyebrow, title, lead, logo: _logo, timeline, conclusion } = Astro.props;
@@ -37,7 +37,7 @@ const equipoPhotos = [
 ];
 ---
 
-<section class="section section--sand" id="historia" style="padding-top:1.5rem">
+<section class="section section--sand" id="equipo" style="padding-top:1.5rem">
   <div class="container">
     <div class="story-grid">
       <!-- Columna visual: Imagen central + Cinta de miniaturas (5 visibles) -->
@@ -64,7 +64,7 @@ const equipoPhotos = [
         </div>
 
         <!-- Cinta de fotos en miniatura (exactamente 5 visibles a la vez) -->
-        <div class="story-strip-viewport" id="storyStripViewport" aria-label="Galería fotográfica del equipo">
+        <div class="story-strip-viewport" id="storyStripViewport" aria-label="Galería fotográfica de nuestro equipo">
           <div class="story-strip-track" id="storyStripTrack">
             {equipoPhotos.map((photo, idx) => (
               <div
@@ -73,9 +73,9 @@ const equipoPhotos = [
                 data-src={photo}
                 tabindex="0"
                 role="button"
-                aria-label={`Foto ${idx + 1}`}
+                aria-label={`Foto del equipo ${idx + 1}`}
               >
-                <img src={photo} alt="" width="120" height="80" loading="lazy" decoding="async" />
+                <img src={photo} alt={`Fotografía del equipo ${idx + 1}`} width="120" height="80" loading="lazy" decoding="async" />
               </div>
             ))}
           </div>
@@ -87,19 +87,19 @@ const equipoPhotos = [
         <h2 style="font-size:var(--step-3)">{title}</h2>
         <p class="lead">{lead}</p>
 
-        <!-- Contadores numéricos dinámicos on-scroll (Efecto 3) -->
+        <!-- Tres pilares de valor del equipo humano -->
         <div class="story-stats-row" data-sr data-sr-direction="zoom" data-sr-delay="0.15">
           <div class="story-stat-card">
-            <span class="story-stat-number"><span data-counter data-number="14" data-speed="1600">0</span>+</span>
-            <span class="story-stat-label">Años de tradición costeña</span>
+            <span class="story-stat-number">PASIÓN</span>
+            <span class="story-stat-label">Por lo que hacemos</span>
           </div>
           <div class="story-stat-card">
-            <span class="story-stat-number"><span data-counter data-number="2" data-speed="1200">0</span></span>
-            <span class="story-stat-label">Sedes en Armenia</span>
+            <span class="story-stat-number">CALIDEZ</span>
+            <span class="story-stat-label">En cada servicio</span>
           </div>
           <div class="story-stat-card">
-            <span class="story-stat-number"><span data-counter data-number="100" data-speed="1500">0</span>%</span>
-            <span class="story-stat-label">Pesca fresca seleccionada</span>
+            <span class="story-stat-number">COMPROMISO</span>
+            <span class="story-stat-label">Con cada plato</span>
           </div>
         </div>
 
@@ -112,7 +112,9 @@ const equipoPhotos = [
           ))}
         </ul>
 
-        <p data-sr data-sr-delay="0.3" style="margin-top:1.8rem;font-weight:500;color:var(--ink)">{conclusion}</p>
+        {conclusion && (
+          <p data-sr data-sr-delay="0.3" style="margin-top:1.8rem;font-weight:500;color:var(--ink)">{conclusion}</p>
+        )}
       </div>
     </div>
   </div>
@@ -304,11 +306,12 @@ const equipoPhotos = [
 
   .story-stat-number {
     font-family: var(--font-display);
-    font-size: clamp(1.45rem, 3.2vw, 1.95rem);
+    font-size: clamp(1.05rem, 2.2vw, 1.4rem);
     font-weight: 800;
     color: var(--teal-700);
-    line-height: 1.1;
-    font-variant-numeric: tabular-nums;
+    line-height: 1.15;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
   }
 
   .story-stat-label {
