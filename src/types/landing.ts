@@ -62,19 +62,21 @@ export interface TimelineMilestone {
   descripcion: string;
 }
 
-export interface HistoriaFrontmatter {
+export interface EquipoFrontmatter {
   eyebrow: string;
   title: string;
   lead: string;
-  logo: {
+  logo?: {
     src: string;
     alt: string;
     width: number;
     height: number;
   };
   timeline: TimelineMilestone[];
-  conclusion: string;
+  conclusion?: string;
 }
+
+export type HistoriaFrontmatter = EquipoFrontmatter;
 
 export interface PlatoDestacado {
   id: string;

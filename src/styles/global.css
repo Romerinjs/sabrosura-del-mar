@@ -1163,7 +1163,7 @@ ul {
 }
 
 /* -------------------------------------------------------------
-   10. Historia
+   10. Nuestro Equipo
    ------------------------------------------------------------- */
 .story-grid {
   display: grid;
@@ -1218,12 +1218,15 @@ ul {
 
 .timeline b {
   font-family: var(--font-display);
-  font-size: 1.02rem;
+  font-size: 0.92rem;
+  font-weight: 700;
   color: #fff;
   background: var(--navy-900);
   border-radius: 999px;
-  padding: 0.3rem 0.85rem;
+  padding: 0.35rem 0.95rem;
   line-height: 1.4;
+  white-space: nowrap;
+  letter-spacing: 0.02em;
 }
 
 .timeline p {

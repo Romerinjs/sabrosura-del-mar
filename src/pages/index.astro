@@ -16,7 +16,7 @@ const site = (await getEntry('meta', 'site'))?.data;
 const hero = (await getEntry('landing', 'hero'))?.data;
 const intro = (await getEntry('landing', 'intro'))?.data;
 const diferenciales = (await getEntry('landing', 'diferenciales'))?.data;
-const historia = (await getEntry('landing', 'historia'))?.data;
+const equipo = (await getEntry('landing', 'historia'))?.data;
 const platosDestacados = (await getEntry('landing', 'platos-destacados'))?.data;
 const contacto = (await getEntry('landing', 'contacto'))?.data;
 const sedes = await getCollection('sedes');
@@ -143,14 +143,14 @@ const schemaJsonLd = {
     </>
   )}
 
-  {historia && (
+  {equipo && (
     <Timeline
-      eyebrow={historia.eyebrow}
-      title={historia.title}
-      lead={historia.lead}
-      logo={historia.logo}
-      timeline={historia.timeline}
-      conclusion={historia.conclusion}
+      eyebrow={equipo.eyebrow}
+      title={equipo.title}
+      lead={equipo.lead}
+      logo={equipo.logo}
+      timeline={equipo.timeline}
+      conclusion={equipo.conclusion}
     />
   )}
 
