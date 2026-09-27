@@ -1,0 +1,50 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import Timeline from '../components/home/Timeline.astro';
+import { getEntry } from 'astro:content';
+
+const equipo = (await getEntry('landing', 'historia'))?.data;
+---
+
+<BaseLayout
+  title="Nuestro Equipo | El talento detrás de cada sabor | La Sabrosura del Mar"
+  description="Conoce al equipo de personas apasionadas por la cocina de mar y la atención en Armenia. Pasión, calidez y compromiso en cada servicio."
+  canonicalUrl="https://lasabrosuradelmar.com/nuestro-equipo"
+  activePage="nuestro-equipo"
+>
+  <section class="page-hero">
+    <div class="page-hero__bg" aria-hidden="true">
+      <img src="/equipo/equipo.webp" alt="Equipo de La Sabrosura del Mar" class="page-hero__bg-img" loading="eager" width="1400" height="600" />
+      <div class="page-hero__bg-overlay"></div>
+    </div>
+    <div class="container">
+      <span class="eyebrow" data-sr data-sr-instant data-sr-delay="0.06">Detrás de cada sabor</span>
+      <h1 data-sr data-sr-instant data-sr-delay="0.16">Nuestro equipo</h1>
+      <p data-sr data-sr-instant data-sr-delay="0.26">Personas apasionadas por la buena cocina, el servicio y los auténticos sabores del mar.</p>
+    </div>
+  </section>
+
+  {equipo && (
+    <Timeline
+      eyebrow={equipo.eyebrow}
+      title={equipo.title}
+      lead={equipo.lead}
+      logo={equipo.logo}
+      timeline={equipo.timeline}
+      conclusion={equipo.conclusion}
+    />
+  )}
+
+  <section class="section section--white">
+    <div class="container" style="max-width:800px;text-align:center" data-sr data-sr-direction="zoom">
+      <h2 style="font-size:var(--step-2);margin-bottom:1rem">Ven a vivir la experiencia</h2>
+      <p class="lead" style="margin-bottom:2rem">
+        Hoy te esperamos en nuestras dos sedes en Armenia para que disfrutes platos preparados al momento con pescado fresco y sabor costeño.
+      </p>
+      <div class="btn-row btn-row--center" data-sr data-sr-delay="0.15">
+        <a class="btn btn--primary" href="/carta">Ver la carta digital</a>
+        <a class="btn btn--outline" href="/sedes">Conocer nuestras sedes</a>
+      </div>
+    </div>
+  </section>
+</BaseLayout>
