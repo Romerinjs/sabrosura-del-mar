@@ -332,14 +332,14 @@
       "destacado": {
         "nombre": "Ejecutivo Mojarra",
         "descripcion": "Almuerzo del día con mojarra fresca dorada al punto, acompañado con caldo de pescado, arroz, patacón y ensalada.",
-        "precio": 22000,
+        "precio": 28000,
         "imagen": "/carta/ejecutivo-mojarra/plato-58.webp",
         "alt": "Almuerzo ejecutivo con mojarra, arroz, patacón y caldo"
       },
       "items": [
         {
           "nombre": "Ejecutivo Mojarra",
-          "precio": 22000,
+          "precio": 28000,
           "destacado": true,
           "descripcion": "Almuerzo del día con mojarra frita fresca, acompañado de caldo de pescado, arroz, patacón y ensalada recién hecha."
         },
@@ -365,12 +365,12 @@
         },
         {
           "nombre": "Ejecutivo de Sierra Sudada",
-          "precio": 23000,
+          "precio": 28000,
           "descripcion": "Posta de sierra sudada en guiso criollo casero, acompañada de su caldo reconfortante, arroz, patacón y ensalada del día."
         },
         {
           "nombre": "Ejecutivo de Trucha Frita",
-          "precio": 24000,
+          "precio": 28000,
           "descripcion": "Trucha fresca frita al punto crocante en opción ejecutiva, servida con caldo de pescado, arroz, patacón y ensalada."
         },
         {
@@ -380,7 +380,7 @@
         },
         {
           "nombre": "Ejecutivo de Basa Frita",
-          "precio": 22000,
+          "precio": 26000,
           "descripcion": "Filete de basa fresco frito al momento, acompañado con caldo de pescado, arroz blanco, patacón y ensalada fresca."
         },
         {
@@ -390,7 +390,7 @@
         },
         {
           "nombre": "Ejecutivo de Filete de Basa Apanado",
-          "precio": 22000,
+          "precio": 26000,
           "descripcion": "Filete de basa empanizado y dorado, crujiente por fuera y tierno por dentro, servido con caldo, arroz, patacón y ensalada."
         },
         {
