@@ -102,7 +102,7 @@
         },
         {
           "nombre": "Sancocho de Pescado",
-          "descripcion": "Acompañado con patacón y ensalada.",
+          "descripcion": "Acompañado con arroz, patacón y ensalada.",
           "precio": 40000,
           "precioAlt": 45000,
           "notaPrecio": "Normal / Súper"
@@ -154,7 +154,7 @@
         },
         {
           "nombre": "Salmón a la Plancha",
-          "descripcion": "Pescado frito y en salsa. Acompañado con arroz, patacón y ensalada.",
+          "descripcion": "Acompañado con arroz, patacón y ensalada.",
           "precio": 50000
         },
         {
@@ -404,7 +404,6 @@
     {
       "id": "adicionales",
       "nombre": "Adicionales",
-      "resumen": "Fritos o en salsa, acompañado de 3 patacones",
       "items": [
         {
           "nombre": "Porción de Arroz",
